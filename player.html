@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>빠따넷 · 선수</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="./">빠따넷</a>
+      <nav class="header-nav">
+        <a href="./" id="backLink">리더보드</a>
+        <a href="prospects.html">유망주</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <p class="status" id="status" role="status">불러오는 중...</p>
+
+    <section class="profile" id="profile" hidden>
+      <div class="profile-main">
+        <h1 id="playerName"></h1>
+        <p class="profile-sub" id="playerSub"></p>
+      </div>
+      <dl class="profile-facts" id="playerFacts"></dl>
+      <div class="prospect-banner" id="prospectBanner" hidden></div>
+    </section>
+
+    <div class="career-toolbar" id="careerToolbar" hidden>
+      <div class="segmented" id="viewSwitch" role="group" aria-label="지표 종류">
+        <button type="button" data-value="basic" aria-pressed="true">기본</button>
+        <button type="button" data-value="saber" aria-pressed="false">세이버</button>
+      </div>
+      <span class="career-note">최근 3개 시즌 기록입니다.</span>
+    </div>
+
+    <div id="career"></div>
+    <div id="prospectHistory"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>MLB·MiLB 기록 출처: MLB Stats API. Copyright MLB Advanced Media, L.P. 비상업적 개인 프로젝트입니다.</p>
+    </div>
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script src="js/player.js"></script>
+</body>
+</html>

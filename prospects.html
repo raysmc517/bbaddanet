@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>빠따넷 · 유망주</title>
+  <meta name="description" content="MLB Pipeline 유망주 랭킹과 마이너리그 성적">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="./">빠따넷</a>
+      <nav class="header-nav">
+        <a href="./">리더보드</a>
+        <a href="prospects.html" aria-current="page">유망주</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="toolbar" aria-label="조회 조건">
+      <div class="toolbar-row">
+        <label class="field">
+          <span>목록</span>
+          <select id="listSelect"></select>
+        </label>
+        <label class="field">
+          <span>구분</span>
+          <select id="typeSelect">
+            <option value="">전체</option>
+            <option value="bat">타자</option>
+            <option value="pit">투수</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>현재 레벨</span>
+          <select id="levelSelect"></select>
+        </label>
+        <label class="field field-search">
+          <span>선수 검색</span>
+          <input type="search" id="searchInput" placeholder="이름" autocomplete="off">
+        </label>
+      </div>
+    </section>
+
+    <p class="status" id="status" role="status">불러오는 중...</p>
+
+    <div class="table-scroll">
+      <table class="stats prospects" id="prospectTable">
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    <p class="page-note">성적은 AAA·AA·MLB 기록만 제공합니다. 한 시즌에 여러 레벨에서 뛴 선수는 가장 많이 뛴 레벨의 성적을 보여줍니다.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>유망주 순위 출처: MLB Pipeline (mlb.com/prospects). 주 1회 갱신합니다.</p>
+      <p>기록 출처: MLB Stats API. Copyright MLB Advanced Media, L.P. 비상업적 개인 프로젝트입니다.</p>
+    </div>
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script src="js/prospects.js"></script>
+</body>
+</html>

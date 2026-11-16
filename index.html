@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>빠따넷 · 리더보드</title>
+  <meta name="description" content="MLB, MiLB, NPB, KBO 선수 성적과 세이버매트릭스">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="./">빠따넷</a>
+      <nav class="league-tabs" id="leagueTabs" aria-label="리그 선택"></nav>
+      <nav class="header-nav header-nav-end">
+        <a href="prospects.html">유망주</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="toolbar" aria-label="조회 조건">
+      <div class="toolbar-row">
+        <div class="segmented" id="groupSwitch" role="group" aria-label="타자 또는 투수">
+          <button type="button" data-value="batting">타자</button>
+          <button type="button" data-value="pitching">투수</button>
+        </div>
+        <div class="segmented" id="viewSwitch" role="group" aria-label="지표 종류">
+          <button type="button" data-value="basic">기본</button>
+          <button type="button" data-value="saber">세이버</button>
+        </div>
+        <label class="field">
+          <span>시즌</span>
+          <select id="seasonSelect"></select>
+        </label>
+        <label class="field" id="levelField" hidden>
+          <span>레벨</span>
+          <select id="levelSelect"></select>
+        </label>
+        <label class="field" id="subField" hidden>
+          <span>리그</span>
+          <select id="subSelect"></select>
+        </label>
+        <label class="field">
+          <span>팀</span>
+          <select id="teamSelect"></select>
+        </label>
+        <label class="field">
+          <span id="posLabel">포지션</span>
+          <select id="posSelect"></select>
+        </label>
+        <label class="field">
+          <span id="minLabel">타석</span>
+          <select id="minSelect"></select>
+        </label>
+        <label class="field field-search">
+          <span>선수 검색</span>
+          <input type="search" id="searchInput" placeholder="이름" autocomplete="off">
+        </label>
+      </div>
+    </section>
+
+    <p class="status" id="status" role="status"></p>
+
+    <div class="table-scroll" id="tableScroll">
+      <table class="stats" id="statsTable">
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    <nav class="pager" id="pager" aria-label="페이지"></nav>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p id="updatedText"></p>
+      <p>MLB 기록 출처: MLB Stats API. Copyright MLB Advanced Media, L.P. 비상업적 개인 프로젝트입니다.</p>
+    </div>
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script src="js/leaderboard.js"></script>
+</body>
+</html>
