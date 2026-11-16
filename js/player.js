@@ -11,6 +11,7 @@
   const GROUP_TITLE = { batting: "타격 기록", pitching: "투구 기록" };
 
   let player = null;
+  let recruitment = null;
   let view = "basic";
 
   function showError(message) {
@@ -28,17 +29,33 @@
 
     const body = [player.heightCm ? player.heightCm + "cm" : "", player.weightKg ? player.weightKg + "kg" : ""].filter(Boolean);
     const hands = (HAND[player.throws] ? HAND[player.throws] + "투" : "") + (HAND[player.bats] ? HAND[player.bats] + "타" : "");
+    const signing = recruitment;
+    let entryLabel = "지명 정보";
+    let entryText = "미확인";
+    if (signing && signing.type === "draft") {
+      entryText = signing.year + "년 · " + (signing.round ? signing.round + "라운드 · " : "") +
+        (signing.overall ? "전체 " + signing.overall + "순위" : "순위 미확인");
+    } else if (signing && signing.type === "international") {
+      entryLabel = "프로 계약";
+      entryText = (signing.date || signing.year + "년") + " · 국제 아마추어 계약 (지명 없음)";
+    }
     const facts = [
       ["생년월일", player.birthDate ? player.birthDate + (player.age ? " (" + player.age + "세)" : "") : ""],
       ["출신", player.country],
       ["신체", body.join(" / ")],
       ["투타", hands],
       ["MLB 데뷔", player.debut || "없음"],
+      [entryLabel, entryText],
+      [signing && signing.type === "international" ? "계약 구단" : "지명 구단", signing && signing.team],
+      ["계약금", signing && Number.isFinite(signing.bonusUSD) ? "$" + signing.bonusUSD.toLocaleString("en-US") + " USD" : "미확인"],
     ];
     $("playerFacts").innerHTML = facts
       .filter((fact) => fact[1])
       .map((fact) => "<div><dt>" + fact[0] + "</dt><dd>" + escapeHtml(fact[1]) + "</dd></div>")
       .join("");
+    if (signing && /^https:\/\//.test(signing.source || "")) {
+      $("playerFacts").insertAdjacentHTML("beforeend", '<div><dt>입단 정보 출처</dt><dd><a target="_blank" rel="noopener noreferrer" href="' + escapeHtml(signing.source) + '">MLB 공식 자료</a></dd></div>');
+    }
     $("profile").hidden = false;
   }
 
@@ -78,8 +95,8 @@
     const body = rows.map((row) => {
       const team = escapeHtml(row.team || "-") + (row.nt > 1 ? '<span class="team-note">' + row.nt + "팀</span>" : "");
       return (
-        '<tr><td class="col-season">' + row.season + "</td>" +
-        '<td class="col-team"><span class="level level-' + row.league + '">' + escapeHtml(row.level) + "</span></td>" +
+        '<tr><td class="col-season">' + escapeHtml(row.seasonLabel || String(row.season)) + "</td>" +
+        '<td class="col-team"><span class="level level-' + row.league + '">' + escapeHtml(row.level === "Single-A" && row.season === 2021 ? "Low-A" : row.level) + "</span></td>" +
         '<td class="col-team">' + team + "</td>" +
         "<td>" + (row.age || "-") + "</td>" +
         columns.map((column) => "<td>" + cell(column, row) + "</td>").join("") +
@@ -96,7 +113,7 @@
     // 투수는 투구 기록을, 야수는 타격 기록을 먼저 보여준다
     const order = player.pos === "P" ? ["pitching", "batting"] : ["batting", "pitching"];
     const html = order.map(renderTable).join("");
-    $("career").innerHTML = html || '<p class="status">AA 이상 리그의 최근 3개 시즌 기록이 없습니다.</p>';
+    $("career").innerHTML = html || '<p class="status">제공된 프로 경기 기록이 없습니다.</p>';
   }
 
   async function init() {
@@ -111,11 +128,22 @@
       showError("선수 데이터를 불러오지 못했습니다. 리더보드에서 다시 선택해 주세요.");
       return;
     }
+    try {
+      const entries = await loadJson("data/recruitment.json");
+      recruitment = entries[id] || null;
+    } catch (error) {
+      recruitment = null;
+    }
     $("status").textContent = "";
     renderProfile();
     renderProspect();
     renderCareer();
     $("careerToolbar").hidden = false;
+    $("status").textContent = player.careerStatus === "no_records"
+      ? "공식 데이터에서 제공된 프로 경기 기록이 없습니다."
+      : player.careerUpdated
+      ? "MLB·마이너리그의 최초 제공 시즌부터 표시합니다. 해외 리그 및 원본 미제공 기록은 포함되지 않을 수 있습니다. 과거 세이버 지표는 계산 근거가 있는 경우에만 제공합니다."
+      : "저장된 시즌 기록입니다. 전체 프로 커리어 데이터는 아직 수집되지 않았습니다.";
 
     // 리더보드에서 넘어왔으면 보던 조건 그대로 돌아가게 한다
     if (document.referrer && new URL(document.referrer).origin === location.origin && /(\/|index\.html)$/.test(new URL(document.referrer).pathname)) {

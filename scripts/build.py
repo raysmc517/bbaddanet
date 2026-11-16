@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import prospects
+import careers as career_data
 from collectors import statsapi
 from sabermetrics import calc, parkfactors
 
@@ -35,6 +36,8 @@ LEAGUES = [
         "levels": [
             {"id": "aaa", "name": "AAA", "sport_id": 11},
             {"id": "aa", "name": "AA", "sport_id": 12},
+            {"id": "high_a", "name": "High-A", "sport_id": 13},
+            {"id": "single_a", "name": "Single-A", "sport_id": 14},
         ],
     },
 ]
@@ -166,7 +169,7 @@ def affiliated_team(player, team_names):
 def build_players(prospect_info):
     """저장된 성적 파일을 모아 선수별 파일을 만든다. (성공 여부, 선수별 성적)을 돌려준다.
 
-    AA 이상 기록이 없는 유망주도 프로필만 담은 파일을 만든다.
+    수집 레벨의 기록이 없는 유망주도 프로필만 담은 파일을 만든다.
     """
     careers = {}  # 선수 ID → {"batting": [...], "pitching": [...]}
     for player_id in prospect_info:
@@ -215,7 +218,9 @@ def build_players(prospect_info):
             continue
         for group in GROUPS:
             career[group].sort(key=lambda row: (-row["season"], level_rank[row["level"]]))
+        # 별도 수집한 과거 커리어를 매번 재빌드해도 보존한다.
         payload = {**profile, **career}
+        career_data.merge_cached(payload, DATA)
         if player_id in prospect_info:
             payload["prospect"] = prospect_info[player_id]
         if payload["team"] not in affiliated:
@@ -230,6 +235,7 @@ def main():
     parser = argparse.ArgumentParser(description="빠따넷 데이터 수집")
     parser.add_argument("--skip-stats", action="store_true", help="성적은 다시 받지 않고 저장된 파일을 그대로 쓴다")
     parser.add_argument("--pipeline", action="store_true", help="이번 주 랭킹이 있어도 Pipeline 랭킹을 다시 받는다")
+    parser.add_argument("--levels", nargs="+", choices=["mlb", "aaa", "aa", "high_a", "single_a"], help="수집할 레벨 ID (mlb, aaa, aa, high_a, single_a)")
     args = parser.parse_args()
 
     updated = datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -239,7 +245,8 @@ def main():
         if not args.skip_stats:
             print(f"{league['name']} 수집 중...")
             for level in league["levels"]:
-                ok = collect_level(league, level, updated) and ok
+                if not args.levels or (level["id"] or league["id"]) in args.levels:
+                    ok = collect_level(league, level, updated) and ok
         seasons = existing_seasons(league)
         if seasons:
             entry = {"id": league["id"], "name": league["name"], "seasons": seasons}

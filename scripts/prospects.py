@@ -115,7 +115,7 @@ def is_pitcher(position):
 
 
 def _season_line(career, position, season):
-    """올 시즌 가장 많이 뛴 레벨의 성적 한 줄. AA 이상 기록이 없으면 None."""
+    """올 시즌 가장 많이 뛴 레벨의 성적 한 줄. 지원 레벨의 기록이 없으면 None."""
     order = ["pitching", "batting"] if is_pitcher(position) else ["batting", "pitching"]
     for group in order:
         rows = [row for row in career.get(group, []) if row["season"] == season]

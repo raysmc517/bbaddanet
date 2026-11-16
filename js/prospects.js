@@ -7,15 +7,16 @@
   const { fmt, escapeHtml, loadJson } = window.BB;
 
   const LEVEL_ORDER = ["MLB", "AAA", "AA", "A+", "A", "ROK"];
-  const STAT_LEVELS = ["MLB", "AAA", "AA"]; // 성적을 제공하는 레벨
+  const STAT_LEVELS = ["MLB", "AAA", "AA", "A+", "A", "High-A", "Single-A", "Low-A"]; // 성적을 제공하는 레벨
 
   const $ = (id) => document.getElementById(id);
   const state = { list: "top100", type: "", level: "", search: "" };
   let data = null;
 
   const isPitcher = (pos) => pos.includes("HP") || ["P", "SP", "RP"].includes(pos);
+  const levelLabel = (level) => ({ "A+": "High-A", A: "Single-A", ROK: "Rookie" }[level] || level);
   const levelBadge = (level) =>
-    level ? '<span class="level' + (level === "MLB" ? " level-mlb" : "") + '">' + escapeHtml(level) + "</span>" : "-";
+    level ? '<span class="level' + (level === "MLB" ? " level-mlb" : "") + '">' + escapeHtml(levelLabel(level)) + "</span>" : "-";
 
   function weekLabel(week) {
     const parts = week.split("-W");
@@ -62,7 +63,7 @@
     const levels = LEVEL_ORDER.filter((level) => found.has(level)).concat([...found].filter((level) => !LEVEL_ORDER.includes(level)).sort());
     $("levelSelect").innerHTML =
       '<option value="">전체</option>' +
-      levels.map((level) => '<option value="' + escapeHtml(level) + '">' + escapeHtml(level) + "</option>").join("");
+      levels.map((level) => '<option value="' + escapeHtml(level) + '">' + escapeHtml(levelLabel(level)) + "</option>").join("");
     if (!levels.includes(state.level)) state.level = "";
     $("levelSelect").value = state.level;
   }
@@ -80,7 +81,7 @@
     const s = player.stat;
     if (!s) {
       const covered = STAT_LEVELS.includes(player.level);
-      return '<span class="muted">' + (covered ? "올 시즌 기록 없음" : "AA 미만 (성적 미제공)") + "</span>";
+      return '<span class="muted">' + (covered ? "올 시즌 기록 없음" : "해당 레벨 성적 미제공") + "</span>";
     }
     const parts =
       s.group === "pitching"
