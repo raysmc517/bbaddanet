@@ -88,12 +88,12 @@ def add_official_war(level, season, rows_by_group):
             row["WAR"] = round(war, 1) if war is not None else None
 
 
-def collect_level(league, level, updated):
+def collect_level(league, level, updated, seasons=SEASONS):
     """리그의 레벨 하나를 수집한다. 모든 시즌이 성공하면 True."""
     label = level["name"]
     ok = True
     park_by_season = level_park_factors(level)
-    for season in SEASONS:
+    for season in seasons:
         try:
             teams = statsapi.fetch_teams(level["sport_id"], season)
             rows_by_group = {
@@ -237,7 +237,13 @@ def main():
     parser.add_argument("--skip-stats", action="store_true", help="성적은 다시 받지 않고 저장된 파일을 그대로 쓴다")
     parser.add_argument("--pipeline", action="store_true", help="이번 주 랭킹이 있어도 Pipeline 랭킹을 다시 받는다")
     parser.add_argument("--levels", nargs="+", choices=["mlb", "aaa", "aa", "high_a", "single_a"], help="수집할 레벨 ID (mlb, aaa, aa, high_a, single_a)")
+    parser.add_argument(
+        "--current-season",
+        action="store_true",
+        help=f"가장 최근 시즌({SEASONS[0]})만 다시 받는다. 끝난 시즌은 저장된 파일을 그대로 쓴다 (일일 자동 갱신용)",
+    )
     args = parser.parse_args()
+    seasons = SEASONS[:1] if args.current_season else SEASONS
 
     updated = datetime.now(timezone.utc).isoformat(timespec="seconds")
     meta = {"updated": updated, "leagues": []}
@@ -247,7 +253,7 @@ def main():
             print(f"{league['name']} 수집 중...")
             for level in league["levels"]:
                 if not args.levels or (level["id"] or league["id"]) in args.levels:
-                    ok = collect_level(league, level, updated) and ok
+                    ok = collect_level(league, level, updated, seasons) and ok
         seasons = existing_seasons(league)
         if seasons:
             entry = {"id": league["id"], "name": league["name"], "seasons": seasons}

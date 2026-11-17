@@ -1,0 +1,101 @@
+# 빠따넷 일일 갱신과 GitHub Pages 배포
+#
+# - 매일 한국 시간 16:00(UTC 07:00)에 최근 시즌 성적을 다시 받아 data/를 커밋하고 사이트를 배포한다.
+#   미국 동부 새벽 2~3시, 서부 자정 무렵이라 전날 경기가 끝난 뒤다. GitHub 사정으로 몇십 분 늦어질 수 있다.
+# - 끝난 시즌, 은퇴 선수(past_players.py), 과거 커리어(careers.py --refresh)는 거의 바뀌지 않으므로 여기서 돌리지 않는다.
+# - Pipeline 랭킹은 build.py가 주 1회만 새로 받는다.
+# - main에 push하면 수집 없이 배포만 한다. Actions 탭에서 직접 실행(workflow_dispatch)하면 수집과 배포를 한다.
+
+name: 일일 갱신·배포
+
+on:
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: update-and-deploy
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - run: python -m pip install -r requirements.txt
+
+      # 일부 리그·시즌이 실패해도 build.py는 직전 데이터를 유지한다.
+      # 성공한 부분은 커밋·배포하고, 실패는 마지막 단계에서 알린다.
+      - name: 최근 시즌 수집·계산
+        id: build
+        run: |
+          set +e
+          python scripts/build.py --current-season
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+
+      - name: 데이터 커밋
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --cached --quiet; then
+            echo "바뀐 데이터 없음"
+            exit 0
+          fi
+          git commit -m "data: 일일 갱신 $(TZ=Asia/Seoul date +%F)"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: 수집 실패 알림
+        if: steps.build.outputs.code != '0'
+        run: |
+          echo "::warning::build.py 일부 실패 (코드 ${{ steps.build.outputs.code }}). 실패한 리그·시즌은 직전 데이터를 유지했다. 로그를 확인한다."
+
+  deploy:
+    needs: update
+    # push로 update가 건너뛰어졌거나, update가 데이터 커밋까지 마쳤을 때 배포한다.
+    if: ${{ !cancelled() && (needs.update.result == 'success' || needs.update.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      # 브라우저가 읽는 파일만 올린다. data/careers/, data/drafts/는 수집 캐시라 제외한다.
+      - name: 사이트 파일 모으기
+        run: |
+          mkdir _site
+          cp ./*.html _site/
+          cp -r css js _site/
+          rsync -a --exclude careers/ --exclude drafts/ data _site/
+          touch _site/.nojekyll
+          echo "파일 $(find _site -type f | wc -l)개, $(du -sh _site | cut -f1)"
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -22,7 +22,7 @@ MiLB 성적은 MLB Pipeline 유망주 랭킹과 연결해 유망주의 순위와
 | 선수 검색: 은퇴 선수를 포함한 MLB 출전 선수 전원 영문 이름 검색 | `search.html` | 구현 |
 | 용어 설명 | `glossary.html` | 계획 |
 | KBO·NPB 리더보드 | - | 보류 |
-| 자동 갱신·배포 (GitHub Actions) | - | 계획 |
+| 자동 갱신·배포 (GitHub Actions, GitHub Pages) | `.github/workflows/update.yml` | 구현 |
 
 - 시즌별 리더보드는 최근 3개 시즌(2024~2026)을 제공합니다.
 - 선수 커리어는 MLB 데뷔가 아닌 **프로 첫 출전 시즌부터** 보여줍니다. 원본이 정확한 데뷔일을 주지 않으므로 날짜를 추정하지 않습니다.
@@ -101,6 +101,7 @@ python -m http.server 8000
 |---|---|
 | 전체 성적 수집·계산 (외부 요청과 다수 JSON 변경 발생) | `python scripts/build.py` |
 | 특정 레벨만 수집 | `python scripts/build.py --levels high_a single_a` |
+| 최근 시즌만 수집 (일일 자동 갱신과 같은 범위) | `python scripts/build.py --current-season` |
 | 성적 재수집 생략 (Pipeline·프로필 요청은 남음) | `python scripts/build.py --skip-stats` |
 | Pipeline 랭킹 강제 갱신 | `python scripts/build.py --pipeline` |
 | 선수별 과거 커리어 수집 (`--ids`로 범위 지정, `--refresh`로 갱신) | `python scripts/careers.py` |
@@ -111,6 +112,22 @@ python -m http.server 8000
 | MLB 공식 값과 대조 | `python scripts/validate.py 2026` |
 
 권장 순서는 성적 빌드 → 커리어 수집입니다. 수집이 실패하거나 빈 응답이 오면 기존 정상 데이터를 덮어쓰지 않습니다.
+
+### 자동 갱신·배포
+
+[`.github/workflows/update.yml`](.github/workflows/update.yml)이 GitHub 서버에서 실행됩니다. PC가 꺼져 있어도 됩니다.
+
+| 언제 | 하는 일 |
+|---|---|
+| 매일 한국 시간 16:00 (UTC 07:00) | `build.py --current-season`으로 최근 시즌 성적을 수집·계산하고, 바뀐 `data/`를 커밋한 뒤 GitHub Pages에 배포 |
+| `main`에 push | 수집 없이 배포만 |
+| Actions 탭에서 직접 실행 | 수집과 배포 |
+
+- 16:00은 미국 동부 새벽 2~3시, 서부 자정 무렵으로 전날 경기가 끝난 뒤입니다. GitHub 사정으로 실행이 몇십 분 늦어질 수 있습니다.
+- 끝난 시즌, 은퇴 선수(`past_players.py`), 과거 커리어 갱신(`careers.py --refresh`)은 거의 바뀌지 않으므로 매일 돌리지 않고 필요할 때 직접 실행합니다.
+- Pipeline 랭킹은 `build.py`가 주 1회만 새로 받습니다.
+- 일부 리그·시즌이 실패하면 그 부분은 직전 데이터를 유지하고 나머지만 반영합니다. 실패는 Actions 실행 결과에 경고로 남습니다.
+- 배포본에는 브라우저가 읽지 않는 수집 캐시(`data/careers/`, `data/drafts/`)를 넣지 않습니다.
 
 ### 테스트
 
@@ -165,7 +182,7 @@ bbaddanet/
 | 추가 | High-A·Single-A, 프로 데뷔부터 커리어, 입단 정보, 구단·구장, 은퇴 선수 검색 | 완료 |
 | 5 | KBO 수집기 | 보류 (출처 이용 조건) |
 | 6 | NPB 수집기 | 보류 (출처 이용 조건) |
-| 7 | 자동 갱신, 배포, 용어 설명 | 예정 |
+| 7 | 자동 갱신, 배포, 용어 설명 | 진행 중 (자동 갱신·배포 구현, 용어 설명 예정) |
 
-남은 일: 한글 이름 표기와 한글 검색, 과거 시즌 세이버 지표, 팀 로스터·합산 성적, 용어 설명, 자동 갱신·배포.
+남은 일: 한글 이름 표기와 한글 검색, 과거 시즌 세이버 지표, 팀 로스터·합산 성적, 용어 설명.
 제품 요구사항과 결정 사항 전체는 [PRD.md](PRD.md)를 참고하세요.
