@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>빠따넷 · 구단</title>
+  <meta name="description" content="MLB 구단과 홈구장, 산하 마이너리그 구단 정보">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="./">빠따넷</a>
+      <nav class="header-nav">
+        <a href="./">리더보드</a>
+        <a href="prospects.html">유망주</a>
+        <a href="teams.html" aria-current="page">구단</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="toolbar" aria-label="조회 조건">
+      <div class="toolbar-row">
+        <label class="field">
+          <span>리그</span>
+          <select id="leagueSelect">
+            <option value="">전체</option>
+            <option value="AL">아메리칸리그</option>
+            <option value="NL">내셔널리그</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>지구</span>
+          <select id="divisionSelect"></select>
+        </label>
+        <label class="field field-search">
+          <span>구단·구장 검색</span>
+          <input type="search" id="searchInput" placeholder="구단, 구장, 도시" autocomplete="off">
+        </label>
+      </div>
+    </section>
+
+    <p class="status" id="status" role="status">불러오는 중...</p>
+
+    <div class="table-scroll">
+      <table class="stats teams" id="teamTable">
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    <p class="page-note">펜스 거리는 홈플레이트 기준(피트)입니다. 파크팩터는 빠따넷 자체 계산값으로 1.000이 중립이고 클수록 타자에게 유리합니다. 구단을 선택하면 구장 상세와 산하 마이너리그 구단을 볼 수 있습니다.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p id="updatedText"></p>
+      <p>구단·구장 정보 출처: MLB Stats API. Copyright MLB Advanced Media, L.P. 비상업적 개인 프로젝트입니다.</p>
+    </div>
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script src="js/teams.js"></script>
+</body>
+</html>

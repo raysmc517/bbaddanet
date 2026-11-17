@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>빠따넷 · 구단</title>
+  <meta name="description" content="구단과 홈구장, 산하 마이너리그 구단 정보">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="./">빠따넷</a>
+      <nav class="header-nav">
+        <a href="./">리더보드</a>
+        <a href="prospects.html">유망주</a>
+        <a href="teams.html" aria-current="page">구단</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <p class="status" id="status" role="status">불러오는 중...</p>
+
+    <div id="content" hidden>
+      <section class="profile" aria-label="구단 정보">
+        <div>
+          <h1 id="teamName"></h1>
+          <p class="profile-sub" id="teamSub"></p>
+        </div>
+        <dl class="profile-facts" id="teamFacts"></dl>
+        <p class="team-links" id="teamLinks"></p>
+      </section>
+
+      <section class="career-section" aria-label="홈구장">
+        <h2>홈구장</h2>
+        <div class="venue-card">
+          <div class="venue-info">
+            <h3 id="venueName"></h3>
+            <p class="venue-address" id="venueAddress"></p>
+            <dl class="profile-facts" id="venueFacts"></dl>
+            <p class="team-links" id="venueLinks"></p>
+          </div>
+          <figure class="venue-field" id="venueField"></figure>
+        </div>
+      </section>
+
+      <section class="career-section" aria-label="구단 조직">
+        <h2 id="orgTitle"></h2>
+        <div class="table-scroll">
+          <table class="stats teams" id="orgTable">
+            <thead id="orgHead"></thead>
+            <tbody id="orgBody"></tbody>
+          </table>
+        </div>
+        <p class="page-note">펜스 거리는 좌측 폴-중앙-우측 폴(피트)입니다. 파크팩터는 빠따넷 자체 계산값이며 Rookie 리그는 계산하지 않습니다. 원본에 없는 항목은 "-"로 표시합니다.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p id="updatedText"></p>
+      <p>구단·구장 정보 출처: MLB Stats API. Copyright MLB Advanced Media, L.P. 비상업적 개인 프로젝트입니다.</p>
+    </div>
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script src="js/team.js"></script>
+</body>
+</html>

@@ -23,7 +23,8 @@
 
 - `scripts/collectors/`: 외부 데이터 수집. `scripts/sabermetrics/`: 지표 및 파크팩터 계산.
 - `scripts/build.py`: 데이터 생성 진입점. `scripts/prospects.py`: 유망주 스냅샷과 화면용 데이터. `scripts/validate.py`: MLB 공식 값과 비교.
-- `index.html`, `player.html`, `prospects.html`: 화면 진입점. `js/common.js`: 공통 표시 형식과 열 정의. `css/style.css`: 스타일.
+- `scripts/teams.py`: MLB 구단·산하 구단·구장 정보(`data/teams.json`).
+- `index.html`, `player.html`, `prospects.html`, `teams.html`, `team.html`: 화면 진입점. `js/common.js`: 공통 표시 형식과 열 정의. `css/style.css`: 스타일.
 - `data/`: 생성된 JSON과 랭킹 기록. 데이터 오류는 수집·계산 원인을 먼저 고친다. 대량 JSON을 손으로 수정하지 않는다.
 - 기존 코드 스타일과 UTF-8 인코딩을 유지한다. JSON 필드 변경 시 생성 코드, 소비하는 화면, 기존 데이터와의 호환성을 함께 확인한다.
 - 브라우저는 저장된 JSON을 읽는다. 원본 사이트의 수집 요청은 Python에서 수행한다.
@@ -65,5 +66,14 @@
 - 실행 순서: 성적 빌드 → 커리어 수집. 일반 빌드는 `data/careers/`의 과거 기록을 보존한다. 기존 커리어의 새 시즌·정정 기록까지 갱신하려면 `--refresh`를 사용한다.
 - `python -m unittest discover -s scripts -p test_careers.py`: 중복·합계 행 제거, 과거 기록 갱신과 최근 세이버 지표 보존을 검증한다.
 - 최초 제공 시즌은 정확한 프로 데뷔일과 다르다. 해외 리그 데이터 누락 가능성을 화면에 안내한다.
+
+## 구단·구장 정보 실행
+
+- `python scripts/teams.py`: MLB와 산하 마이너리그(AAA~Rookie) 구단·구장 정보를 6회 요청으로 받아 `data/teams.json`을 만든다. 실패하거나 MLB 구단 수가 30개가 아니면 기존 파일을 유지한다.
+- 파크팩터는 성적 빌드 결과(`constants_{시즌}.json`)를 읽어 붙이므로 성적 빌드 뒤에 실행한다. 없는 값은 1.000으로 채우지 않고 미제공으로 둔다.
+- `python -m unittest discover -s scripts -p test_teams.py`: 산하 구단 묶기, 모구단 불명 구단 제외, 파크팩터 누락, 도미니카 구장 위치 보정을 검증한다.
+- 구장 사진·로고는 수집하지 않는다. 지도는 좌표로 외부 지도 링크만 건다.
+
+## 입단 정보 실행
 
 - 프로필은 최초 제공 시즌 대신 지명 연도·라운드·전체 순위·계약금을 표시한다. 국제 계약은 별도로 구분하며 확인된 출처가 없는 순위·계약금은 만들지 않는다. `python scripts/recruitment.py`로 생성하고 `--refresh`로 캐시를 갱신한다.

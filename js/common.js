@@ -108,5 +108,18 @@ window.BB = (function () {
   const visibleColumns = (columns, rows) =>
     columns.filter((column) => rows.some((row) => row[column.key] !== null && row[column.key] !== undefined));
 
-  return { fmt, COLUMNS, isStarter, escapeHtml, loadJson, cell, visibleColumns };
+  // ---------- 구단·구장 표시 ----------
+  const has = (v) => v !== null && v !== undefined && v !== "";
+  const TURF = { Grass: "천연잔디", "Artificial Turf": "인조잔디" };
+  const ROOF = { Open: "개방형", Retractable: "개폐식", Dome: "돔" };
+  const venue = {
+    turf: (v) => (has(v) ? TURF[v] || v : "-"),
+    roof: (v) => (has(v) ? ROOF[v] || v : "-"),
+    capacity: (v) => (has(v) ? v.toLocaleString("ko-KR") + "명" : "-"),
+    meters: (feet) => Math.round(feet * 0.3048),
+    place: (v) => [v.city, v.state, v.country && v.country !== "USA" ? v.country : ""].filter(has).join(", ") || "-",
+    pf: (v) => (has(v) ? v.toFixed(3) : "-"),
+  };
+
+  return { fmt, COLUMNS, isStarter, escapeHtml, loadJson, cell, visibleColumns, venue, has };
 })();

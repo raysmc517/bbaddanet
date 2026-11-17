@@ -367,6 +367,80 @@ table.stats {
   .level-mlb { color: #0c1a12; }
 }
 
+/* 구단·구장 */
+.stats.teams .col-name { left: 0; }
+.stats.teams a { color: inherit; }
+.stats.teams td.col-team a { color: var(--accent); }
+.stats.teams tr.current td { background: var(--sorted-bg); font-weight: 700; }
+.team-links {
+  flex: 1 1 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+.team-links a,
+.profile-sub a { color: var(--accent); }
+.venue-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 40px;
+  align-items: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+}
+.venue-info {
+  flex: 1 1 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.venue-info h3 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+}
+.venue-address {
+  margin: -10px 0 0;
+  color: var(--text-sub);
+  font-size: 14px;
+}
+.venue-field {
+  flex: 0 1 360px;
+  margin: 0;
+}
+.venue-field svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.venue-field figcaption {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-sub);
+}
+.field-grass {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.field-dirt {
+  fill: var(--surface-alt);
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+.venue-field text {
+  fill: var(--text);
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
 .empty {
   padding: 40px 16px !important;
   text-align: center !important;

@@ -44,6 +44,57 @@ def fetch_team_directory(sport_id, season):
     ]
 
 
+def _venue(venue):
+    """구장 정보. 원본에 없는 항목은 None으로 둔다."""
+    location = venue.get("location", {})
+    coords = location.get("defaultCoordinates", {})
+    field = venue.get("fieldInfo", {})
+    return {
+        "id": venue.get("id"),
+        "name": venue.get("name", ""),
+        "address": location.get("address1"),
+        "city": location.get("city"),
+        "state": location.get("stateAbbrev") or location.get("state"),
+        "country": location.get("country"),
+        "lat": coords.get("latitude"),
+        "lon": coords.get("longitude"),
+        "elevationFt": location.get("elevation"),
+        "capacity": field.get("capacity"),
+        "turf": field.get("turfType"),
+        "roof": field.get("roofType"),
+        # 홈플레이트에서 펜스까지 거리(피트): 좌, 좌중, 중, 우중, 우
+        "fence": [field.get(key) for key in ("leftLine", "leftCenter", "center", "rightCenter", "rightLine")],
+    }
+
+
+def fetch_clubs(sport_id, season):
+    """구단과 홈구장 정보 목록. 마이너리그 구단은 parentId가 MLB 모구단 ID다."""
+    data = _get(
+        "/teams",
+        {"sportId": sport_id, "season": season, "hydrate": "venue(location,fieldInfo),division,league"},
+    )
+    clubs = []
+    for team in data["teams"]:
+        if not team.get("active", True):
+            continue
+        first_year = team.get("firstYearOfPlay")
+        clubs.append(
+            {
+                "id": team["id"],
+                "name": team["name"],
+                "abbr": team.get("abbreviation", ""),
+                "parentId": team.get("parentOrgId"),
+                "league": team.get("league", {}).get("name", ""),
+                "leagueAbbr": team.get("league", {}).get("abbreviation", ""),
+                "division": team.get("division", {}).get("name", ""),
+                "divisionShort": team.get("division", {}).get("nameShort", ""),
+                "firstYear": int(first_year) if str(first_year).isdigit() else None,
+                "venue": _venue(team.get("venue", {})),
+            }
+        )
+    return clubs
+
+
 def _fetch_splits(group, sport_id, season, pool):
     """선수별 시즌 성적 전체를 페이지 단위로 받아온다."""
     splits = []
