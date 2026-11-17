@@ -142,8 +142,18 @@
     $("awardList").hidden = false;
   }
 
+  // 같은 시즌 안에서는 상위 리그부터 보여준다. 원본에 경기 날짜가 없어 시즌 안의 시간 순서는 알 수 없다.
+  // 같은 시즌·레벨의 여러 팀은 저장된 순서(팀 약자순)를 유지한다.
+  const LEVEL_ORDER = ["MLB", "AAA", "AA", "High-A", "Single-A", "Short-Season A", "Rookie"];
+  const levelRank = (level) => {
+    const index = LEVEL_ORDER.indexOf(level);
+    return index < 0 ? LEVEL_ORDER.length : index;
+  };
+  const sortRows = (rows) =>
+    rows.slice().sort((a, b) => b.season - a.season || levelRank(a.level) - levelRank(b.level));
+
   function renderTable(group) {
-    const rows = player[group];
+    const rows = sortRows(player[group]);
     if (!rows.length) return "";
     const columns = visibleColumns(COLUMNS[group][view], rows);
     const head =
