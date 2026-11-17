@@ -14,6 +14,9 @@ DATA = Path(__file__).resolve().parent.parent / "data"
 SPORTS = {1: "MLB", 11: "AAA", 12: "AA", 13: "High-A", 14: "Single-A", 15: "Short-Season A", 16: "Rookie"}
 SPORT_IDS = {name: sport for sport, name in SPORTS.items()}
 TEAM_ABBR_FILE = "team_abbr.json"  # {"레벨ID-시즌": {"팀ID": "약자"}}
+# 은퇴 선수는 이 시즌 이후 MLB 출전 기록이 있을 때만 마이너리그 기록을 받는다(2026-11-17 사용자 결정).
+# 원본은 1990년대 초 이전 마이너리그 기록을 거의 제공하지 않는다. js/player.js의 같은 상수와 맞춘다.
+PAST_MINOR_FROM = 2000
 
 # 화면 항목 → 원본 필드. 옛 시즌은 원본에 없는 항목이 있다(예: 1914년 도루 실패, 희생플라이).
 # 없는 항목을 0으로 저장하면 실제 0과 구분할 수 없으므로 None으로 남긴다.
@@ -150,6 +153,11 @@ def is_past(player_id, data=DATA):
     return path.exists() and bool(json.loads(path.read_text(encoding="utf-8")).get("past"))
 
 
+def past_minor_eligible(rows):
+    """은퇴 선수의 MLB 기록(행 목록)에 PAST_MINOR_FROM 이후 시즌이 있는지."""
+    return any(r.get("level") == "MLB" and r["season"] >= PAST_MINOR_FROM for r in rows)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ids", nargs="+", type=int)
@@ -158,21 +166,26 @@ def main(argv=None):
     ids = args.ids or sorted(int(p.stem) for p in (DATA / "players").glob("*.json"))
     pending = [i for i in ids if args.refresh or not (DATA / "careers" / f"{i}.json").exists()]
     failed = False
-    # 은퇴 선수(past)는 MLB 기록만 받는다. 마이너리그 기록은 현역 선수만 제공한다.
+    # 은퇴 선수(past)는 MLB 기록을 먼저 받고, PAST_MINOR_FROM 이후 MLB 출전 선수만 마이너리그 기록을 받는다.
     past = {i for i in pending if is_past(i)}
-    queue = [(batch, SPORTS) for batch in chunks(sorted(set(pending) - past))]
-    queue += [(batch, {1: SPORTS[1]}) for batch in chunks(sorted(past))]
+    queue = [(batch, False) for batch in chunks(sorted(set(pending) - past))]
+    queue += [(batch, True) for batch in chunks(sorted(past))]
     done = 0
-    for batch, sports in queue:
+    for batch, is_past_batch in queue:
         rows = {i: {"batting": [], "pitching": []} for i in batch}
         try:
-            for sport in sports:
+            for sport in SPORTS:  # MLB(1)가 먼저
+                targets = batch
+                if is_past_batch and sport != 1:
+                    targets = [i for i in batch if past_minor_eligible(rows[i]["batting"] + rows[i]["pitching"])]
+                    if not targets:
+                        continue
                 response = statsapi._get("/people", {
-                    "personIds": ",".join(map(str, batch)),
+                    "personIds": ",".join(map(str, targets)),
                     "hydrate": f"stats(group=[hitting,pitching],type=[yearByYear],sportId={sport},gameType=R)",
                 })
                 people = response["people"]
-                if {p["id"] for p in people} != set(batch):
+                if {p["id"] for p in people} != set(targets):
                     raise ValueError("선수 응답 누락: 기존 커리어 유지")
                 for person in people:
                     converted = convert(person, sport)

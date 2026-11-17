@@ -14,6 +14,11 @@
   let recruitment = null;
   let view = "basic";
 
+  // 은퇴 선수 중 마이너리그 기록을 받는 기준(scripts/careers.py의 PAST_MINOR_FROM과 같게 유지)
+  const PAST_MINOR_FROM = 2000;
+  const pastWithMinors = (p) =>
+    p.batting.concat(p.pitching).some((r) => r.level === "MLB" && r.season >= PAST_MINOR_FROM);
+
   function showError(message) {
     $("status").className = "status error";
     $("status").textContent = message;
@@ -162,8 +167,10 @@
     $("careerToolbar").hidden = false;
     $("status").textContent = player.careerStatus === "no_records"
       ? "공식 데이터에서 제공된 프로 경기 기록이 없습니다."
+      : player.past && pastWithMinors(player)
+      ? "2000년 이후 MLB에 출전한 은퇴 선수는 MLB·마이너리그 정규시즌 기록을 제공합니다. 마이너리그 재활 경기도 포함되며, 해외 리그 기록과 과거 시즌 세이버 지표는 제공하지 않습니다."
       : player.past
-      ? "은퇴 선수는 MLB 정규시즌 기록만 제공합니다. 마이너리그와 해외 리그 기록은 포함하지 않으며, 과거 시즌 세이버 지표는 아직 제공하지 않습니다."
+      ? "2000년 이전에 MLB 경력을 마친 은퇴 선수는 MLB 정규시즌 기록만 제공합니다. 마이너리그와 해외 리그 기록은 포함하지 않으며, 과거 시즌 세이버 지표는 아직 제공하지 않습니다."
       : player.careerUpdated
       ? "MLB·마이너리그의 최초 제공 시즌부터 표시합니다. 해외 리그 및 원본 미제공 기록은 포함되지 않을 수 있습니다. 과거 세이버 지표는 계산 근거가 있는 경우에만 제공합니다."
       : "저장된 시즌 기록입니다. 전체 프로 커리어 데이터는 아직 수집되지 않았습니다.";

@@ -1,6 +1,7 @@
 import json
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 import careers
@@ -35,7 +36,7 @@ class CareerTests(unittest.TestCase):
         self.assertEqual(row["SB"], 0)  # 원본에 있는 0은 그대로 0
         self.assertEqual(row["PA"], 10)
 
-    def test_past_flag_marks_mlb_only_players(self):
+    def test_past_flag_marks_retired_players(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
             careers.write(root / "players/1.json", {"id": 1, "past": True})
@@ -43,6 +44,42 @@ class CareerTests(unittest.TestCase):
             self.assertTrue(careers.is_past(1, root))
             self.assertFalse(careers.is_past(2, root))  # 최근 리더보드에 있던 비활동 선수는 기존대로
             self.assertFalse(careers.is_past(3, root))  # 선수 파일이 없으면 전체 레벨
+
+    def test_past_minor_eligible_from_2000_mlb_season(self):
+        self.assertTrue(careers.past_minor_eligible([{"level": "MLB", "season": 2000}]))
+        self.assertTrue(careers.past_minor_eligible([{"level": "MLB", "season": 1995}, {"level": "MLB", "season": 2003}]))
+        self.assertFalse(careers.past_minor_eligible([{"level": "MLB", "season": 1999}]))
+        self.assertFalse(careers.past_minor_eligible([{"level": "AAA", "season": 2005}]))  # 마이너 기록은 기준이 아님
+        self.assertFalse(careers.past_minor_eligible([]))
+
+    def test_past_players_get_minor_records_only_if_mlb_after_2000(self):
+        def season_split(season):
+            return {"season": str(season), "gameType": "R", "team": {"id": 10, "name": "T"},
+                    "stat": {"gamesPlayed": 3, "plateAppearances": 5}}
+
+        mlb_seasons = {1: 1990, 2: 2004}  # 1번은 1999년까지, 2번은 2000년 이후 MLB 출전
+        calls = []
+
+        def fake_get(path, params):
+            ids = [int(i) for i in params["personIds"].split(",")]
+            sport = int(params["hydrate"].split("sportId=")[1].split(",")[0])
+            calls.append((sport, ids))
+            season = mlb_seasons if sport == 1 else {i: 2001 for i in ids}
+            return {"people": [{"id": i, "fullName": f"P{i}", "stats": [
+                {"group": {"displayName": "hitting"}, "splits": [season_split(season[i])]}]} for i in ids]}
+
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            for pid in (1, 2):
+                careers.write(root / f"players/{pid}.json", {"id": pid, "past": True, "batting": [], "pitching": []})
+            with mock.patch.object(careers, "DATA", root),                     mock.patch.object(careers, "is_past", lambda pid: True),                     mock.patch.object(careers.statsapi, "_get", fake_get),                     mock.patch.object(careers, "fill_team_abbr", lambda table, cached: True),                     mock.patch.object(careers, "load_team_abbr", lambda: {}),                     mock.patch.object(careers, "merge_cached", lambda player: None):
+                self.assertEqual(careers.main(["--ids", "1", "2"]), 0)
+            self.assertEqual(calls[0], (1, [1, 2]))
+            self.assertTrue(all(ids == [2] for sport, ids in calls[1:]))
+            self.assertEqual(len(calls), len(careers.SPORTS))
+            levels = lambda pid: {r["level"] for r in json.loads((root / f"careers/{pid}.json").read_text(encoding="utf-8"))["batting"]}
+            self.assertEqual(levels(1), {"MLB"})
+            self.assertEqual(levels(2), set(careers.SPORTS.values()))
 
     def test_chunks(self):
         self.assertEqual(careers.chunks([1, 2, 3], 2), [[1, 2], [3]])

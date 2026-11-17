@@ -50,7 +50,7 @@ def create_profiles(ids):
         if not profile["active"]:
             # 은퇴 선수의 '현재 팀'은 윈터리그 팀이나 마지막 소속 팀이라 현재 소속으로 표시하지 않는다.
             profile["team"] = ""
-            # 은퇴 선수 표시. careers.py는 이 선수들의 MLB 기록만 받는다.
+            # 은퇴 선수 표시. careers.py는 2000년 이후 MLB 출전 선수만 마이너리그 기록까지 받는다.
             profile["past"] = True
         careers.write(path, {**profile, "batting": [], "pitching": []})
         created.append(player_id)
