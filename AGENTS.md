@@ -40,7 +40,7 @@
 
 ## 실행과 검증
 
-아래 명령은 저장소 루트에서 실행한다. Python 수집 코드는 `requests`를 사용한다.
+아래 명령은 저장소 루트에서 실행한다. Python 수집 코드는 `requests`를 사용한다. 처음 받은 PC에서는 `python -m pip install -r requirements.txt`로 설치한다. 외부 패키지를 추가하면 `requirements.txt`에 버전을 고정(`==`)해 적는다.
 
 | 목적 | 명령 | 주의 사항 |
 |---|---|---|
