@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>빠따넷 · 선수단</title>
+  <meta name="description" content="MLB 구단의 시즌별 선수단과 구단 성적, 40인 로스터, 액티브 로스터, 부상자 명단">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="./">빠따넷</a>
+      <nav class="header-nav">
+        <a href="./">리더보드</a>
+        <a href="standings.html">순위</a>
+        <a href="prospects.html">유망주</a>
+        <a href="teams.html" aria-current="page">구단</a>
+        <a href="awards.html">수상</a>
+        <a href="search.html">선수 검색</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="profile" aria-label="구단">
+      <picture class="team-logo" id="teamLogo" hidden></picture>
+      <div>
+        <h1 id="teamName">선수단</h1>
+        <p class="profile-sub" id="teamSub"></p>
+      </div>
+      <p class="team-links" id="teamLinks"></p>
+    </section>
+
+    <section class="toolbar" aria-label="조회 조건">
+      <div class="toolbar-row">
+        <label class="field">
+          <span>시즌</span>
+          <select id="seasonSelect"></select>
+        </label>
+        <div class="segmented" id="viewSwitch" role="group" aria-label="명단 종류"></div>
+        <span class="career-note" id="rosterDate"></span>
+      </div>
+    </section>
+
+    <p class="status" id="status" role="status">불러오는 중...</p>
+
+    <div id="content"></div>
+
+    <p class="page-note" id="rosterNote"></p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p id="updatedText"></p>
+      <p>선수단·기록 출처: MLB Stats API. Copyright MLB Advanced Media, L.P. 비상업적 개인 프로젝트입니다.</p>
+    </div>
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script src="js/roster.js"></script>
+</body>
+</html>

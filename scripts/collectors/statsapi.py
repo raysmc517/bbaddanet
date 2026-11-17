@@ -428,3 +428,95 @@ def fetch_standings(league_ids, season, kind="regularSeason"):
             }
         )
     return groups
+
+
+def fetch_season_dates(season, sport_id=1):
+    """시즌 일정의 주요 날짜 {"regularStart", "regularEnd", "postEnd", "springStart"}. 원본에 없으면 빈 표."""
+    data = _get(f"/seasons/{season}", {"sportId": sport_id})
+    seasons = data.get("seasons") or [{}]
+    info = seasons[0]
+    return {
+        "springStart": info.get("springStartDate"),
+        "regularStart": info.get("regularSeasonStartDate"),
+        "regularEnd": info.get("regularSeasonEndDate"),
+        "postEnd": info.get("postSeasonEndDate"),
+    }
+
+
+def fetch_roster(team_id, date=None, season=None, roster_type="40Man"):
+    """MLB 구단 명단 (요청 1회). 원본의 40Man 명단은 60일 IL 선수도 포함한다.
+    roster_type "fullSeason" + season은 그 시즌 중 한 번이라도 명단에 있었던 선수 전원이다 (상태는 시즌 이후 값일 수 있다).
+
+    [{"id", "name", "num", "pos", "posType", "bats", "throws", "birthDate", "status", "statusText", "note"}]
+    status는 원본 코드(A 액티브, RM 마이너 강등, D10/D15/D60 부상자 명단 등)다.
+    """
+    params = {"rosterType": roster_type, "hydrate": "person"}
+    if date:
+        params["date"] = date
+    if season:
+        params["season"] = season
+    data = _get(f"/teams/{team_id}/roster", params)
+    rows = []
+    for item in data.get("roster", []):
+        person = item.get("person") or {}
+        if not person.get("id"):
+            continue
+        position = item.get("position") or person.get("primaryPosition") or {}
+        status = item.get("status") or {}
+        rows.append(
+            {
+                "id": person["id"],
+                "name": person.get("fullName", ""),
+                "num": item.get("jerseyNumber") or "",
+                "pos": position.get("abbreviation", ""),
+                "posType": position.get("type", ""),
+                "bats": (person.get("batSide") or {}).get("code", ""),
+                "throws": (person.get("pitchHand") or {}).get("code", ""),
+                "birthDate": person.get("birthDate"),
+                "status": status.get("code", ""),
+                "statusText": status.get("description", ""),
+                "note": item.get("note") or "",
+            }
+        )
+    return rows
+
+
+BAT_KEYS = {
+    "G": "gamesPlayed", "PA": "plateAppearances", "H": "hits", "HR": "homeRuns", "RBI": "rbi",
+    "SB": "stolenBases", "BB": "baseOnBalls", "SO": "strikeOuts",
+}
+PIT_KEYS = {
+    "G": "gamesPitched", "GS": "gamesStarted", "W": "wins", "L": "losses", "SV": "saves", "HLD": "holds",
+    "outs": "outs", "SO": "strikeOuts", "BB": "baseOnBalls",
+}
+
+
+def fetch_team_season_stats(team_id, season, group):
+    """한 구단에서 거둔 선수별 정규시즌 성적 (요청 1회). 시즌 중 이적한 선수는 이 구단 기록만 들어 있다.
+    {선수 ID: {"name", "pos", 기록...}}. group은 'hitting' 또는 'pitching'."""
+    data = _get(
+        "/stats",
+        {
+            "stats": "season", "group": group, "season": season, "sportId": 1,
+            "teamId": team_id, "playerPool": "ALL", "limit": 500,
+        },
+    )
+    block = data["stats"][0] if data.get("stats") else {"splits": []}
+    keys = BAT_KEYS if group == "hitting" else PIT_KEYS
+    result = {}
+    for split in block["splits"]:
+        stat = split.get("stat", {})
+        row = {key: stat.get(source, 0) for key, source in keys.items()}
+        if group == "hitting":
+            row.update({key: _rate(stat.get(key.lower())) for key in ("AVG", "OBP", "SLG", "OPS")})
+        else:
+            row.update({"ERA": _rate(stat.get("era")), "WHIP": _rate(stat.get("whip"))})
+        player = split.get("player", {})
+        result[player["id"]] = dict(row, name=player.get("fullName", ""), pos=split.get("position", {}).get("abbreviation", ""))
+    return result
+
+
+def fetch_transactions(team_id, start_date, end_date):
+    """구단의 선수 이동 기록 원본 목록 (요청 1회). 산하 마이너리그 배정 등도 섞여 있으므로 쓰는 쪽에서 거른다."""
+    data = _get("/transactions", {"teamId": team_id, "startDate": start_date, "endDate": end_date})
+    return data.get("transactions", [])

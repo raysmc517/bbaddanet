@@ -625,3 +625,54 @@ table.stats {
   #levelSwitch { flex-wrap: wrap; }
   #levelSwitch button { padding-left: 10px; padding-right: 10px; }
 }
+
+/* 구단 선수단 */
+.stats.roster .col-name { left: 0; border-right: 0; }
+.stats.roster tr.group-row td {
+  background: var(--surface-alt);
+  color: var(--text-sub);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+}
+.idle-list {
+  margin: 0;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  line-height: 1.9;
+}
+.idle-list a { color: inherit; }
+
+/* 선수 이동 */
+.move-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 12px;
+  margin-bottom: 10px;
+}
+.move-filter { flex-wrap: wrap; }
+.move-filter button { white-space: nowrap; }
+.move-tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--surface-alt);
+  color: var(--text-sub);
+}
+.move-tag.move-up { background: var(--accent); color: #fff; }
+.move-tag.move-down { background: #f3e3d3; color: #8a4b12; }
+.move-tag.move-il { background: #f6dede; color: #a12a2a; }
+.move-tag.move-trans { background: #dfe8f5; color: #23508a; }
+@media (prefers-color-scheme: dark) {
+  .move-tag.move-up { color: #0c1a12; }
+  .move-tag.move-down { background: #3a2a1a; color: #e8b98a; }
+  .move-tag.move-il { background: #3b2020; color: #f0a5a5; }
+  .move-tag.move-trans { background: #1e2b3d; color: #9cc0ef; }
+}
+.stats.moves td.move-detail { white-space: normal; min-width: 260px; }
+.stats.moves .col-name { position: static; border-right: 0; } /* 이름이 세 번째 열이라 고정하지 않는다 */

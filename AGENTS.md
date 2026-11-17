@@ -26,12 +26,13 @@
 - `scripts/build.py`: 데이터 생성 진입점. `scripts/prospects.py`: 유망주 스냅샷과 화면용 데이터. `scripts/validate.py`: MLB 공식 값과 비교.
 - `scripts/teams.py`: MLB 구단·산하 구단·구장 정보와 구단 역사(`data/teams.json`). `scripts/awards.py`: 수상 기록·명예의 전당(`data/awards.json`).
 - `scripts/past_players.py`: 은퇴 선수 등 과거 MLB 선수 추가. `scripts/search_index.py`: 선수 검색 색인(`data/search.json`).
-- `scripts/standings.py`: 리그·지구별 순위(`data/standings_{시즌}.json`).
-- `index.html`, `standings.html`, `player.html`, `prospects.html`, `teams.html`, `team.html`, `awards.html`, `search.html`: 화면 진입점. `js/common.js`: 공통 표시 형식과 열 정의. `css/style.css`: 스타일.
+- `scripts/standings.py`: 리그·지구별 순위(`data/standings_{시즌}.json`). `scripts/rosters.py`: MLB 구단 선수단(`data/rosters/{시즌}/{구단 ID}.json`).
+- `index.html`, `standings.html`, `roster.html`, `player.html`, `prospects.html`, `teams.html`, `team.html`, `awards.html`, `search.html`: 화면 진입점. `js/common.js`: 공통 표시 형식과 열 정의. `css/style.css`: 스타일.
 - `data/`: 생성된 JSON과 랭킹 기록. 데이터 오류는 수집·계산 원인을 먼저 고친다. 대량 JSON을 손으로 수정하지 않는다.
 - 기존 코드 스타일과 UTF-8 인코딩을 유지한다. JSON 필드 변경 시 생성 코드, 소비하는 화면, 기존 데이터와의 호환성을 함께 확인한다.
 - 브라우저는 저장된 JSON을 읽는다. 원본 사이트의 수집 요청은 Python에서 수행한다.
 - 표의 정렬·필터·검색, 선수 링크, 모바일 가로 스크롤을 보존한다. 누락된 값과 실제 0을 구분한다.
+- 시즌·월 등 기간 선택 상자는 최신 기간이 먼저 오는 내림차순으로 둔다(2026-11-17 사용자 결정).
 
 ## 야구 데이터 원칙
 
@@ -104,6 +105,15 @@
 - `python scripts/standings.py`: MLB와 AAA~Single-A의 2024~2026 순위를 시즌별 파일로 만든다(시즌당 요청 약 17회). `--current-season`은 최근 시즌만 받으며 자동 갱신이 매일 실행한다. 실패하거나 MLB 구단이 30개가 아니면 그 시즌 파일을 유지한다.
 - 시즌 목록(`SEASONS`)은 `build.py`와 같게 유지한다. 기대 승패는 자체 계산(피타고리안, 지수 1.83)이다.
 - `python -m unittest discover -s scripts -p test_standings.py`: 기대 승패, 리그 묶기, 빈 응답·구단 수 검사를 검증한다.
+
+## 구단 선수단 실행
+
+- `python scripts/rosters.py`: 2024~2026 시즌마다 MLB 30개 구단의 시즌 선수단(원본 fullSeason)과 그 구단에서의 정규시즌 성적을 `data/rosters/{시즌}/{구단 ID}.json`으로 만든다. 최근 시즌 파일에는 기준일의 40인 명단(상태 포함, `current`)도 넣는다. 요청은 시즌당 약 121회, 최근 시즌은 31회 더. `--current-season`은 최근 시즌만 받으며 자동 갱신이 매일 실행한다. `--date 2026-08-01`로 40인 명단 기준일을 바꿀 수 있다. 한 구단이라도 실패하거나 인원이 비정상이면 그 시즌 파일을 하나도 바꾸지 않는다.
+- 원본 40인 명단은 60일 IL 선수를 포함하므로 시즌 중 40인 수에서 뺀다. 액티브 로스터는 정규시즌·포스트시즌(`phase`)에만 보여준다. 비시즌에는 원본의 액티브 표시도 40인으로 보여준다.
+- 부상 내용은 원본 영문을 그대로 보여주고 번역하거나 추정하지 않는다.
+- 선수 이동(`moves`)은 구단·시즌당 `/transactions` 1회로 받고 `classify_move`가 MLB 관련 이동만 남긴다. 분류를 바꾸면 `js/roster.js`의 `MOVE_GROUPS`·`MOVE_LABEL`도 함께 고친다.
+- 시즌 선수단의 기록은 `teamId`로 받은 구단 기록이라 이적 선수는 그 구단 기록만 들어간다. 리더보드의 시즌 합계와 다를 수 있다.
+- `python -m unittest discover -s scripts -p test_rosters.py`: 시즌 단계, 정렬, 명단 크기 검사, 명단과 기록 합치기, 선수 이동 분류·중복 제거를 검증한다.
 
 ## 입단 정보 실행
 

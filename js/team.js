@@ -106,6 +106,7 @@
     const links = [];
     const board = boardLink(team, season);
     if (board) links.push('<a href="' + board + '">' + season + " 선수 성적</a>");
+    if (isMajor) links.push('<a href="roster.html?id=' + team.id + '">선수단</a>');
     if (isMajor) links.push('<a href="prospects.html?list=' + encodeURIComponent(team.abbr) + '">유망주 Top 30</a>');
     links.push('<a href="teams.html">구단 목록</a>');
     $("teamLinks").innerHTML = links.join("");
