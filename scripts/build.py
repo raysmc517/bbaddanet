@@ -243,7 +243,7 @@ def main():
         help=f"가장 최근 시즌({SEASONS[0]})만 다시 받는다. 끝난 시즌은 저장된 파일을 그대로 쓴다 (일일 자동 갱신용)",
     )
     args = parser.parse_args()
-    seasons = SEASONS[:1] if args.current_season else SEASONS
+    collect_seasons = SEASONS[:1] if args.current_season else SEASONS
 
     updated = datetime.now(timezone.utc).isoformat(timespec="seconds")
     meta = {"updated": updated, "leagues": []}
@@ -253,7 +253,7 @@ def main():
             print(f"{league['name']} 수집 중...")
             for level in league["levels"]:
                 if not args.levels or (level["id"] or league["id"]) in args.levels:
-                    ok = collect_level(league, level, updated, seasons) and ok
+                    ok = collect_level(league, level, updated, collect_seasons) and ok
         seasons = existing_seasons(league)
         if seasons:
             entry = {"id": league["id"], "name": league["name"], "seasons": seasons}
