@@ -208,9 +208,13 @@
     return visibleColumns(COLUMNS[state.group][state.view], players);
   }
 
+  // 악센트와 대소문자를 무시한다 (Rodriguez → Rodríguez). 한글은 그대로 둔다.
+  const fold = (text) => String(text || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const matchesName = (p, keyword) => fold(p.nameKo).includes(keyword) || fold(p.name).includes(keyword);
+
   function filteredPlayers() {
     const minTest = MIN_OPTIONS[state.group].find((option) => option.value === state.min).test;
-    const keyword = state.search.trim().toLowerCase();
+    const keyword = fold(state.search.trim());
     return players.filter((p) => {
       if (!minTest(p)) return false;
       if (state.sub && p.lg !== state.sub) return false;
@@ -219,7 +223,7 @@
         if (state.group === "batting" && p.pos !== state.pos) return false;
         if (state.group === "pitching" && (state.pos === "SP") !== isStarter(p)) return false;
       }
-      if (keyword && !(p.nameKo || "").toLowerCase().includes(keyword) && !p.name.toLowerCase().includes(keyword)) return false;
+      if (keyword && !matchesName(p, keyword)) return false;
       return true;
     });
   }
@@ -305,6 +309,32 @@
     el.status.textContent =
       levelName() + (state.sub ? " " + state.sub : "") + " " + state.season + " " + (state.group === "batting" ? "타자" : "투수") + " · " + list.length + "명";
     writeUrl();
+    showOtherGroupMatches();
+  }
+
+  // 검색 중이면 반대쪽(타자↔투수) 기록에서 같은 이름이 몇 명인지 알려 주고 바로 넘어갈 수 있게 한다.
+  // 반대쪽은 최소 출장 조건 없이 센다. 다른 조건으로 다시 그려졌으면 늦게 온 결과는 버린다.
+  let otherToken = 0;
+  async function showOtherGroupMatches() {
+    const token = ++otherToken;
+    const keyword = fold(state.search.trim());
+    if (!keyword) return;
+    const other = state.group === "batting" ? "pitching" : "batting";
+    const folder = "data/" + state.league + "/" + (state.level ? state.level + "/" : "");
+    let count = 0;
+    try {
+      const data = await loadJson(folder + other + "_" + state.season + ".json");
+      count = data.players.filter((p) => matchesName(p, keyword)).length;
+    } catch (error) {
+      return;
+    }
+    if (token !== otherToken || !count) return;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "link-button";
+    button.textContent = (other === "batting" ? "타자" : "투수") + " 기록에서 " + count + "명 보기";
+    button.addEventListener("click", () => switchGroup(other));
+    el.status.append(" · ", button);
   }
 
   // ---------- 데이터 불러오기 ----------
@@ -333,6 +363,14 @@
       location.protocol === "file:"
         ? "파일을 직접 열면 데이터를 읽을 수 없습니다. 프로젝트 폴더에서 python -m http.server 8000 을 실행한 뒤 http://localhost:8000 으로 접속하세요."
         : message;
+  }
+
+  // 타자↔투수 전환. 검색 중이면 출장 조건 없이 이름이 맞는 선수를 모두 보여준다.
+  function switchGroup(group) {
+    Object.assign(state, { group, pos: "", min: state.search.trim() ? "0" : "q", page: 1 });
+    resetSort();
+    setPressed(el.groupSwitch, state.group);
+    loadPlayers();
   }
 
   function resetSort() {
@@ -365,10 +403,7 @@
     el.groupSwitch.addEventListener("click", (event) => {
       const button = event.target.closest("button");
       if (!button || button.dataset.value === state.group) return;
-      Object.assign(state, { group: button.dataset.value, pos: "", min: "q", page: 1 });
-      resetSort();
-      setPressed(el.groupSwitch, state.group);
-      loadPlayers();
+      switchGroup(button.dataset.value);
     });
 
     el.viewSwitch.addEventListener("click", (event) => {
@@ -392,7 +427,18 @@
     el.team.addEventListener("change", onFilter("team", el.team));
     el.pos.addEventListener("change", onFilter("pos", el.pos));
     el.min.addEventListener("change", onFilter("min", el.min));
-    el.search.addEventListener("input", onFilter("search", el.search));
+    // 검색을 새로 시작하면 리그·팀·포지션·출장 조건을 풀어 이름이 맞는 선수를 모두 보여준다.
+    // 검색하는 동안 다시 고른 조건은 그대로 적용한다.
+    el.search.addEventListener("input", () => {
+      const starting = !state.search.trim() && el.search.value.trim();
+      state.search = el.search.value;
+      state.page = 1;
+      if (starting) {
+        Object.assign(state, { sub: "", team: "", pos: "", min: "0" });
+        renderDataFilters();
+      }
+      renderTable();
+    });
 
     el.head.addEventListener("click", (event) => {
       const th = event.target.closest("th.sortable");

@@ -150,6 +150,15 @@ body {
   min-height: 20px;
 }
 .status.error { color: #c0392b; }
+.link-button {
+  font: inherit;
+  color: var(--accent);
+  background: none;
+  border: 0;
+  padding: 0;
+  text-decoration: underline;
+  cursor: pointer;
+}
 
 /* 표 */
 .table-scroll {
