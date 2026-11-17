@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>빠따넷 · 순위</title>
+  <meta name="description" content="MLB 지구·와일드카드 순위와 마이너리그 리그별 순위">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="./">빠따넷</a>
+      <nav class="header-nav">
+        <a href="./">리더보드</a>
+        <a href="standings.html" aria-current="page">순위</a>
+        <a href="prospects.html">유망주</a>
+        <a href="teams.html">구단</a>
+        <a href="awards.html">수상</a>
+        <a href="search.html">선수 검색</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="toolbar" aria-label="조회 조건">
+      <div class="toolbar-row">
+        <div class="segmented" id="levelSwitch" role="group" aria-label="레벨"></div>
+        <label class="field">
+          <span>시즌</span>
+          <select id="seasonSelect"></select>
+        </label>
+        <label class="field" id="leagueField">
+          <span>리그</span>
+          <select id="leagueSelect"></select>
+        </label>
+        <div class="segmented" id="halfSwitch" role="group" aria-label="기간" hidden>
+          <button type="button" data-value="">시즌 전체</button>
+          <button type="button" data-value="firstHalf">전반기</button>
+          <button type="button" data-value="secondHalf">후반기</button>
+        </div>
+      </div>
+    </section>
+
+    <p class="status" id="status" role="status">불러오는 중...</p>
+
+    <div id="content"></div>
+
+    <p class="page-note" id="legend"></p>
+    <p class="page-note">기대 승패는 득점과 실점으로 계산한 피타고리안 승률(지수 1.83)에 경기 수를 곱한 빠따넷 자체 계산값이고, 차이는 실제 승수에서 기대 승수를 뺀 값입니다. 열 제목을 누르면 표 안에서 정렬하고, 순위 열을 누르면 원래 순서로 돌아갑니다. 정규시즌 기록만 포함합니다.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p id="updatedText"></p>
+      <p>순위 출처: MLB Stats API. Copyright MLB Advanced Media, L.P. 비상업적 개인 프로젝트입니다.</p>
+    </div>
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script src="js/standings.js"></script>
+</body>
+</html>

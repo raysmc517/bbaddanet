@@ -329,3 +329,100 @@ def collect(group, sport_id, season, teams=None):
     splits = _fetch_splits(group, sport_id, season, "ALL")
     convert = _batter if group == "hitting" else _pitcher
     return [convert(split, teams, qualified_ids) for split in splits]
+
+
+def fetch_leagues(sport_id, season):
+    """레벨의 리그 목록. [{"id", "name", "abbr", "wildCards", "split", "games"}]
+    wildCards: 와일드카드 진출 팀 수(없으면 0), split: 전·후반기로 나누는 리그인지."""
+    data = _get("/league", {"sportId": sport_id, "season": season})
+    leagues = []
+    for league in data.get("leagues", []):
+        if not league.get("active", True):
+            continue
+        leagues.append(
+            {
+                "id": league["id"],
+                "name": league.get("name", ""),
+                "abbr": league.get("abbreviation", ""),
+                "wildCards": league.get("numWildcardTeams", 0) if league.get("hasWildCard") else 0,
+                "split": bool(league.get("hasSplitSeason")),
+                "games": league.get("numGames"),
+            }
+        )
+    return leagues
+
+
+def _split_record(team, kind):
+    """splitRecords에서 [승, 패]. 없으면 None."""
+    for item in team.get("records", {}).get("splitRecords", []):
+        if item.get("type") == kind:
+            return [item.get("wins", 0), item.get("losses", 0)]
+    return None
+
+
+def _number(value):
+    """'5', '+1.0', '-' 같은 원본 표기를 숫자로. 값이 없거나 '-'이면 None."""
+    try:
+        return float(str(value).replace("+", ""))
+    except (TypeError, ValueError):
+        return None
+
+
+def fetch_standings(league_ids, season, kind="regularSeason"):
+    """리그들의 순위 (요청 1회). kind: regularSeason, firstHalf, secondHalf.
+
+    지구별 묶음 목록 [{"leagueId", "division", "divisionShort", "teams": [...]}]을 원본 순서대로 돌려준다.
+    지구가 없는 리그는 division이 None이다. 승차는 원본 표기를 숫자로 바꾸고 1위(원본 '-')는 0이다.
+    와일드카드 승차는 원본처럼 진출권 안쪽 팀이 양수('+3.0' → 3.0)라 부호를 뒤집어 뒤처진 만큼 양수로 둔다.
+    """
+    data = _get(
+        "/standings",
+        {
+            "leagueId": ",".join(str(i) for i in league_ids),
+            "season": season,
+            "standingsTypes": kind,
+            "hydrate": "team,division",
+        },
+    )
+    groups = []
+    for record in data.get("records", []):
+        division = record.get("division") or {}
+        teams = []
+        for team in record.get("teamRecords", []):
+            info = team.get("team", {})
+            wc_gb = team.get("wildCardGamesBack")
+            wc_back = None
+            if team.get("wildCardRank"):
+                wc_back = 0.0 if wc_gb in (None, "-") else -_number(wc_gb) if str(wc_gb).startswith("+") else _number(wc_gb)
+            streak = team.get("streak", {}).get("streakCode")
+            magic = team.get("magicNumber")
+            teams.append(
+                {
+                    "id": info.get("id"),
+                    "name": info.get("name", ""),
+                    "abbr": info.get("abbreviation", ""),
+                    "parentId": info.get("parentOrgId"),
+                    "W": team.get("wins", 0),
+                    "L": team.get("losses", 0),
+                    "GB": 0.0 if team.get("gamesBack") == "-" else _number(team.get("gamesBack")),
+                    "wcRank": int(team["wildCardRank"]) if str(team.get("wildCardRank", "")).isdigit() else None,
+                    "wcGB": wc_back,
+                    "clinch": team.get("clinchIndicator") or "",
+                    "home": _split_record(team, "home"),
+                    "away": _split_record(team, "away"),
+                    "last10": _split_record(team, "lastTen"),
+                    "streak": streak or "",
+                    "RS": team.get("runsScored"),
+                    "RA": team.get("runsAllowed"),
+                    "magic": int(magic) if str(magic).isdigit() else None,
+                }
+            )
+        groups.append(
+            {
+                "leagueId": record.get("league", {}).get("id"),
+                "division": division.get("name"),
+                "divisionShort": division.get("nameShort"),
+                "teams": teams,
+            }
+        )
+    return groups

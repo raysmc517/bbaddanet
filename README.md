@@ -19,6 +19,7 @@ MiLB 성적은 MLB Pipeline 유망주 랭킹과 연결해 유망주의 순위와
 |---|---|---|
 | 리더보드: 리그·시즌·레벨·타자/투수 선택, 정렬, 팀·포지션·최소 타석(이닝) 필터, 기본/세이버 보기 전환 | `index.html` | 구현 |
 | 선수 페이지: 프로필, 지명·계약 정보, 마이너리그를 포함한 연도별 커리어, Pipeline 순위 | `player.html` | 구현 |
+| 순위: MLB 지구·와일드카드 순위, 마이너리그 리그·지구별 순위와 전·후반기 순위, 자체 계산 피타고리안 기대 승패 | `standings.html` | 구현 |
 | 유망주: Pipeline Top 100·팀별 Top 30과 현재 레벨의 MiLB 성적, 주차별 순위 변동 | `prospects.html` | 구현 |
 | 구단·구장: MLB 30개 구단과 산하 마이너리그 구단의 홈구장 정보, 자체 계산 파크팩터, 구단 역사(월드시리즈 우승, 영구결번, 명예의 전당, 소개 글) | `teams.html`, `team.html` | 구현 |
 | 수상 기록: 명예의 전당과 MVP·사이영상·신인왕·골드글러브·올스타 등 역대 수상자, 선수 페이지의 수상 경력 | `awards.html`, `player.html` | 구현 |
@@ -113,6 +114,7 @@ python -m http.server 8000
 | 지명·계약 정보 생성 | `python scripts/recruitment.py` |
 | 수상 기록·명예의 전당 생성 | `python scripts/awards.py` |
 | 구단·구장 정보와 구단 역사 생성 (수상 기록 뒤에 실행) | `python scripts/teams.py` |
+| 리그·지구별 순위 생성 (`--current-season`으로 최근 시즌만) | `python scripts/standings.py` |
 | 은퇴 선수 등 과거 MLB 선수 추가 | `python scripts/past_players.py` |
 | 선수 검색 색인 생성 | `python scripts/search_index.py` |
 | MLB 공식 값과 대조 | `python scripts/validate.py 2026` |
@@ -168,11 +170,13 @@ bbaddanet/
 │  ├─ teams.json       구단·구장·구단 역사
 │  ├─ team_notes.json  구단 소개 글 (직접 작성해 관리)
 │  ├─ awards.json      수상 기록·명예의 전당
+│  ├─ standings_{시즌}.json  레벨·리그·지구별 순위
 │  ├─ recruitment.json 지명·계약 정보
 │  ├─ search.json      선수 검색 색인
 │  └─ meta.json        리그·시즌 목록, 마지막 갱신 시각
 ├─ index.html          리더보드
 ├─ player.html         선수 페이지
+├─ standings.html      순위
 ├─ prospects.html      유망주
 ├─ teams.html          구단 목록
 ├─ team.html           구단·구장 상세

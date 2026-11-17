@@ -596,3 +596,32 @@ table.stats {
   .stats th, .stats td { padding: 7px 8px; }
   .player-photo { width: 64px; height: 96px; }
 }
+
+/* 순위 */
+.standings-league { margin-bottom: 8px; }
+.standings-title {
+  font-size: 19px;
+  margin: 20px 0 4px;
+}
+.standings-block h2 {
+  font-size: 15px;
+  margin: 14px 0 6px;
+  color: var(--text-sub);
+}
+.stats.standings .col-name { min-width: 230px; }
+.stats.standings td:not(.col-rank):not(.col-name),
+.stats.standings th:not(.col-rank):not(.col-name) { min-width: 58px; }
+.stats.standings tr.cutoff td { border-bottom: 2px solid var(--text-sub); }
+.clinch {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+#levelSwitch button { white-space: nowrap; }
+@media (max-width: 640px) {
+  .stats.standings .col-name { min-width: 0; }
+  .stats.standings td:not(.col-rank):not(.col-name),
+  .stats.standings th:not(.col-rank):not(.col-name) { min-width: 0; }
+  #levelSwitch { flex-wrap: wrap; }
+  #levelSwitch button { padding-left: 10px; padding-right: 10px; }
+}

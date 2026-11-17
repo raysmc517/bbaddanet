@@ -3,6 +3,7 @@
 # - 매일 한국 시간 16:00(UTC 07:00)에 최근 시즌 성적을 다시 받아 data/를 커밋하고 사이트를 배포한다.
 #   미국 동부 새벽 2~3시, 서부 자정 무렵이라 전날 경기가 끝난 뒤다. GitHub 사정으로 몇십 분 늦어질 수 있다.
 # - 끝난 시즌, 은퇴 선수(past_players.py), 과거 커리어(careers.py --refresh)는 거의 바뀌지 않으므로 여기서 돌리지 않는다.
+# - 최근 시즌 순위(standings.py --current-season)도 매일 받는다.
 # - Pipeline 랭킹은 build.py가 주 1회만 새로 받는다.
 # - 수상 기록(awards.py)과 구단 정보(teams.py)는 월요일에만 다시 받는다.
 # - main에 push하면 수집 없이 배포만 한다. Actions 탭에서 직접 실행(workflow_dispatch)하면 수집과 배포를 한다.
@@ -51,6 +52,14 @@ jobs:
           python scripts/build.py --current-season
           echo "code=$?" >> "$GITHUB_OUTPUT"
 
+      # 최근 시즌 순위 (요청 약 17회). 실패하면 그 시즌 파일을 유지한다.
+      - name: 최근 시즌 순위
+        id: standings
+        run: |
+          set +e
+          python scripts/standings.py --current-season
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+
       # 수상 기록과 구단 역사(우승·영구결번 등)는 자주 바뀌지 않으므로 월요일(UTC)에만 다시 받는다.
       # 두 스크립트 모두 실패하면 기존 파일을 유지한다. teams.py는 awards.json을 읽으므로 뒤에 실행한다.
       - name: 수상 기록·구단 정보 (주 1회)
@@ -80,9 +89,9 @@ jobs:
           git push origin HEAD:main
 
       - name: 수집 실패 알림
-        if: steps.build.outputs.code != '0' || steps.weekly.outputs.code != '0'
+        if: steps.build.outputs.code != '0' || steps.standings.outputs.code != '0' || steps.weekly.outputs.code != '0'
         run: |
-          echo "::warning::수집 일부 실패 (build.py 코드 ${{ steps.build.outputs.code }}, 주간 수집 코드 ${{ steps.weekly.outputs.code }}). 실패한 부분은 직전 데이터를 유지했다. 로그를 확인한다."
+          echo "::warning::수집 일부 실패 (build.py 코드 ${{ steps.build.outputs.code }}, 순위 코드 ${{ steps.standings.outputs.code }}, 주간 수집 코드 ${{ steps.weekly.outputs.code }}). 실패한 부분은 직전 데이터를 유지했다. 로그를 확인한다."
 
   deploy:
     needs: update
