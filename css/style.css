@@ -367,6 +367,16 @@ table.stats {
   padding: 20px 24px;
   margin-bottom: 16px;
 }
+.player-photo {
+  flex: none;
+  align-self: center;
+  width: 84px;
+  height: 126px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: var(--border);
+}
+.player-photo[hidden] { display: none; }
 .team-logo { flex: none; align-self: center; }
 .team-logo[hidden] { display: none; }
 .team-logo img { display: block; width: 72px; height: 72px; object-fit: contain; }
@@ -566,4 +576,5 @@ table.stats {
   .field-search { margin-left: 0; flex: 1 1 100%; }
   .field-search input { width: 100%; }
   .stats th, .stats td { padding: 7px 8px; }
+  .player-photo { width: 64px; height: 96px; }
 }

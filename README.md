@@ -67,6 +67,7 @@ MiLB 성적은 MLB Pipeline 유망주 랭킹과 연결해 유망주의 순위와
 | MiLB (AAA·AA·High-A·Single-A, 커리어용 하위 레벨) | MLB Stats API | API 호출 |
 | 유망주 랭킹 | MLB Pipeline (`mlb.com/prospects`) | 순위·포지션·예상 데뷔 연도만 주 1회 스냅샷. 리포트 본문과 사진은 수집하지 않음 |
 | 구단·구장 | MLB Stats API | API 호출. 사진·로고는 수집하지 않음(MLB 구단 로고는 공식 이미지 주소로 표시). 지도는 외부 링크로 연결 |
+| 선수 얼굴 사진 | MLB 공식 이미지 서버 (`img.mlbstatic.com`) | 저장하지 않고 선수 ID별 이미지 주소로 표시 |
 | 수상 기록·명예의 전당·영구결번 | MLB Stats API | API 호출 (상 하나당 1회, 주 1회 갱신) |
 
 - MLB·MiLB·Pipeline은 같은 MLB 선수 ID로 연결합니다. 이름만으로 선수를 합치지 않습니다.

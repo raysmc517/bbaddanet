@@ -46,10 +46,23 @@
     }
   }
 
+  // MLB 공식 얼굴 사진. 파일을 저장하지 않고 MLB 이미지 서버 주소로만 표시한다.
+  // 사진이 없는 선수는 서버가 실루엣 기본 이미지를 주고, 이미지를 못 받으면 사진 자리를 숨긴다.
+  const PHOTO_URL = "https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/";
+  function renderPhoto(name) {
+    const img = $("playerPhoto");
+    if (!img) return; // 예전 player.html이 캐시돼 있어도 나머지 화면은 그린다
+    img.addEventListener("error", () => { img.hidden = true; }, { once: true });
+    img.alt = name + " 사진";
+    img.src = PHOTO_URL + encodeURIComponent(player.id) + "/headshot/67/current";
+    img.hidden = false;
+  }
+
   function renderProfile() {
     const name = player.nameKo || player.name;
     document.title = "빠따넷 · " + name;
     $("playerName").textContent = name;
+    renderPhoto(name);
 
     renderSub(null);
 
