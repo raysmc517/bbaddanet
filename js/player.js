@@ -24,13 +24,34 @@
     $("status").textContent = message;
   }
 
+  // 소속 팀·포지션·등번호 줄. teamId가 있으면 팀 이름을 구단 페이지 링크로 만든다.
+  function renderSub(teamId) {
+    const team = player.team
+      ? (teamId ? '<a href="team.html?id=' + teamId + '">' + escapeHtml(player.team) + "</a>" : escapeHtml(player.team))
+      : "";
+    const sub = [team, escapeHtml(player.pos || ""), player.number ? "#" + escapeHtml(player.number) : ""].filter(Boolean);
+    $("playerSub").innerHTML = sub.join(" · ") + (player.past ? " (은퇴)" : player.active ? "" : " (비활동)");
+  }
+
+  // 선수 파일에는 팀 이름만 있으므로 구단 정보(MLB와 산하 구단)에서 같은 이름의 구단 ID를 찾는다.
+  // 윈터리그 팀처럼 구단 정보에 없는 팀은 링크 없이 둔다.
+  function linkTeam(data) {
+    if (!player.team) return;
+    for (const club of data.clubs) {
+      const found = [club].concat(club.affiliates || []).find((t) => t.name === player.team);
+      if (found) {
+        renderSub(found.id);
+        return;
+      }
+    }
+  }
+
   function renderProfile() {
     const name = player.nameKo || player.name;
     document.title = "빠따넷 · " + name;
     $("playerName").textContent = name;
 
-    const sub = [player.team, player.pos, player.number ? "#" + player.number : ""].filter(Boolean);
-    $("playerSub").textContent = sub.join(" · ") + (player.past ? " (은퇴)" : player.active ? "" : " (비활동)");
+    renderSub(null);
 
     const body = [player.heightCm ? player.heightCm + "cm" : "", player.weightKg ? player.weightKg + "kg" : ""].filter(Boolean);
     const hands = (HAND[player.throws] ? HAND[player.throws] + "투" : "") + (HAND[player.bats] ? HAND[player.bats] + "타" : "");
@@ -164,6 +185,7 @@
     renderCareer();
     // 수상 기록은 없어도 나머지 화면에 영향이 없으므로 따로 불러온다
     loadJson("data/awards.json").then(renderAwards).catch(() => {});
+    loadJson("data/teams.json").then(linkTeam).catch(() => {});
     $("careerToolbar").hidden = false;
     $("status").textContent = player.careerStatus === "no_records"
       ? "공식 데이터에서 제공된 프로 경기 기록이 없습니다."
