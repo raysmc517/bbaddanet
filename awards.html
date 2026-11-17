@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>빠따넷 · 수상 기록</title>
+  <meta name="description" content="MLB 명예의 전당과 MVP, 사이영상, 신인왕 등 역대 수상 기록">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="./">빠따넷</a>
+      <nav class="header-nav">
+        <a href="./">리더보드</a>
+        <a href="prospects.html">유망주</a>
+        <a href="teams.html">구단</a>
+        <a href="awards.html" aria-current="page">수상</a>
+        <a href="search.html">선수 검색</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="toolbar" aria-label="조회 조건">
+      <div class="toolbar-row">
+        <label class="field">
+          <span>상</span>
+          <select id="awardSelect"></select>
+        </label>
+        <label class="field" id="leagueField">
+          <span>리그</span>
+          <select id="leagueSelect">
+            <option value="">전체</option>
+            <option value="AL">아메리칸리그</option>
+            <option value="NL">내셔널리그</option>
+          </select>
+        </label>
+        <label class="field">
+          <span id="seasonLabel">시즌</span>
+          <select id="seasonSelect"></select>
+        </label>
+        <label class="field field-search">
+          <span>선수·팀 검색</span>
+          <input type="search" id="searchInput" placeholder="영문 이름, 팀 약칭" autocomplete="off">
+        </label>
+      </div>
+    </section>
+
+    <p class="status" id="status" role="status">불러오는 중...</p>
+
+    <div class="table-scroll">
+      <table class="stats awards" id="awardTable">
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    <p class="page-note">MLB 공식 자료에 등록된 수상 기록입니다. 팀은 수상 시즌의 소속 팀이며, 명예의 전당은 명판 기준 팀으로 원본에 없으면 비워 둡니다. 포지션은 선수의 주 포지션으로, 수상 당시 포지션과 다를 수 있습니다. 감독·구단주·심판 등 선수 기록이 없는 인물은 선수 페이지가 없습니다.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p id="updatedText"></p>
+      <p>수상 기록 출처: MLB Stats API. Copyright MLB Advanced Media, L.P. 비상업적 개인 프로젝트입니다.</p>
+    </div>
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script src="js/awards.js"></script>
+</body>
+</html>

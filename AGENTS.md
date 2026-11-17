@@ -24,9 +24,9 @@
 
 - `scripts/collectors/`: 외부 데이터 수집. `scripts/sabermetrics/`: 지표 및 파크팩터 계산.
 - `scripts/build.py`: 데이터 생성 진입점. `scripts/prospects.py`: 유망주 스냅샷과 화면용 데이터. `scripts/validate.py`: MLB 공식 값과 비교.
-- `scripts/teams.py`: MLB 구단·산하 구단·구장 정보(`data/teams.json`).
+- `scripts/teams.py`: MLB 구단·산하 구단·구장 정보와 구단 역사(`data/teams.json`). `scripts/awards.py`: 수상 기록·명예의 전당(`data/awards.json`).
 - `scripts/past_players.py`: 은퇴 선수 등 과거 MLB 선수 추가. `scripts/search_index.py`: 선수 검색 색인(`data/search.json`).
-- `index.html`, `player.html`, `prospects.html`, `teams.html`, `team.html`, `search.html`: 화면 진입점. `js/common.js`: 공통 표시 형식과 열 정의. `css/style.css`: 스타일.
+- `index.html`, `player.html`, `prospects.html`, `teams.html`, `team.html`, `awards.html`, `search.html`: 화면 진입점. `js/common.js`: 공통 표시 형식과 열 정의. `css/style.css`: 스타일.
 - `data/`: 생성된 JSON과 랭킹 기록. 데이터 오류는 수집·계산 원인을 먼저 고친다. 대량 JSON을 손으로 수정하지 않는다.
 - 기존 코드 스타일과 UTF-8 인코딩을 유지한다. JSON 필드 변경 시 생성 코드, 소비하는 화면, 기존 데이터와의 호환성을 함께 확인한다.
 - 브라우저는 저장된 JSON을 읽는다. 원본 사이트의 수집 요청은 Python에서 수행한다.
@@ -86,6 +86,17 @@
 - 파크팩터는 성적 빌드 결과(`constants_{시즌}.json`)를 읽어 붙이므로 성적 빌드 뒤에 실행한다. 없는 값은 1.000으로 채우지 않고 미제공으로 둔다.
 - `python -m unittest discover -s scripts -p test_teams.py`: 산하 구단 묶기, 모구단 불명 구단 제외, 파크팩터 누락, 도미니카 구장 위치 보정을 검증한다.
 - 구장 사진·로고는 수집하지 않는다. 지도는 좌표로 외부 지도 링크만 건다.
+- MLB 구단에는 구단 역사(`history`: 월드시리즈 우승 연도, MVP·사이영상·신인왕 횟수, 명예의 전당, 영구결번)와 소개 글(`note`)이 붙는다. 우승·수상·명예의 전당은 `data/awards.json`에서 팀 ID로 세므로 `awards.py` 뒤에 실행한다. 파일이 없으면 0이 아닌 미제공(`null`)으로 둔다. 영구결번은 구단별로 30회 더 요청한다.
+- 소개 글은 `data/team_notes.json`(구단 ID → 글)에 직접 작성해 관리하는 파일이다. 스크립트가 만들지 않으며, 바뀔 수 있는 숫자(우승 횟수 등)는 글에 쓰지 않고 수집 데이터로 표시한다.
+
+## 수상 기록·명예의 전당 실행
+
+- `python scripts/awards.py`: `AWARDS` 목록의 상별 역대 수상자를 받아 `data/awards.json`을 만든다 (요청 34회). 하나라도 실패하거나 비면 기존 파일을 유지한다.
+- 리그별로 나뉜 상(AL/NL MVP 등)은 하나의 키로 묶고 리그를 행에 남긴다. 행은 `[상 키, 시즌, 리그, 선수 ID, 팀 약칭, 팀 ID]`, 선수 표는 `{선수 ID: [이름, 포지션, 선수 페이지 여부]}`다.
+- 선수 페이지 링크 여부는 `data/players/`에 파일이 있는지로 정하므로 `past_players.py` 뒤에 실행한다. 감독·구단주 등 선수 파일이 없는 인물은 링크 없이 이름만 보여준다.
+- 포지션은 선수의 주 포지션이며 수상 당시 포지션이 아니다. 명예의 전당의 팀은 명판 기준이고 원본에 없으면 비운다.
+- 자동 갱신에서는 월요일에만 `awards.py` → `teams.py` 순서로 실행한다.
+- `python -m unittest discover -s scripts -p test_awards.py`: 리그 묶기, 중복 제거, 정렬을 검증한다.
 
 ## 입단 정보 실행
 

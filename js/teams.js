@@ -13,6 +13,7 @@
     { key: "venue", label: "구장", left: true, value: (c) => c.venue.name, text: (c) => escapeHtml(c.venue.name || "-") },
     { key: "place", label: "위치", left: true, value: (c) => venue.place(c.venue), text: (c) => escapeHtml(venue.place(c.venue)) },
     { key: "first", label: "창단", desc: "구단 첫 시즌", asc: true, value: (c) => c.firstYear, text: (c) => (has(c.firstYear) ? c.firstYear : "-") },
+    { key: "titles", label: "우승", desc: "월드시리즈 우승 횟수", value: (c) => titles(c), text: (c) => (has(titles(c)) ? titles(c) + "회" : "-") },
     { key: "capacity", label: "수용 인원", value: (c) => c.venue.capacity, text: (c) => (has(c.venue.capacity) ? c.venue.capacity.toLocaleString("ko-KR") : "-") },
     { key: "turf", label: "잔디", left: true, value: (c) => venue.turf(c.venue.turf), text: (c) => venue.turf(c.venue.turf) },
     { key: "roof", label: "지붕", left: true, value: (c) => venue.roof(c.venue.roof), text: (c) => venue.roof(c.venue.roof) },
@@ -26,6 +27,9 @@
 
   const state = { league: "", division: "", search: "", sortKey: "name", sortDir: "asc" };
   let data = null;
+
+  // 월드시리즈 우승 횟수. 수집되지 않았으면 0이 아닌 null
+  const titles = (club) => (club.history && club.history.titles ? club.history.titles.length : null);
 
   function fence(club, index) {
     const value = club.venue.fence[index];

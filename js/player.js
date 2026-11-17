@@ -86,6 +86,23 @@
       '<thead><tr><th class="col-season">주차</th><th>전체 순위</th><th>팀 내 순위</th></tr></thead><tbody>' + rows + "</tbody></table></div></section>";
   }
 
+  // 수상 경력: 명예의 전당을 맨 앞에, 나머지는 상별로 횟수와 시즌을 보여준다
+  function renderAwards(awards) {
+    const mine = awards.rows.filter((row) => String(row[3]) === String(player.id));
+    if (!mine.length) return;
+    const items = awards.awards.map((award) => {
+      const seasons = mine.filter((row) => row[0] === award.key).map((row) => row[1]).sort((a, b) => a - b);
+      if (!seasons.length) return "";
+      const link = '<a href="awards.html' + (award.key === "hof" ? "" : "?award=" + encodeURIComponent(award.key)) + '">' + escapeHtml(award.name) + "</a>";
+      if (award.key === "hof") {
+        return '<li class="award-hof"><span class="prospect-label">' + link + "</span> " + seasons[0] + "년 헌액</li>";
+      }
+      return "<li><strong>" + link + "</strong> " + seasons.length + '회 <span class="muted">(' + seasons.join(", ") + ")</span></li>";
+    }).join("");
+    $("awardList").innerHTML = "<h2>수상 경력</h2><ul>" + items + "</ul>";
+    $("awardList").hidden = false;
+  }
+
   function renderTable(group) {
     const rows = player[group];
     if (!rows.length) return "";
@@ -140,6 +157,8 @@
     renderProfile();
     renderProspect();
     renderCareer();
+    // 수상 기록은 없어도 나머지 화면에 영향이 없으므로 따로 불러온다
+    loadJson("data/awards.json").then(renderAwards).catch(() => {});
     $("careerToolbar").hidden = false;
     $("status").textContent = player.careerStatus === "no_records"
       ? "공식 데이터에서 제공된 프로 경기 기록이 없습니다."

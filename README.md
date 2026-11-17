@@ -20,7 +20,8 @@ MiLB 성적은 MLB Pipeline 유망주 랭킹과 연결해 유망주의 순위와
 | 리더보드: 리그·시즌·레벨·타자/투수 선택, 정렬, 팀·포지션·최소 타석(이닝) 필터, 기본/세이버 보기 전환 | `index.html` | 구현 |
 | 선수 페이지: 프로필, 지명·계약 정보, 마이너리그를 포함한 연도별 커리어, Pipeline 순위 | `player.html` | 구현 |
 | 유망주: Pipeline Top 100·팀별 Top 30과 현재 레벨의 MiLB 성적, 주차별 순위 변동 | `prospects.html` | 구현 |
-| 구단·구장: MLB 30개 구단과 산하 마이너리그 구단의 홈구장 정보, 자체 계산 파크팩터 | `teams.html`, `team.html` | 구현 |
+| 구단·구장: MLB 30개 구단과 산하 마이너리그 구단의 홈구장 정보, 자체 계산 파크팩터, 구단 역사(월드시리즈 우승, 영구결번, 명예의 전당, 소개 글) | `teams.html`, `team.html` | 구현 |
+| 수상 기록: 명예의 전당과 MVP·사이영상·신인왕·골드글러브·올스타 등 역대 수상자, 선수 페이지의 수상 경력 | `awards.html`, `player.html` | 구현 |
 | 선수 검색: 은퇴 선수를 포함한 MLB 출전 선수 전원 영문 이름 검색 | `search.html` | 구현 |
 | 용어 설명 | `glossary.html` | 계획 |
 | KBO·NPB 리더보드 | - | 보류 |
@@ -66,6 +67,7 @@ MiLB 성적은 MLB Pipeline 유망주 랭킹과 연결해 유망주의 순위와
 | MiLB (AAA·AA·High-A·Single-A, 커리어용 하위 레벨) | MLB Stats API | API 호출 |
 | 유망주 랭킹 | MLB Pipeline (`mlb.com/prospects`) | 순위·포지션·예상 데뷔 연도만 주 1회 스냅샷. 리포트 본문과 사진은 수집하지 않음 |
 | 구단·구장 | MLB Stats API | API 호출. 사진·로고는 수집하지 않고 지도는 외부 링크로 연결 |
+| 수상 기록·명예의 전당·영구결번 | MLB Stats API | API 호출 (상 하나당 1회, 주 1회 갱신) |
 
 - MLB·MiLB·Pipeline은 같은 MLB 선수 ID로 연결합니다. 이름만으로 선수를 합치지 않습니다.
 - 방문자의 브라우저는 원본 사이트를 호출하지 않고, Python이 미리 만든 JSON만 읽습니다.
@@ -108,7 +110,8 @@ python -m http.server 8000
 | Pipeline 랭킹 강제 갱신 | `python scripts/build.py --pipeline` |
 | 선수별 과거 커리어 수집 (`--ids`로 범위 지정, `--refresh`로 갱신) | `python scripts/careers.py` |
 | 지명·계약 정보 생성 | `python scripts/recruitment.py` |
-| 구단·구장 정보 생성 | `python scripts/teams.py` |
+| 수상 기록·명예의 전당 생성 | `python scripts/awards.py` |
+| 구단·구장 정보와 구단 역사 생성 (수상 기록 뒤에 실행) | `python scripts/teams.py` |
 | 은퇴 선수 등 과거 MLB 선수 추가 | `python scripts/past_players.py` |
 | 선수 검색 색인 생성 | `python scripts/search_index.py` |
 | MLB 공식 값과 대조 | `python scripts/validate.py 2026` |
@@ -128,6 +131,7 @@ python -m http.server 8000
 - 16:00은 미국 동부 새벽 2~3시, 서부 자정 무렵으로 전날 경기가 끝난 뒤입니다. GitHub 사정으로 실행이 몇십 분 늦어질 수 있습니다.
 - 끝난 시즌, 은퇴 선수(`past_players.py`), 과거 커리어 갱신(`careers.py --refresh`)은 거의 바뀌지 않으므로 매일 돌리지 않고 필요할 때 직접 실행합니다.
 - Pipeline 랭킹은 `build.py`가 주 1회만 새로 받습니다.
+- 수상 기록(`awards.py`)과 구단 정보(`teams.py`)는 월요일에만 다시 받습니다.
 - 일부 리그·시즌이 실패하면 그 부분은 직전 데이터를 유지하고 나머지만 반영합니다. 실패는 Actions 실행 결과에 경고로 남습니다.
 - 배포본에는 브라우저가 읽지 않는 수집 캐시(`data/careers/`, `data/drafts/`)를 넣지 않습니다.
 
@@ -148,7 +152,8 @@ bbaddanet/
 │  ├─ careers.py       선수별 과거 커리어 수집·캐시
 │  ├─ recruitment.py   지명·계약 정보
 │  ├─ prospects.py     유망주 스냅샷과 화면용 데이터
-│  ├─ teams.py         구단·산하 구단·구장 정보
+│  ├─ awards.py        수상 기록·명예의 전당
+│  ├─ teams.py         구단·산하 구단·구장 정보, 구단 역사
 │  ├─ past_players.py  은퇴 선수 등 과거 MLB 선수
 │  ├─ search_index.py  선수 검색 색인
 │  ├─ validate.py      MLB 공식 값과 대조
@@ -159,7 +164,9 @@ bbaddanet/
 │  ├─ players/         선수별 상세 ({선수ID}.json)
 │  ├─ careers/         커리어 수집 캐시 (화면에서 읽지 않음)
 │  ├─ drafts/          지명 정보 캐시 (화면에서 읽지 않음)
-│  ├─ teams.json       구단·구장
+│  ├─ teams.json       구단·구장·구단 역사
+│  ├─ team_notes.json  구단 소개 글 (직접 작성해 관리)
+│  ├─ awards.json      수상 기록·명예의 전당
 │  ├─ recruitment.json 지명·계약 정보
 │  ├─ search.json      선수 검색 색인
 │  └─ meta.json        리그·시즌 목록, 마지막 갱신 시각
@@ -168,6 +175,7 @@ bbaddanet/
 ├─ prospects.html      유망주
 ├─ teams.html          구단 목록
 ├─ team.html           구단·구장 상세
+├─ awards.html         수상 기록·명예의 전당
 ├─ search.html         선수 검색
 ├─ css/
 └─ js/
@@ -181,7 +189,7 @@ bbaddanet/
 | 2 | 선수 페이지, MiLB 추가 | 완료 |
 | 3 | 세이버 계산 모듈 | 완료 |
 | 4 | MLB Pipeline 연계 | 완료 |
-| 추가 | High-A·Single-A, 프로 데뷔부터 커리어, 입단 정보, 구단·구장, 은퇴 선수 검색 | 완료 |
+| 추가 | High-A·Single-A, 프로 데뷔부터 커리어, 입단 정보, 구단·구장, 은퇴 선수 검색, 수상 기록·명예의 전당, 구단 역사 | 완료 |
 | 5 | KBO 수집기 | 보류 (출처 이용 조건) |
 | 6 | NPB 수집기 | 보류 (출처 이용 조건) |
 | 7 | 자동 갱신, 배포, 용어 설명 | 진행 중 (자동 갱신·배포 구현, 용어 설명 예정) |

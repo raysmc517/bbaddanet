@@ -95,6 +95,41 @@ def fetch_clubs(sport_id, season):
     return clubs
 
 
+def fetch_award_recipients(award_id):
+    """상 하나의 역대 수상자 목록 (요청 1회). 팀은 수상 시즌 기준 약칭이다.
+
+    선수 정보가 없는 항목은 건너뛴다. 원본에 없는 팀·포지션·비고는 빈 문자열, 팀 ID는 None으로 둔다.
+    팀 ID는 연고지를 옮겨도 같은 구단이면 그대로다. 비고(note)는 영구결번의 등번호 등이다.
+    """
+    data = _get(
+        f"/awards/{award_id}/recipients",
+        {
+            "sportId": 1,
+            "hydrate": "team",
+            "fields": "awards,season,notes,team,abbreviation,player,id,nameFirstLast,primaryPosition",
+        },
+    )
+    recipients = []
+    for item in data.get("awards", []):
+        player = item.get("player") or {}
+        season = str(item.get("season", ""))
+        if not player.get("id") or not season.isdigit():
+            continue
+        position = player.get("primaryPosition", {}).get("abbreviation", "")
+        recipients.append(
+            {
+                "season": int(season),
+                "id": player["id"],
+                "name": player.get("nameFirstLast", ""),
+                "pos": "" if position == "X" else position,  # X는 원본의 '알 수 없음'
+                "team": (item.get("team") or {}).get("abbreviation", ""),
+                "teamId": (item.get("team") or {}).get("id"),
+                "note": item.get("notes", ""),
+            }
+        )
+    return recipients
+
+
 def fetch_player_ids(sport_id, season):
     """해당 시즌에 그 레벨 로스터에 있었던 선수 ID 목록."""
     data = _get(f"/sports/{sport_id}/players", {"season": season, "fields": "people,id"})

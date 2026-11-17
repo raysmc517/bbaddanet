@@ -52,5 +52,44 @@ class AssembleTest(unittest.TestCase):
         self.assertEqual(kept["venue"]["city"], "Boca Chica")
 
 
+class ClubHistoryTest(unittest.TestCase):
+    AWARDS = {
+        "people": {"1": ["A One", "OF", 1], "2": ["B Two", "P", 0]},
+        "rows": [
+            ["wschamp", 1990, "", 1, "OLD", 7],  # 연고지 이전 전 약칭이어도 팀 ID가 같으면 같은 구단
+            ["wschamp", 1990, "", 2, "OLD", 7],
+            ["wschamp", 2020, "", 1, "NEW", 7],
+            ["wschamp", 2021, "", 1, "XXX", 8],
+            ["mvp", 2020, "AL", 1, "NEW", 7],
+            ["mvp", 2021, "AL", 1, "NEW", 7],
+            ["hof", 2030, "", 2, "NEW", 7],
+            ["hof", 2025, "", 1, "", None],  # 명판 팀이 없는 헌액자는 어느 구단에도 넣지 않는다
+        ],
+    }
+
+    def test_titles_awards_hof_counted_by_team_id(self):
+        history = teams.club_history(7, self.AWARDS, [], lambda player_id: True)
+        self.assertEqual(history["titles"], [2020, 1990])  # 선수 여러 명이어도 시즌당 한 번
+        self.assertEqual(history["awards"], {"mvp": 2, "cy": 0, "roy": 0})
+        self.assertEqual(history["hof"], [{"id": 2, "name": "B Two", "year": 2030, "page": 0}])
+
+    def test_missing_awards_file_stays_none(self):
+        history = teams.club_history(7, None, [], lambda player_id: True)
+        self.assertIsNone(history["titles"])  # 우승 0회로 표시하지 않는다
+        self.assertIsNone(history["awards"])
+        self.assertIsNone(history["hof"])
+        self.assertEqual(history["retired"], [])
+
+    def test_retired_numbers_sorted_numerically(self):
+        def retired(number, player_id, year):
+            return {"season": year, "id": player_id, "name": f"P{player_id}", "pos": "", "team": "", "teamId": 7, "note": number}
+
+        history = teams.club_history(
+            7, None, [retired("#42", 1, 1997), retired("No number", 2, 1950), retired("4 - Owner", 3, 1939)], lambda player_id: player_id == 3
+        )
+        self.assertEqual([item["number"] for item in history["retired"]], ["4", "42", ""])
+        self.assertEqual([item["page"] for item in history["retired"]], [1, 0, 0])
+
+
 if __name__ == "__main__":
     unittest.main()

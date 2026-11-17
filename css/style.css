@@ -278,6 +278,77 @@ table.stats {
 .move-new { color: var(--accent); font-size: 11px; }
 .stat-line { margin-left: 4px; }
 .muted { color: var(--text-sub); }
+/* 선수 페이지 수상 경력 */
+.award-list {
+  flex: 1 1 100%;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.award-list h2 {
+  font-size: 13px;
+  color: var(--text-sub);
+  margin: 0 0 8px;
+}
+.award-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  font-size: 14px;
+}
+.award-list li.award-hof { flex: 1 1 100%; font-weight: 700; }
+.award-list a { color: inherit; text-decoration: none; }
+.award-list a:hover { text-decoration: underline; }
+.award-list .muted { font-size: 12px; }
+
+/* 구단 페이지 구단 역사 */
+.history-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 24px;
+}
+.club-note {
+  margin: 0 0 16px;
+  line-height: 1.7;
+}
+.history-card h3 {
+  font-size: 13px;
+  color: var(--text-sub);
+  margin: 18px 0 8px;
+}
+.title-years {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.legend-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  font-size: 14px;
+}
+.legend-list a { color: var(--accent); text-decoration: none; }
+.legend-list a:hover { text-decoration: underline; }
+.legend-list .muted { font-size: 12px; }
+.uniform {
+  display: inline-block;
+  min-width: 26px;
+  margin-right: 6px;
+  padding: 1px 6px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 6px;
+}
+
 .page-note {
   font-size: 12px;
   color: var(--text-sub);

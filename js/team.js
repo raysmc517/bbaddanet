@@ -97,6 +97,51 @@
     $("teamLinks").innerHTML = links.join("");
   }
 
+  const personLink = (item) =>
+    item.page ? '<a href="player.html?id=' + item.id + '">' + escapeHtml(item.name) + "</a>" : escapeHtml(item.name);
+
+  // 구단 역사: 월드시리즈 우승, 주요 수상 횟수, 영구결번, 명예의 전당, 소개 글. MLB 구단에만 있다.
+  // 값이 null이면 수집되지 않은 것이므로 0회가 아니라 미제공으로 표시한다.
+  function renderHistory(team) {
+    const history = team.history;
+    if (!history) return;
+    $("clubNote").textContent = team.note || "";
+    $("clubNote").hidden = !team.note;
+
+    const count = (value) => (has(value) ? value + "회" : "미제공");
+    const awards = history.awards || {};
+    $("historyFacts").innerHTML = facts([
+      ["월드시리즈 우승", history.titles ? '<a href="awards.html?award=wschamp">' + history.titles.length + "회</a>" : "미제공"],
+      ["최근 우승", history.titles ? (history.titles.length ? history.titles[0] + "년" : "없음") : "미제공"],
+      ["MVP 배출", count(awards.mvp)],
+      ["사이영상 배출", count(awards.cy)],
+      ["신인왕 배출", count(awards.roy)],
+      ["영구결번", history.retired.length + "건"],
+    ]);
+
+    const blocks = [];
+    if (history.titles && history.titles.length) {
+      blocks.push("<h3>월드시리즈 우승 연도</h3><p class=\"title-years\">" + history.titles.slice().reverse().join(", ") + "</p>");
+    }
+    if (history.retired.length) {
+      blocks.push(
+        "<h3>영구결번</h3><ul class=\"legend-list\">" +
+        history.retired.map((item) =>
+          '<li><span class="uniform">' + (item.number ? escapeHtml(item.number) : "-") + "</span>" + personLink(item) +
+          ' <span class="muted">' + item.year + "</span></li>"
+        ).join("") + "</ul>"
+      );
+    }
+    if (history.hof && history.hof.length) {
+      blocks.push(
+        "<h3>명예의 전당 (" + history.hof.length + "명)</h3><ul class=\"legend-list\">" +
+        history.hof.map((item) => "<li>" + personLink(item) + ' <span class="muted">' + item.year + "</span></li>").join("") + "</ul>"
+      );
+    }
+    $("historyLists").innerHTML = blocks.join("");
+    $("historySection").hidden = false;
+  }
+
   function renderVenue(team, season) {
     const v = team.venue;
     $("venueName").textContent = v.name || "구장 정보 없음";
@@ -189,6 +234,7 @@
     }
 
     renderProfile(team, parent, data.season);
+    renderHistory(team);
     renderVenue(team, data.season);
     renderOrg(team, parent, data.season);
     $("status").hidden = true;
