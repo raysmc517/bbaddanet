@@ -45,6 +45,7 @@
 
   // value: 정렬 값, text: 표시. asc: 낮을수록 좋은 열(처음 누르면 오름차순)
   const BASE_COLUMNS = [
+    { key: "G", label: "경기", value: (t) => t.W + t.L, text: (t) => t.W + t.L },
     { key: "W", label: "승", value: (t) => t.W, text: (t) => t.W },
     { key: "L", label: "패", asc: true, value: (t) => t.L, text: (t) => t.L },
     { key: "pct", label: "승률", value: pct, text: (t) => (has(pct(t)) ? fmt.rate(pct(t)) : "-") },
@@ -62,6 +63,14 @@
     { key: "xW", label: "기대 승패", desc: "피타고리안 기대 승패 (자체 계산, 지수 1.83)", value: (t) => t.xW, text: (t) => (has(t.xW) ? t.xW + "-" + t.xL : "-") },
     { key: "luck", label: "차이", desc: "실제 승수 - 기대 승수", value: luck, text: (t) => signed(luck(t)) },
   ];
+  // 잔여 경기: 리그의 팀당 경기 수 - 치른 경기. 화면을 그릴 때 리그 경기 수를 넣어 만든다
+  const remainingColumn = (games) => ({
+    key: "left",
+    label: "잔여",
+    desc: "남은 정규시즌 경기 (팀당 " + games + "경기 기준)",
+    value: (t) => Math.max(games - t.W - t.L, 0),
+    text: (t) => Math.max(games - t.W - t.L, 0),
+  });
   const MAGIC = { key: "magic", label: "매직넘버", desc: "지구 우승 매직넘버", asc: true, value: (t) => t.magic, text: (t) => (has(t.magic) ? t.magic : "-") };
 
   const state = { level: "mlb", season: null, league: "", half: "", sortKey: "rank", sortDir: "asc" };
@@ -98,10 +107,11 @@
     return map;
   }
 
-  function sortTeams(teams) {
+  // columns: 이 표에 보이는 열 (잔여 경기처럼 리그마다 만드는 열도 찾기 위해)
+  function sortTeams(teams, columns) {
     const rows = teams.map((team, index) => ({ team, rank: index + 1 }));
     if (state.sortKey === "rank") return rows;
-    const column = [GB, WCGB, MAGIC].concat(BASE_COLUMNS, TAIL_COLUMNS).find((c) => c.key === state.sortKey);
+    const column = columns.find((c) => c.key === state.sortKey);
     if (!column) return rows;
     const sign = state.sortDir === "asc" ? 1 : -1;
     // 값이 없는 팀은 정렬 방향과 관계없이 맨 아래에 둔다
@@ -137,7 +147,7 @@
   // cutoff: 이 순위까지 진출권. 그 아래에 구분선을 긋는다 (정렬하지 않았을 때만)
   function table(title, teams, columns, cutoff) {
     const parents = parentAbbr();
-    const rows = sortTeams(teams);
+    const rows = sortTeams(teams, columns);
     const head =
       "<tr>" + headCell({ key: "rank", label: "#" }, "col-rank") + '<th class="col-name">구단</th>' +
       columns.map((column) => headCell(column)).join("") + "</tr>";
@@ -155,8 +165,17 @@
     );
   }
 
-  function columnsFor(teams, gamesBack) {
-    const columns = BASE_COLUMNS.concat([gamesBack], TAIL_COLUMNS);
+  // 정규시즌이 아직 진행 중인지: 갱신 날짜(UTC)가 리그의 정규시즌 마지막 날 이하.
+  // 마지막 날 경기는 다음 날 갱신에 반영되므로 그때부터 잔여 경기 열을 숨긴다.
+  // 전·후반기 보기에서는 시즌 전체 경기 수 기준이 맞지 않아 숨긴다.
+  function inProgress(league) {
+    if (state.half || !league || !league.games || !league.endDate) return false;
+    return String(data.updated).slice(0, 10) <= league.endDate;
+  }
+
+  function columnsFor(teams, gamesBack, league) {
+    const base = inProgress(league) ? BASE_COLUMNS.slice(0, 1).concat([remainingColumn(league.games)], BASE_COLUMNS.slice(1)) : BASE_COLUMNS;
+    const columns = base.concat([gamesBack], TAIL_COLUMNS);
     if (gamesBack === GB && teams.some((t) => has(t.magic))) columns.push(MAGIC);
     return columns;
   }
@@ -165,7 +184,7 @@
     const teams = league.divisions.flatMap((division) => division.teams).filter((t) => has(t.wcRank));
     teams.sort((a, b) => a.wcRank - b.wcRank);
     if (!teams.length) return "";
-    return table(league.abbr + " 와일드카드", teams, columnsFor(teams, WCGB), league.wildCards);
+    return table(league.abbr + " 와일드카드", teams, columnsFor(teams, WCGB, league), league.wildCards);
   }
 
   function renderLeague(league) {
@@ -177,7 +196,7 @@
       html += '<p class="status">' + escapeHtml(HALF_NAMES[state.half] || "") + " 순위가 없습니다.</p></div>";
       return html;
     }
-    html += '<div class="standings-grid">' + divisions.map((division) => table(title(division), division.teams, columnsFor(division.teams, GB))).join("") + "</div>";
+    html += '<div class="standings-grid">' + divisions.map((division) => table(title(division), division.teams, columnsFor(division.teams, GB, league))).join("") + "</div>";
     if (isMlb() && league.wildCards) html += wildCardTable(league);
     return html + "</div>";
   }

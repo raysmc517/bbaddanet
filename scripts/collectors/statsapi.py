@@ -332,8 +332,9 @@ def collect(group, sport_id, season, teams=None):
 
 
 def fetch_leagues(sport_id, season):
-    """레벨의 리그 목록. [{"id", "name", "abbr", "wildCards", "split", "games"}]
-    wildCards: 와일드카드 진출 팀 수(없으면 0), split: 전·후반기로 나누는 리그인지."""
+    """레벨의 리그 목록. [{"id", "name", "abbr", "wildCards", "split", "games", "endDate"}]
+    wildCards: 와일드카드 진출 팀 수(없으면 0), split: 전·후반기로 나누는 리그인지,
+    games: 팀당 정규시즌 경기 수, endDate: 정규시즌 마지막 날(YYYY-MM-DD, 없으면 None)."""
     data = _get("/league", {"sportId": sport_id, "season": season})
     leagues = []
     for league in data.get("leagues", []):
@@ -347,6 +348,7 @@ def fetch_leagues(sport_id, season):
                 "wildCards": league.get("numWildcardTeams", 0) if league.get("hasWildCard") else 0,
                 "split": bool(league.get("hasSplitSeason")),
                 "games": league.get("numGames"),
+                "endDate": league.get("seasonDateInfo", {}).get("regularSeasonEndDate"),
             }
         )
     return leagues
