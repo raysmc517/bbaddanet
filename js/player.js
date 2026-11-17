@@ -154,6 +154,62 @@
   const sortRows = (rows) =>
     rows.slice().sort((a, b) => b.season - a.season || levelRank(a.level) - levelRank(b.level));
 
+  // ---------- 통산 행 ----------
+  // 누적 기록은 더하고, 비율 기록은 시즌 값을 평균 내지 않고 합친 누적 기록으로 다시 계산한다.
+  // 한 시즌이라도 값이 없는 항목(옛 시즌의 도루 실패 등)은 0으로 채우지 않고 미제공으로 둔다.
+  // 시즌별 리그 기준이 필요한 지표(wOBA, wRC+, FIP, ERA-, FIP-, LOB%)와 피BABIP는 계산하지 않는다.
+  const SUM_KEYS = {
+    batting: ["G", "PA", "AB", "R", "H", "2B", "3B", "HR", "RBI", "SB", "CS", "BB", "SO", "HBP", "SF", "TB", "sWAR", "WAR"],
+    pitching: ["G", "GS", "W", "L", "SV", "HLD", "outs", "H", "R", "ER", "HR", "BB", "SO", "HBP", "BF", "sWAR", "WAR"],
+  };
+  const ok = (v) => v !== null && v !== undefined && Number.isFinite(v);
+  const div = (a, b) => (ok(a) && ok(b) && b > 0 ? a / b : null);
+
+  function sumRows(group, rows) {
+    const total = {};
+    SUM_KEYS[group].forEach((key) => {
+      total[key] = rows.every((row) => ok(row[key])) ? rows.reduce((sum, row) => sum + row[key], 0) : null;
+    });
+    return total;
+  }
+
+  function addRates(group, t) {
+    if (group === "batting") {
+      t.AVG = div(t.H, t.AB);
+      t.OBP = ok(t.H) && ok(t.BB) && ok(t.HBP) && ok(t.SF) ? div(t.H + t.BB + t.HBP, t.AB + t.BB + t.HBP + t.SF) : null;
+      t.SLG = div(t.TB, t.AB);
+      t.OPS = ok(t.OBP) && ok(t.SLG) ? t.OBP + t.SLG : null;
+      t.ISO = ok(t.SLG) && ok(t.AVG) ? t.SLG - t.AVG : null;
+      t.BABIP = ok(t.H) && ok(t.HR) && ok(t.SO) && ok(t.SF) ? div(t.H - t.HR, t.AB - t.SO - t.HR + t.SF) : null;
+      t.BBp = div(t.BB, t.PA);
+      t.Kp = div(t.SO, t.PA);
+    } else {
+      t.ERA = ok(t.ER) ? div(t.ER * 27, t.outs) : null;
+      t.WHIP = ok(t.H) && ok(t.BB) ? div((t.H + t.BB) * 3, t.outs) : null;
+      t.K9 = ok(t.SO) ? div(t.SO * 27, t.outs) : null;
+      t.BB9 = ok(t.BB) ? div(t.BB * 27, t.outs) : null;
+      t.HR9 = ok(t.HR) ? div(t.HR * 27, t.outs) : null;
+      t.Kp = div(t.SO, t.BF);
+      t.BBp = div(t.BB, t.BF);
+      t.KBBp = ok(t.Kp) && ok(t.BBp) ? t.Kp - t.BBp : null;
+    }
+    return t;
+  }
+
+  // MLB와 MiLB를 따로 합친다(2026-11-17 사용자 결정: 평균 행 없이 통산만).
+  function summaryRows(group, rows) {
+    const result = [];
+    [["mlb", "MLB"], ["milb", "MiLB"]].forEach(([league, label]) => {
+      const mine = rows.filter((row) => row.league === league);
+      if (mine.length < 2) return; // 한 줄이면 통산이 그 줄과 같다
+      const seasons = new Set(mine.map((row) => row.season)).size;
+      const total = addRates(group, sumRows(group, mine));
+      // 한 시즌만 남으면(시즌 필터, 시즌 중 이적) 여러 팀 기록의 시즌 합계다
+      result.push({ title: seasons > 1 ? "통산" : "합계", label, league, note: seasons + "시즌", row: total });
+    });
+    return result;
+  }
+
   function renderTable(group, filtered) {
     const rows = sortRows(filtered);
     if (!rows.length) return "";
@@ -173,9 +229,17 @@
         "</tr>"
       );
     }).join("");
+    const foot = summaryRows(group, rows).map((item) =>
+      '<tr class="summary-row"><td class="col-season">' + item.title + "</td>" +
+      '<td class="col-team"><span class="level level-' + item.league + '">' + item.label + "</span></td>" +
+      '<td class="col-team muted">' + item.note + "</td><td></td>" +
+      columns.map((column) => "<td>" + cell(column, item.row) + "</td>").join("") +
+      "</tr>"
+    ).join("");
     return (
       '<section class="career-section"><h2>' + GROUP_TITLE[group] + "</h2>" +
-      '<div class="table-scroll"><table class="stats career"><thead>' + head + "</thead><tbody>" + body + "</tbody></table></div></section>"
+      '<div class="table-scroll"><table class="stats career"><thead>' + head + "</thead><tbody>" + body + "</tbody>" +
+      (foot ? "<tfoot>" + foot + "</tfoot>" : "") + "</table></div></section>"
     );
   }
 
