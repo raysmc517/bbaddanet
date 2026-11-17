@@ -1,5 +1,7 @@
 # 빠따넷 (bbaddanet)
 
+**사이트 바로가기: https://raysmc517.github.io/bbaddanet/** (매일 한국 시간 16:00 자동 갱신)
+
 MLB, MiLB, NPB, KBO 선수의 성적과 세이버매트릭스 지표를 한곳에서 조회하는 웹사이트입니다.
 MiLB 성적은 MLB Pipeline 유망주 랭킹과 연결해 유망주의 순위와 마이너리그 성적을 함께 보여줍니다.
 
