@@ -74,10 +74,24 @@
     );
   }
 
+  // MLB 공식 로고. 파일을 저장하지 않고 MLB 이미지 서버 주소로만 표시한다.
+  // 이미지를 못 받으면 로고 자리를 숨긴다.
+  const LOGO_BASE = "https://www.mlbstatic.com/team-logos/";
+  function renderLogo(team, isMajor) {
+    const box = $("teamLogo");
+    if (!isMajor || !Number.isInteger(team.id)) return;
+    box.innerHTML =
+      '<source media="(prefers-color-scheme: dark)" srcset="' + LOGO_BASE + "team-cap-on-dark/" + team.id + '.svg">' +
+      '<img src="' + LOGO_BASE + team.id + '.svg" alt="' + escapeHtml(team.name) + ' 로고" width="72" height="72">';
+    box.querySelector("img").addEventListener("error", () => { box.hidden = true; });
+    box.hidden = false;
+  }
+
   function renderProfile(team, parent, season) {
     document.title = "빠따넷 · " + team.name;
     $("teamName").textContent = team.name;
     const isMajor = team.level === "MLB";
+    renderLogo(team, isMajor);
     $("teamSub").innerHTML =
       levelBadge(team.level) + " " + escapeHtml(isMajor ? team.division : team.league) +
       (isMajor ? "" : ' · 모구단 <a href="team.html?id=' + parent.id + '">' + escapeHtml(parent.name) + "</a>");

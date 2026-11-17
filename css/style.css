@@ -367,6 +367,9 @@ table.stats {
   padding: 20px 24px;
   margin-bottom: 16px;
 }
+.team-logo { flex: none; align-self: center; }
+.team-logo[hidden] { display: none; }
+.team-logo img { display: block; width: 72px; height: 72px; object-fit: contain; }
 .profile h1 {
   margin: 0;
   font-size: 28px;
