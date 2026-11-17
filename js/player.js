@@ -13,6 +13,8 @@
   let player = null;
   let recruitment = null;
   let view = "basic";
+  // 커리어 표 필터. 시즌은 "" 이면 전체, 레벨은 ""(전체)·"mlb"·"milb"
+  const filter = { season: "", league: "" };
 
   // 은퇴 선수 중 마이너리그 기록을 받는 기준(scripts/careers.py의 PAST_MINOR_FROM과 같게 유지)
   const PAST_MINOR_FROM = 2000;
@@ -152,8 +154,8 @@
   const sortRows = (rows) =>
     rows.slice().sort((a, b) => b.season - a.season || levelRank(a.level) - levelRank(b.level));
 
-  function renderTable(group) {
-    const rows = sortRows(player[group]);
+  function renderTable(group, filtered) {
+    const rows = sortRows(filtered);
     if (!rows.length) return "";
     const columns = visibleColumns(COLUMNS[group][view], rows);
     const head =
@@ -177,11 +179,40 @@
     );
   }
 
+  const matchesFilter = (row) =>
+    (!filter.season || String(row.season) === filter.season) &&
+    (!filter.league || row.league === filter.league);
+
   function renderCareer() {
     // 투수는 투구 기록을, 야수는 타격 기록을 먼저 보여준다
     const order = player.pos === "P" ? ["pitching", "batting"] : ["batting", "pitching"];
-    const html = order.map(renderTable).join("");
-    $("career").innerHTML = html || '<p class="status">제공된 프로 경기 기록이 없습니다.</p>';
+    const hasRows = order.some((group) => player[group].length);
+    const html = order.map((group) => renderTable(group, player[group].filter(matchesFilter))).join("");
+    $("career").innerHTML = html ||
+      '<p class="status">' + (hasRows ? "해당 조건의 기록이 없습니다." : "제공된 프로 경기 기록이 없습니다.") + "</p>";
+  }
+
+  // 시즌 목록은 이 선수가 기록을 남긴 시즌만 보여준다. 고른 조건은 주소에 남긴다.
+  function setupFilters() {
+    const seasons = [...new Set(player.batting.concat(player.pitching).map((row) => row.season))].sort((a, b) => b - a);
+    const params = new URLSearchParams(location.search);
+    if (seasons.map(String).includes(params.get("season"))) filter.season = params.get("season");
+    if (["mlb", "milb"].includes(params.get("level"))) filter.league = params.get("level");
+    $("careerSeason").innerHTML = '<option value="">전체 시즌</option>' +
+      seasons.map((season) => '<option value="' + season + '">' + season + "</option>").join("");
+    $("careerSeason").value = filter.season;
+    $("careerLevel").value = filter.league;
+    const update = () => {
+      filter.season = $("careerSeason").value;
+      filter.league = $("careerLevel").value;
+      const next = new URLSearchParams(location.search);
+      filter.season ? next.set("season", filter.season) : next.delete("season");
+      filter.league ? next.set("level", filter.league) : next.delete("level");
+      history.replaceState(null, "", "?" + next.toString());
+      renderCareer();
+    };
+    $("careerSeason").addEventListener("change", update);
+    $("careerLevel").addEventListener("change", update);
   }
 
   async function init() {
@@ -205,6 +236,7 @@
     $("status").textContent = "";
     renderProfile();
     renderProspect();
+    setupFilters();
     renderCareer();
     // 수상 기록은 없어도 나머지 화면에 영향이 없으므로 따로 불러온다
     loadJson("data/awards.json").then(renderAwards).catch(() => {});
