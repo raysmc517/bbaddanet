@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import prospects
+import search_index
 import careers as career_data
 from collectors import statsapi
 from sabermetrics import calc, parkfactors
@@ -267,6 +268,11 @@ def main():
         write_json(DATA / "milb" / "prospects.json", prospects.build_page(latest, history, careers, SEASONS[0]))
         meta["prospects"] = {"week": latest["week"], "date": latest["date"]}
     write_json(DATA / "meta.json", meta)
+    try:
+        print(f"검색 색인 {search_index.build(DATA)}명")
+    except Exception as error:  # 색인 실패는 기존 색인을 유지한다
+        ok = False
+        print(f"  [실패] 검색 색인: {error}", file=sys.stderr)
     print("완료" if ok else "일부 실패 (위 메시지 확인)")
     return 0 if ok else 1
 

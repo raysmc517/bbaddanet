@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>빠따넷 · 선수 검색</title>
+  <meta name="description" content="현역과 은퇴 선수를 이름으로 검색">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="./">빠따넷</a>
+      <nav class="header-nav">
+        <a href="./">리더보드</a>
+        <a href="prospects.html">유망주</a>
+        <a href="teams.html">구단</a>
+        <a href="search.html" aria-current="page">선수 검색</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="toolbar" aria-label="검색 조건">
+      <div class="toolbar-row">
+        <label class="field search-main">
+          <span>선수 이름 (영문)</span>
+          <input type="search" id="searchInput" placeholder="예: Pedro Martinez" autocomplete="off" autofocus>
+        </label>
+        <label class="field">
+          <span>구분</span>
+          <select id="scopeSelect">
+            <option value="">전체</option>
+            <option value="mlb">MLB 출전 선수</option>
+            <option value="minor">마이너리그만</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <p class="status" id="status" role="status">불러오는 중...</p>
+
+    <div class="table-scroll" id="resultWrap" hidden>
+      <table class="stats teams" id="resultTable">
+        <thead>
+          <tr>
+            <th class="col-name">선수</th>
+            <th class="col-team">포지션</th>
+            <th class="col-team">기록 시즌</th>
+            <th class="col-team">구분</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    <p class="page-note">은퇴 선수를 포함해 MLB 출전 경험이 있는 선수와 최근 시즌 마이너리그 선수를 찾습니다. 이름은 영문으로 검색하며 악센트 기호는 없어도 됩니다(Martinez → Martínez). 기록 시즌은 기록이 제공되는 첫 시즌과 마지막 시즌입니다. 은퇴 선수는 MLB 기록만 제공합니다.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>MLB·MiLB 기록 출처: MLB Stats API. Copyright MLB Advanced Media, L.P. 비상업적 개인 프로젝트입니다.</p>
+    </div>
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script src="js/search.js"></script>
+</body>
+</html>

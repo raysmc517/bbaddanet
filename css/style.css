@@ -441,6 +441,10 @@ table.stats {
   font-variant-numeric: tabular-nums;
 }
 
+/* 선수 검색 */
+.search-main { flex: 1 1 280px; max-width: 420px; }
+.search-main input { width: 100%; }
+
 .empty {
   padding: 40px 16px !important;
   text-align: center !important;

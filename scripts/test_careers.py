@@ -21,6 +21,33 @@ class CareerTests(unittest.TestCase):
         self.assertEqual(rows[0]["outs"], 16)
         self.assertNotIn("FIP", rows[0])
 
+    def test_fields_missing_in_old_seasons_stay_none(self):
+        # 1914년 기록처럼 원본에 도루 실패·희생플라이가 없으면 0이 아니라 None이어야 한다.
+        split = {"season": "1914", "team": {"id": 111, "name": "Boston Red Sox"},
+                 "sport": {"id": 1}, "gameType": "R", "stat": {
+                     "gamesPlayed": 5, "plateAppearances": 10, "atBats": 10, "hits": 2,
+                     "stolenBases": 0, "homeRuns": 0, "avg": ".200", "slg": ".300"}}
+        person = {"id": 121578, "fullName": "Test", "stats": [{
+            "group": {"displayName": "hitting"}, "splits": [split]}]}
+        row = careers.convert(person, 1)["batting"][0]
+        self.assertIsNone(row["CS"])
+        self.assertIsNone(row["SF"])
+        self.assertEqual(row["SB"], 0)  # 원본에 있는 0은 그대로 0
+        self.assertEqual(row["PA"], 10)
+
+    def test_past_flag_marks_mlb_only_players(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            careers.write(root / "players/1.json", {"id": 1, "past": True})
+            careers.write(root / "players/2.json", {"id": 2, "active": False})
+            self.assertTrue(careers.is_past(1, root))
+            self.assertFalse(careers.is_past(2, root))  # 최근 리더보드에 있던 비활동 선수는 기존대로
+            self.assertFalse(careers.is_past(3, root))  # 선수 파일이 없으면 전체 레벨
+
+    def test_chunks(self):
+        self.assertEqual(careers.chunks([1, 2, 3], 2), [[1, 2], [3]])
+        self.assertEqual(careers.chunks([]), [])
+
     def test_refresh_replaces_history_preserves_current_saber(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)

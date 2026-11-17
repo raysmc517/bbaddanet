@@ -25,7 +25,7 @@
     $("playerName").textContent = name;
 
     const sub = [player.team, player.pos, player.number ? "#" + player.number : ""].filter(Boolean);
-    $("playerSub").textContent = sub.join(" · ") + (player.active ? "" : " (비활동)");
+    $("playerSub").textContent = sub.join(" · ") + (player.past ? " (은퇴)" : player.active ? "" : " (비활동)");
 
     const body = [player.heightCm ? player.heightCm + "cm" : "", player.weightKg ? player.weightKg + "kg" : ""].filter(Boolean);
     const hands = (HAND[player.throws] ? HAND[player.throws] + "투" : "") + (HAND[player.bats] ? HAND[player.bats] + "타" : "");
@@ -40,11 +40,13 @@
       entryText = (signing.date || signing.year + "년") + " · 국제 아마추어 계약 (지명 없음)";
     }
     const facts = [
-      ["생년월일", player.birthDate ? player.birthDate + (player.age ? " (" + player.age + "세)" : "") : ""],
+      ["생년월일", player.birthDate ? player.birthDate + (player.age && !player.deathDate ? " (" + player.age + "세)" : "") : ""],
+      ["사망", player.deathDate ? player.deathDate + (player.age ? " (향년 " + player.age + "세)" : "") : ""],
       ["출신", player.country],
       ["신체", body.join(" / ")],
       ["투타", hands],
       ["MLB 데뷔", player.debut || "없음"],
+      ["마지막 출전", player.lastPlayed],
       [entryLabel, entryText],
       [signing && signing.type === "international" ? "계약 구단" : "지명 구단", signing && signing.team],
       ["계약금", signing && Number.isFinite(signing.bonusUSD) ? "$" + signing.bonusUSD.toLocaleString("en-US") + " USD" : "미확인"],
@@ -141,6 +143,8 @@
     $("careerToolbar").hidden = false;
     $("status").textContent = player.careerStatus === "no_records"
       ? "공식 데이터에서 제공된 프로 경기 기록이 없습니다."
+      : player.past
+      ? "은퇴 선수는 MLB 정규시즌 기록만 제공합니다. 마이너리그와 해외 리그 기록은 포함하지 않으며, 과거 시즌 세이버 지표는 아직 제공하지 않습니다."
       : player.careerUpdated
       ? "MLB·마이너리그의 최초 제공 시즌부터 표시합니다. 해외 리그 및 원본 미제공 기록은 포함되지 않을 수 있습니다. 과거 세이버 지표는 계산 근거가 있는 경우에만 제공합니다."
       : "저장된 시즌 기록입니다. 전체 프로 커리어 데이터는 아직 수집되지 않았습니다.";

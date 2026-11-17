@@ -24,7 +24,8 @@
 - `scripts/collectors/`: 외부 데이터 수집. `scripts/sabermetrics/`: 지표 및 파크팩터 계산.
 - `scripts/build.py`: 데이터 생성 진입점. `scripts/prospects.py`: 유망주 스냅샷과 화면용 데이터. `scripts/validate.py`: MLB 공식 값과 비교.
 - `scripts/teams.py`: MLB 구단·산하 구단·구장 정보(`data/teams.json`).
-- `index.html`, `player.html`, `prospects.html`, `teams.html`, `team.html`: 화면 진입점. `js/common.js`: 공통 표시 형식과 열 정의. `css/style.css`: 스타일.
+- `scripts/past_players.py`: 은퇴 선수 등 과거 MLB 선수 추가. `scripts/search_index.py`: 선수 검색 색인(`data/search.json`).
+- `index.html`, `player.html`, `prospects.html`, `teams.html`, `team.html`, `search.html`: 화면 진입점. `js/common.js`: 공통 표시 형식과 열 정의. `css/style.css`: 스타일.
 - `data/`: 생성된 JSON과 랭킹 기록. 데이터 오류는 수집·계산 원인을 먼저 고친다. 대량 JSON을 손으로 수정하지 않는다.
 - 기존 코드 스타일과 UTF-8 인코딩을 유지한다. JSON 필드 변경 시 생성 코드, 소비하는 화면, 기존 데이터와의 호환성을 함께 확인한다.
 - 브라우저는 저장된 JSON을 읽는다. 원본 사이트의 수집 요청은 Python에서 수행한다.
@@ -66,6 +67,16 @@
 - 실행 순서: 성적 빌드 → 커리어 수집. 일반 빌드는 `data/careers/`의 과거 기록을 보존한다. 기존 커리어의 새 시즌·정정 기록까지 갱신하려면 `--refresh`를 사용한다.
 - `python -m unittest discover -s scripts -p test_careers.py`: 중복·합계 행 제거, 과거 기록 갱신과 최근 세이버 지표 보존을 검증한다.
 - 최초 제공 시즌은 정확한 프로 데뷔일과 다르다. 해외 리그 데이터 누락 가능성을 화면에 안내한다.
+
+## 과거 선수(은퇴 선수)와 검색 실행
+
+- `python scripts/past_players.py`: 1876년부터의 시즌별 MLB 명단으로 선수 ID를 모으고, 선수 파일이 없는 선수의 프로필과 커리어를 만든다. 은퇴 선수(프로필의 `past` 표시)는 MLB 기록만 받고, 마이너리그 기록은 현역 선수만 제공한다(2026-11-17 사용자 결정). `careers.py --refresh`도 이 표시를 따른다. 전체 실행은 요청이 1,000회 이상이고 파일 수만 개가 생기므로 먼저 `--ids 118377`이나 `--from 1999 --to 1999`로 좁혀 확인한다.
+- 이미 있는 선수 파일은 덮어쓰지 않는다. 커리어가 없는 선수만 받으므로 중간에 끊겨도 다시 실행하면 이어진다.
+- 과거 시즌의 세이버 지표는 계산하지 않는다(리그 상수·파크팩터 미수집). 최근 시즌 상수를 대신 적용하지 않는다.
+- 옛 시즌은 원본에 없는 항목(도루 실패, 희생플라이, 고의4구, 홀드 등)이 있다. `careers.convert`는 이를 0이 아닌 `None`으로 저장한다.
+- `python scripts/search_index.py`: 선수 파일로 `data/search.json`을 다시 만든다(외부 요청 없음). `build.py`와 `past_players.py` 끝에서도 실행된다.
+- `python -m unittest discover -s scripts -p "test_*.py"`: 전체 단위 테스트.
+- `data/careers/`와 `data/drafts/`는 수집 캐시이며 브라우저가 읽지 않는다. 배포 시 제외할 수 있다.
 
 ## 구단·구장 정보 실행
 

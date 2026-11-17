@@ -15,6 +15,22 @@ SPORTS = {1: "MLB", 11: "AAA", 12: "AA", 13: "High-A", 14: "Single-A", 15: "Shor
 SPORT_IDS = {name: sport for sport, name in SPORTS.items()}
 TEAM_ABBR_FILE = "team_abbr.json"  # {"레벨ID-시즌": {"팀ID": "약자"}}
 
+# 화면 항목 → 원본 필드. 옛 시즌은 원본에 없는 항목이 있다(예: 1914년 도루 실패, 희생플라이).
+# 없는 항목을 0으로 저장하면 실제 0과 구분할 수 없으므로 None으로 남긴다.
+SOURCE_FIELDS = {
+    "batting": {
+        "PA": "plateAppearances", "R": "runs", "2B": "doubles", "3B": "triples", "RBI": "rbi",
+        "BB": "baseOnBalls", "IBB": "intentionalWalks", "SO": "strikeOuts", "HBP": "hitByPitch",
+        "SB": "stolenBases", "CS": "caughtStealing", "SF": "sacFlies", "SH": "sacBunts",
+        "GDP": "groundIntoDoublePlay", "TB": "totalBases",
+    },
+    "pitching": {
+        "GS": "gamesStarted", "W": "wins", "L": "losses", "SV": "saves", "HLD": "holds",
+        "R": "runs", "ER": "earnedRuns", "HR": "homeRuns", "BB": "baseOnBalls",
+        "IBB": "intentionalWalks", "SO": "strikeOuts", "HBP": "hitByPitch", "BF": "battersFaced",
+    },
+}
+
 
 def write(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -53,6 +69,9 @@ def convert(person, sport):
                        seasonLabel=str(split["season"]))
             for field in ("id", "name", "q", "pos", "lg"):
                 row.pop(field, None)
+            for key, source in SOURCE_FIELDS[group].items():
+                if source not in split["stat"]:
+                    row[key] = None
             if row["G"]:
                 result[group].append(row)
     return result
@@ -121,19 +140,33 @@ def merge_cached(player, data=DATA):
     player["careerStatus"] = cached.get("status", "available")
 
 
-def main():
+def chunks(ids, size=300):
+    return [ids[start:start + size] for start in range(0, len(ids), size)]
+
+
+def is_past(player_id, data=DATA):
+    """past_players.py가 추가한 은퇴 선수인지. 선수 파일의 past 표시로 판단한다."""
+    path = data / "players" / f"{player_id}.json"
+    return path.exists() and bool(json.loads(path.read_text(encoding="utf-8")).get("past"))
+
+
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ids", nargs="+", type=int)
     parser.add_argument("--refresh", action="store_true")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     ids = args.ids or sorted(int(p.stem) for p in (DATA / "players").glob("*.json"))
     pending = [i for i in ids if args.refresh or not (DATA / "careers" / f"{i}.json").exists()]
     failed = False
-    for start in range(0, len(pending), 300):
-        batch = pending[start:start + 300]
+    # 은퇴 선수(past)는 MLB 기록만 받는다. 마이너리그 기록은 현역 선수만 제공한다.
+    past = {i for i in pending if is_past(i)}
+    queue = [(batch, SPORTS) for batch in chunks(sorted(set(pending) - past))]
+    queue += [(batch, {1: SPORTS[1]}) for batch in chunks(sorted(past))]
+    done = 0
+    for batch, sports in queue:
         rows = {i: {"batting": [], "pitching": []} for i in batch}
         try:
-            for sport in SPORTS:
+            for sport in sports:
                 response = statsapi._get("/people", {
                     "personIds": ",".join(map(str, batch)),
                     "hydrate": f"stats(group=[hitting,pitching],type=[yearByYear],sportId={sport},gameType=R)",
@@ -151,7 +184,8 @@ def main():
                     career["status"] = "no_records"
                 career["updated"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
                 write(DATA / "careers" / f"{pid}.json", career)
-            print(f"커리어 수집 {min(start + 300, len(pending))}/{len(pending)}", flush=True)
+            done += len(batch)
+            print(f"커리어 수집 {done}/{len(pending)}", flush=True)
         except Exception as error:
             failed = True
             print(f"커리어 수집 실패: {error}", flush=True)

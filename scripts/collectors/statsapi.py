@@ -95,6 +95,12 @@ def fetch_clubs(sport_id, season):
     return clubs
 
 
+def fetch_player_ids(sport_id, season):
+    """해당 시즌에 그 레벨 로스터에 있었던 선수 ID 목록."""
+    data = _get(f"/sports/{sport_id}/players", {"season": season, "fields": "people,id"})
+    return [person["id"] for person in data.get("people", [])]
+
+
 def _fetch_splits(group, sport_id, season, pool):
     """선수별 시즌 성적 전체를 페이지 단위로 받아온다."""
     splits = []
@@ -271,6 +277,11 @@ def fetch_people(player_ids, batch_size=300):
                 "debut": person.get("mlbDebutDate"),
                 "active": person.get("active", False),
             }
+            # 은퇴 선수에게만 있는 값. 현역 선수 파일은 바뀌지 않게 있을 때만 넣는다.
+            if person.get("lastPlayedDate"):
+                profiles[person["id"]]["lastPlayed"] = person["lastPlayedDate"]
+            if person.get("deathDate"):
+                profiles[person["id"]]["deathDate"] = person["deathDate"]
     return profiles
 
 
