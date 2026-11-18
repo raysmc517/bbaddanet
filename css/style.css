@@ -354,9 +354,13 @@ table.stats {
 
 /* 금지약물 징계: 이름 뒤 *, 선수 페이지 징계 목록 */
 .ped-mark {
-  color: var(--negative, #c0392b);
-  font-weight: 700;
-  margin-left: 1px;
+  /* 위첨자 기본값(작고 높은 글자)을 풀어 이름과 같은 크기로 보이게 한다 */
+  font-size: 1.15em;
+  vertical-align: baseline;
+  line-height: 1;
+  color: #d4380d;
+  font-weight: 800;
+  margin-left: 2px;
   cursor: help;
 }
 .ped-list {
