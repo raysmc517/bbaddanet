@@ -24,7 +24,7 @@
 
 - `scripts/collectors/`: 외부 데이터 수집. `scripts/sabermetrics/`: 지표 및 파크팩터 계산.
 - `scripts/build.py`: 데이터 생성 진입점. `scripts/prospects.py`: 유망주 스냅샷과 화면용 데이터. `scripts/validate.py`: MLB 공식 값과 비교.
-- `scripts/teams.py`: MLB 구단·산하 구단·구장 정보와 구단 역사(`data/teams.json`). `scripts/awards.py`: 수상 기록·명예의 전당(`data/awards.json`).
+- `scripts/teams.py`: MLB 구단·산하 구단·구장 정보와 구단 역사(`data/teams.json`). `scripts/awards.py`: 수상 기록·명예의 전당(`data/awards.json`). `scripts/hof_votes.py`: 명예의 전당 득표율·투표 차수(`data/hof_votes.json`).
 - `scripts/past_players.py`: 은퇴 선수 등 과거 MLB 선수 추가. `scripts/search_index.py`: 선수 검색 색인(`data/search.json`).
 - `scripts/moves.py`: 리그 전체 이동 소식(`data/moves_{시즌}.json`)과 입단 경로(`data/arrivals.json`). `scripts/franchise.py`: MLB 구단 연도별 성적(`data/franchise/`). `scripts/leaders.py`: 시즌·리그별 기록 1위(`data/leaders.json`). `scripts/standings.py`: 리그·지구별 순위(`data/standings_{시즌}.json`). `scripts/rosters.py`: MLB 구단 선수단(`data/rosters/{시즌}/{구단 ID}.json`).
 - `index.html`, `standings.html`, `roster.html`, `player.html`, `prospects.html`, `teams.html`, `team.html`, `franchise.html`, `moves.html`, `awards.html`, `search.html`: 화면 진입점. `js/common.js`: 공통 표시 형식과 열 정의. `css/style.css`: 스타일.
@@ -87,7 +87,8 @@
 - `python scripts/teams.py`: MLB와 산하 마이너리그(AAA~Rookie) 구단·구장 정보를 6회 요청으로 받아 `data/teams.json`을 만든다. 실패하거나 MLB 구단 수가 30개가 아니면 기존 파일을 유지한다.
 - 파크팩터는 성적 빌드 결과(`constants_{시즌}.json`)를 읽어 붙이므로 성적 빌드 뒤에 실행한다. 없는 값은 1.000으로 채우지 않고 미제공으로 둔다.
 - `python -m unittest discover -s scripts -p test_teams.py`: 산하 구단 묶기, 모구단 불명 구단 제외, 파크팩터 누락, 도미니카 구장 위치 보정을 검증한다.
-- 구장 사진·로고는 수집하지 않는다. MLB 구단 로고만 MLB 공식 이미지 주소로 걸어 표시한다(`js/team.js`, 2026-11-17 사용자 결정). 지도는 좌표로 외부 지도 링크만 건다.
+- 구장 사진·로고 파일은 저장하지 않는다. MLB 구단 로고는 MLB 공식 이미지 주소로(`js/team.js`, 2026-11-17 사용자 결정), MLB 구장 사진은 위키미디어 공용 자유 라이선스 사진 주소로 걸고 저작자·라이선스를 적는다(2026-11-18 사용자 결정). 지도는 좌표로 외부 지도 링크만 건다.
+- `python scripts/venue_photos.py`: `teams.json`의 MLB 홈구장 이름(또는 `WIKI_TITLE`)으로 위키백과 대표 사진을 찾아 주소·저작자·라이선스를 `data/venue_photos.json`에 둔다(요청 약 60회). 자유 라이선스만 넣고, 요청이 실패한 구장은 이전 값을 쓴다. 구장이 바뀔 때 `teams.py` 뒤에 직접 실행한다.
 - MLB 구단에는 구단 역사(`history`: 월드시리즈 우승 연도, MVP·사이영상·신인왕 횟수, 명예의 전당, 영구결번)와 소개 글(`note`)이 붙는다. 우승·수상·명예의 전당은 `data/awards.json`에서 팀 ID로 세므로 `awards.py` 뒤에 실행한다. 파일이 없으면 0이 아닌 미제공(`null`)으로 둔다. 영구결번은 구단별로 30회 더 요청한다.
 - 소개 글은 `data/team_notes.json`(구단 ID → 글)에 직접 작성해 관리하는 파일이다. 스크립트가 만들지 않으며, 바뀔 수 있는 숫자(우승 횟수 등)는 글에 쓰지 않고 수집 데이터로 표시한다.
 
@@ -98,6 +99,9 @@
 - 선수 페이지 링크 여부는 `data/players/`에 파일이 있는지로 정하므로 `past_players.py` 뒤에 실행한다. 감독·구단주 등 선수 파일이 없는 인물은 링크 없이 이름만 보여준다.
 - 포지션은 선수의 주 포지션이며 수상 당시 포지션이 아니다. 명예의 전당의 팀은 명판 기준이고 원본에 없으면 비운다.
 - 자동 갱신에서는 월요일에만 `awards.py` → `teams.py` 순서로 실행한다.
+- `python scripts/hof_votes.py`: 명예의 전당 선출 방식·득표율·득표수·투표 차수를 `data/hof_votes.json`으로 만든다. MLB API에 득표율이 없어 위키백과 공개 문서(회원 목록, 연도별 투표 결과, CC BY-SA)에서 사실 자료만 가져온다(요청 약 60회, 1.5초 간격). 자동 갱신에는 넣지 않고 선출 발표(1월 기자단, 12월 위원회) 뒤 `awards.py` → `hof_votes.py` 순서로 직접 실행한다.
+- 선수는 `awards.json`의 명예의 전당 행과 같은 연도(없으면 앞뒤 1년, 전체 이름 일치만)·이름(Jr./Sr. 무시)으로 맞춘다. 맞추지 못한 회원은 넣지 않고 출력한다. 연도별 문서가 실패하면 그 연도만 득표수·차수를 비운다. 투표 차수는 원본 표에 차수 열이 있는 연도만 채운다.
+- `python -m unittest discover -s scripts -p test_hof_votes.py`: 회원 목록·투표 표 해석, 위원회 칸, 이름·연도 맞추기를 검증한다.
 - `python -m unittest discover -s scripts -p test_awards.py`: 리그 묶기, 중복 제거, 정렬을 검증한다.
 
 ## 구단 연도별 성적 실행
@@ -140,3 +144,5 @@
 ## 입단 정보 실행
 
 - 프로필은 최초 제공 시즌 대신 지명 연도·라운드·전체 순위·계약금을 표시한다. 국제 계약은 별도로 구분하며 확인된 출처가 없는 순위·계약금은 만들지 않는다. `python scripts/recruitment.py`로 생성하고 `--refresh`로 캐시를 갱신한다.
+- 국제 아마추어 계약: `python scripts/recruitment.py --pipeline`이 MLB Pipeline 팀별 Top 30(요청 31회)에서 지명 없이 계약한 선수의 계약일·구단을 읽고, 소개 글의 "signed … for $X" 문장에서 금액만 뽑는다(본문 저장 안 함, 구단 한도 등 다른 금액 제외). `data/drafts/international_pipeline.json`에 쌓으며 순위에서 빠져도 지우지 않는다. 우선순위는 `recruitment_overrides.json` > Pipeline > 공식 지명. `python -m unittest discover -s scripts -p test_signings.py`로 날짜·금액 읽기를 검증한다.
+- 해외 프로 리그(NPB·KBO) 출신의 전 소속팀은 MLB API에 기록이 없어 아직 제공하지 않는다.

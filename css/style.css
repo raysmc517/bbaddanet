@@ -304,16 +304,50 @@ table.stats {
   color: var(--text-sub);
   margin: 0 0 8px;
 }
-.award-list ul {
+.award-hof {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+.award-hof .muted { font-size: 13px; }
+.award-hof-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--surface);
+}
+/* 상별 카드: 큰 횟수 + 상 이름 + 수상 연도 */
+.award-cards {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 22px;
-  font-size: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 8px;
 }
-.award-list li.award-hof { flex: 1 1 100%; font-weight: 700; }
+.award-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-alt);
+}
+.award-count {
+  grid-row: 1 / 3;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.award-count small { font-size: 12px; font-weight: 600; margin-left: 1px; }
+.award-name { font-size: 14px; font-weight: 700; }
+.award-years { font-size: 12px; color: var(--text-sub); font-variant-numeric: tabular-nums; }
 .award-list a { color: inherit; text-decoration: none; }
 .award-list a:hover { text-decoration: underline; }
 .award-list .muted { font-size: 12px; }
@@ -811,4 +845,30 @@ table.stats {
 @media (max-width: 560px) {
   .move-item { flex-direction: column; gap: 6px; }
   .move-badge { min-width: 0; padding: 0 10px; }
+}
+
+/* 구장 사진 (위키미디어 공용, 주소로만 표시): 구장 소개 카드 안의 작은 사진 */
+.venue-card .venue-photo {
+  flex: 0 0 240px;
+  margin: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+}
+.venue-photo img {
+  display: block;
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+.venue-photo figcaption {
+  padding: 4px 8px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-sub);
+}
+.venue-photo figcaption a { color: inherit; }
+@media (max-width: 560px) {
+  .venue-card .venue-photo { flex: 1 1 100%; }
 }

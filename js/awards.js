@@ -215,4 +215,50 @@
     $("toSelect").addEventListener("change", changePeriod);
     $("searchInput").addEventListener("input", () => {
       state.search = $("searchInput").value;
-      render(
+      render();
+    });
+    $("tableHead").addEventListener("click", (event) => {
+      const th = event.target.closest("th[data-key]");
+      if (!th) return;
+      const column = COLUMNS.find((c) => c.key === th.dataset.key);
+      if (state.sortKey === column.key) {
+        state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
+      } else {
+        // 글자 열은 오름차순, 숫자 열은 내림차순으로 시작
+        state.sortKey = column.key;
+        state.sortDir = column.left ? "asc" : "desc";
+      }
+      render();
+    });
+  }
+
+  async function init() {
+    readUrl();
+    try {
+      data = await loadJson("data/awards.json");
+    } catch (error) {
+      $("status").className = "status error";
+      $("status").textContent = "수상 기록을 불러오지 못했습니다: " + error.message;
+      return;
+    }
+    // 명예의 전당 투표 자료는 없어도 나머지 수상 기록은 보여준다
+    try {
+      votes = (await loadJson("data/hof_votes.json")).players;
+    } catch (error) {
+      votes = {};
+    }
+    prepare();
+    if (!data.awards.some((a) => a.key === state.award)) state.award = "hof";
+    $("awardSelect").innerHTML = data.awards
+      .map((a) => '<option value="' + escapeHtml(a.key) + '">' + escapeHtml(a.name) + "</option>")
+      .join("");
+    $("awardSelect").value = state.award;
+    $("searchInput").value = state.search;
+    renderFilters();
+    bindEvents();
+    render();
+    $("updatedText").textContent = "수상 기록 갱신: " + new Date(data.updated).toLocaleString("ko-KR");
+  }
+
+  init();
+})();

@@ -121,5 +121,27 @@ window.BB = (function () {
     pf: (v) => (has(v) ? v.toFixed(3) : "-"),
   };
 
-  return { fmt, COLUMNS, isStarter, escapeHtml, loadJson, cell, visibleColumns, venue, has };
+  // ---------- 명예의 전당 선출 방식 (data/hof_votes.json, scripts/hof_votes.py) ----------
+  // 원본(위키백과 회원 목록)의 방식 표기: BBWAA(기자단) 또는 위원회 약칭. 위원회는 이름을 풀어 쓴다.
+  const HOF_COMMITTEE = {
+    VC: "베테랑 위원회", NLC: "니그로리그 위원회", SCNL: "니그로리그 특별위원회",
+    EE: "Expansion Era 위원회", TG: "Today's Game 위원회", MB: "Modern Baseball 위원회",
+    GD: "Golden Days 위원회", EB: "Early Baseball 위원회", CLB: "Classic Baseball 위원회",
+    COB: "Contemporary Baseball 위원회", PI: "Pre-Integration 위원회", GE: "Golden Era 위원회",
+  };
+  const ordinal = (n) => n + "번째";
+  const hof = {
+    isWriters: (vote) => vote && vote.method === "BBWAA",
+    // "기자단 투표" 또는 "위원회 선출 (Classic Baseball 위원회)"
+    method: (vote) => {
+      if (!vote) return "";
+      if (vote.method === "BBWAA") return "기자단 투표";
+      const code = (vote.method.match(/\(([A-Z]+)\)/) || [])[1] || vote.method.split(" ")[0];
+      return "위원회 선출" + (HOF_COMMITTEE[code] ? " (" + HOF_COMMITTEE[code] + ")" : "");
+    },
+    pct: (vote) => (vote && Number.isFinite(vote.pct) ? (Number.isInteger(vote.pct) ? vote.pct : vote.pct.toFixed(2)) + "%" : ""),
+    ballot: (vote) => (vote && vote.ballot ? (vote.ballot === 1 ? "첫 투표" : ordinal(vote.ballot) + " 투표") : ""),
+  };
+
+  return { fmt, COLUMNS, isStarter, escapeHtml, loadJson, cell, visibleColumns, venue, has, hof };
 })();

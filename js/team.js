@@ -162,8 +162,31 @@
     $("historySection").hidden = false;
   }
 
+  // 구장 사진 (2026-11-18 사용자 결정): 파일을 저장하지 않고 위키미디어 공용 사진 주소로 걸어 표시하며
+  // 저작자·라이선스·원본을 함께 적는다. data/venue_photos.json(scripts/venue_photos.py)에 있는 MLB 구장만 있다.
+  // 사진을 못 받으면 사진 자리를 숨긴다.
+  function renderVenuePhoto(venueId) {
+    loadJson("data/venue_photos.json").then((photos) => {
+      const photo = photos[String(venueId)];
+      if (!photo || !/^https:\/\//.test(photo.url || "")) return;
+      const box = $("venuePhoto");
+      const license = photo.licenseUrl && /^https?:\/\//.test(photo.licenseUrl)
+        ? '<a href="' + escapeHtml(photo.licenseUrl) + '" target="_blank" rel="noopener">' + escapeHtml(photo.license) + "</a>"
+        : escapeHtml(photo.license);
+      // 구장 소개 카드 안에 작은 사진으로 넣고, 누르면 위키미디어 공용 원본을 연다 (2026-11-18 사용자 요구)
+      box.innerHTML =
+        '<a href="' + escapeHtml(photo.file) + '" target="_blank" rel="noopener" title="원본 사진 보기">' +
+        '<img src="' + escapeHtml(photo.url) + '" alt="' + escapeHtml($("venueName").textContent) + ' 사진" loading="lazy"' +
+        (photo.width && photo.height ? ' width="' + photo.width + '" height="' + photo.height + '"' : "") + "></a>" +
+        "<figcaption>사진: " + escapeHtml(photo.author) + " · " + license + " · 위키미디어 공용</figcaption>";
+      box.querySelector("img").addEventListener("error", () => { box.hidden = true; });
+      box.hidden = false;
+    }).catch(() => {});
+  }
+
   function renderVenue(team, season) {
     const v = team.venue;
+    if (team.level === "MLB" && has(v.id)) renderVenuePhoto(v.id);
     $("venueName").textContent = v.name || "구장 정보 없음";
     $("venueAddress").textContent = [v.address, venue.place(v) === "-" ? "" : venue.place(v)].filter(has).join(", ");
 

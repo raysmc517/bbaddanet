@@ -125,7 +125,8 @@
       .map((fact) => "<div><dt>" + fact[0] + "</dt><dd>" + escapeHtml(fact[1]) + "</dd></div>")
       .join("");
     if (signing && /^https:\/\//.test(signing.source || "")) {
-      $("playerFacts").insertAdjacentHTML("beforeend", '<div><dt>입단 정보 출처</dt><dd><a target="_blank" rel="noopener noreferrer" href="' + escapeHtml(signing.source) + '">MLB 공식 자료</a></dd></div>');
+      $("playerFacts").insertAdjacentHTML("beforeend", '<div><dt>입단 정보 출처</dt><dd><a target="_blank" rel="noopener noreferrer" href="' + escapeHtml(signing.source) + '">' +
+        (signing.source.includes("/prospects/") ? "MLB Pipeline" : "MLB 공식 자료") + "</a></dd></div>");
     }
     $("profile").hidden = false;
   }
@@ -436,8 +437,10 @@
   // MLB.com 선수 페이지 상단 요약과 같은 항목·순서 (2026-11-18 확인). 승-패는 한 칸으로 보여준다.
   const SUMMARY_KEYS = {
     // 경기 수(G)는 MLB.com 요약에는 없지만 출전 경기를 중요하게 보므로 맨 앞에 둔다 (2026-11-18 사용자 요구)
-    batting: ["G", "AB", "AVG", "HR", "RBI", "SB", "OPS"],
-    pitching: ["G", "WL", "ERA", "outs", "SO", "WHIP"],
+    // 안타·볼넷·출루율·장타율도 따로 보여준다 (2026-11-18 사용자 요구)
+    batting: ["G", "AB", "H", "HR", "RBI", "BB", "SB", "AVG", "OBP", "SLG", "OPS"],
+    // 볼넷·세이브·홀드를 더해 마무리·중간 투수의 성적도 보이게 한다 (2026-11-18 사용자 요구: 리베라·호프먼 등)
+    pitching: ["G", "WL", "ERA", "outs", "SO", "BB", "SV", "HLD", "WHIP"],
   };
   const WIN_LOSS = {
     key: "WL", label: "W-L", desc: "승-패",
@@ -592,4 +595,28 @@
     $("status").textContent = player.careerStatus === "no_records"
       ? "공식 데이터에서 제공된 프로 경기 기록이 없습니다."
       : player.past && pastWithMinors(player)
-      ? "2000년 이후 MLB에 출전한 은퇴 선수는 MLB·마이너리그 정규시즌 기록을 제공합니다. 마이너리그 재활 경기�
+      ? "2000년 이후 MLB에 출전한 은퇴 선수는 MLB·마이너리그 정규시즌 기록을 제공합니다. 마이너리그 재활 경기도 포함되며, 해외 리그 기록과 과거 시즌 세이버 지표는 제공하지 않습니다."
+      : player.past
+      ? "2000년 이전에 MLB 경력을 마친 은퇴 선수는 MLB 정규시즌 기록만 제공합니다. 마이너리그와 해외 리그 기록은 포함하지 않으며, 과거 시즌 세이버 지표는 아직 제공하지 않습니다."
+      : player.careerUpdated
+      ? "MLB·마이너리그의 최초 제공 시즌부터 표시합니다. 해외 리그 및 원본 미제공 기록은 포함되지 않을 수 있습니다. 과거 세이버 지표는 계산 근거가 있는 경우에만 제공합니다."
+      : "저장된 시즌 기록입니다. 전체 프로 커리어 데이터는 아직 수집되지 않았습니다.";
+
+    // 리더보드에서 넘어왔으면 보던 조건 그대로 돌아가게 한다
+    if (document.referrer && new URL(document.referrer).origin === location.origin && /(\/|index\.html)$/.test(new URL(document.referrer).pathname)) {
+      $("backLink").href = document.referrer;
+    }
+
+    $("viewSwitch").addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (!button || button.dataset.value === view) return;
+      view = button.dataset.value;
+      $("viewSwitch").querySelectorAll("button").forEach((item) => {
+        item.setAttribute("aria-pressed", String(item.dataset.value === view));
+      });
+      renderCareer();
+    });
+  }
+
+  init();
+})();
