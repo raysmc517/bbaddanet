@@ -111,7 +111,8 @@ python -m http.server 8000
 | 성적 재수집 생략 (Pipeline·프로필 요청은 남음) | `python scripts/build.py --skip-stats` |
 | Pipeline 랭킹 강제 갱신 | `python scripts/build.py --pipeline` |
 | 선수별 과거 커리어 수집 (`--ids`로 범위 지정, `--refresh`로 갱신) | `python scripts/careers.py` |
-| 지명·계약 정보 생성 | `python scripts/recruitment.py` |
+| 지명·계약 정보 생성 (`--foreign`로 포스팅·해외 리그 이적, `--transactions`로 이동 기록 첫 계약 수집) | `python scripts/recruitment.py` |
+| 금지약물 공식 징계 기록 생성 (위키백과, 요청 1회) | `python scripts/ped.py` |
 | 수상 기록·명예의 전당 생성 | `python scripts/awards.py` |
 | 구단·구장 정보와 구단 역사 생성 (수상 기록 뒤에 실행) | `python scripts/teams.py` |
 | 리그·지구별 순위 생성 (`--current-season`으로 최근 시즌만) | `python scripts/standings.py` |
@@ -155,6 +156,8 @@ bbaddanet/
 │  ├─ build.py         성적 수집·계산 진입점
 │  ├─ careers.py       선수별 과거 커리어 수집·캐시
 │  ├─ recruitment.py   지명·계약 정보
+│  ├─ signings.py      지명 없는 첫 계약 (포스팅·해외 리그 이적·국제 계약)
+│  ├─ ped.py           금지약물 공식 징계 기록
 │  ├─ prospects.py     유망주 스냅샷과 화면용 데이터
 │  ├─ awards.py        수상 기록·명예의 전당
 │  ├─ teams.py         구단·산하 구단·구장 정보, 구단 역사

@@ -146,4 +146,14 @@
 
 - 프로필은 최초 제공 시즌 대신 지명 연도·라운드·전체 순위·계약금을 표시한다. 국제 계약은 별도로 구분하며 확인된 출처가 없는 순위·계약금은 만들지 않는다. `python scripts/recruitment.py`로 생성하고 `--refresh`로 캐시를 갱신한다.
 - 국제 아마추어 계약: `python scripts/recruitment.py --pipeline`이 MLB Pipeline 팀별 Top 30(요청 31회)에서 지명 없이 계약한 선수의 계약일·구단을 읽고, 소개 글의 "signed … for $X" 문장에서 금액만 뽑는다(본문 저장 안 함, 구단 한도 등 다른 금액 제외). `data/drafts/international_pipeline.json`에 쌓으며 순위에서 빠져도 지우지 않는다. 우선순위는 `recruitment_overrides.json` > Pipeline > 공식 지명. `python -m unittest discover -s scripts -p test_signings.py`로 날짜·금액 읽기를 검증한다.
-- 해외 프로 리그(NPB·KBO) 출신의 전 소속팀은 MLB API에 기록이 없어 아직 제공하지 않는다.
+- 해외 프로 리그 출신(`scripts/signings.py`): `python scripts/recruitment.py --foreign`이 위키백과 포스팅 표(NPB·KBO)에서 포스팅 날짜·전 소속팀·MLB 구단·포스팅 금액·MLB 계약을 읽는다. 일본·한국·대만 출신 MLB 선수 목록에서 포스팅이 아닌 선수는 선수 문서 정보 상자로 MLB 데뷔 전 마지막 해외 프로 구단(NPB·KBO·CPBL)을 찾아 "해외 리그 이적 (포스팅 아님)"으로 둔다(원본이 포스팅 여부만 구분하므로 해외 FA와 옛 임대·판매 이적을 나누지 않는다). 요청 약 80회, 1.5초 간격. 선수 연결은 MLB.com 주소의 ID를 먼저 쓰고, 없으면 이름이 한 명에게만 맞을 때만 연결한다. 미국 출신의 KBO·NPB 복귀 선수(예: Merrill Kelly)는 목록이 없어 넣지 않는다.
+- 이동 기록 첫 계약: `python scripts/recruitment.py --transactions`가 미국·캐나다·푸에르토리코 밖 출신이고 지명 기록이 없으며 프로 첫 시즌이 2009년 이후인 선수의 `/transactions`에서 MLB 구단과의 첫 FA 계약(SFA)을 받아 `data/drafts/first_signings.json`에 쌓는다(선수당 1회, 받은 선수는 건너뜀, `--refresh`로 다시 받음). 원본 이동 기록은 2009년 무렵부터라 계약 연도가 프로 첫 시즌보다 늦거나 2년 넘게 이르면 첫 계약이 아닌 것으로 보고 버린다. 23세 미만의 마이너리그 계약은 국제 아마추어 계약, 나머지는 지명 없는 FA 계약이다. 계약금은 원본에 없다.
+- 우선순위: `recruitment_overrides.json` > 공식 지명 > 포스팅·해외 리그 이적 > Pipeline 국제 계약 > 이동 기록 첫 계약. 화면 표시는 `js/player.js`의 `ENTRY_TYPE`과 맞춘다.
+- `python -m unittest discover -s scripts -p test_signings.py`: 포스팅 표(합친 칸, 글로 쓴 날짜, 링크만 있는 행), 선수 목록 표시, 정보 상자 구단, 이름 순서, 첫 계약 판정을 검증한다.
+
+## 금지약물 징계 표시
+
+- `python scripts/ped.py`: 위키백과 "List of Major League Baseball players suspended for performance-enhancing drugs"에서 MLB·마이너리그 약물 방지 프로그램의 공식 징계만 받아 `data/ped.json`을 만든다(요청 1회). MLB API 이동 기록은 사유 없이 제한 명단(restricted list)으로만 적어 쓰지 않는다. 독립리그·국제대회 징계와 징계 없이 이름만 거론된 경우(미첼 보고서 등)는 넣지 않는다(2026-11-18 사용자 요구).
+- 선수 연결: 이름(가운데 머리글자·Mike/Michael 차이 무시)이 한 명에게만 맞고 징계 연도가 그 선수의 프로 경력 기간 안일 때만. 동명이인은 투수·야수로 거르고, 그래도 여럿이면 넣지 않고 출력한다. 연결 수가 100명 미만이면 기존 파일을 유지한다.
+- 화면: `js/common.js`가 모든 페이지의 선수 링크(`player.html?id=`) 뒤에 `*`를 붙이고, 선수 페이지는 이름 뒤 `*`와 징계 목록(날짜·구단·징계·검출 약물, 출처)을 보여준다. 자동 갱신에는 넣지 않았으므로 새 징계 발표 뒤 직접 실행한다.
+- `python -m unittest discover -s scripts -p test_ped.py`: 합친 칸(rowspan), 서식·각주 정리, 독립리그 표 제외, 동명이인·경력 기간 밖 이름 제외를 검증한다.

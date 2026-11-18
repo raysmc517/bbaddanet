@@ -143,5 +143,29 @@ window.BB = (function () {
     ballot: (vote) => (vote && vote.ballot ? (vote.ballot === 1 ? "첫 투표" : ordinal(vote.ballot) + " 투표") : ""),
   };
 
-  return { fmt, COLUMNS, isStarter, escapeHtml, loadJson, cell, visibleColumns, venue, has, hof };
+  // ---------- 금지약물 징계 표시 (data/ped.json, scripts/ped.py, 2026-11-18 사용자 요구) ----------
+  // MLB·마이너리그 공식 징계를 받은 선수의 이름 뒤에 *를 붙인다. 징계 없이 이름만 거론된 선수는 넣지 않는다.
+  // 페이지마다 표를 그리는 방식이 달라, 선수 페이지 링크(player.html?id=)가 화면에 생기면 찾아서 붙인다.
+  const PED_TITLE = "금지약물 징계 기록 (MLB·마이너리그 공식 징계)";
+  const pedData = loadJson("data/ped.json").catch(() => ({ players: {} }));
+  const pedMark = () => '<sup class="ped-mark" title="' + PED_TITLE + '">*</sup>';
+  function markPedLinks(players, root) {
+    root.querySelectorAll('a[href^="player.html?id="]:not([data-ped])').forEach((link) => {
+      link.dataset.ped = "";
+      const id = new URLSearchParams(link.getAttribute("href").split("?")[1]).get("id");
+      if (players[id]) link.insertAdjacentHTML("beforeend", pedMark());
+    });
+  }
+  pedData.then((data) => {
+    const players = data.players || {};
+    markPedLinks(players, document);
+    let queued = false;
+    new MutationObserver(() => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => { queued = false; markPedLinks(players, document); });
+    }).observe(document.body, { childList: true, subtree: true });
+  });
+
+  return { fmt, COLUMNS, isStarter, escapeHtml, loadJson, cell, visibleColumns, venue, has, hof, pedData, pedMark, PED_TITLE };
 })();

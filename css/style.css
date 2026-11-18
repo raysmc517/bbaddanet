@@ -352,6 +352,24 @@ table.stats {
 .award-list a:hover { text-decoration: underline; }
 .award-list .muted { font-size: 12px; }
 
+/* 금지약물 징계: 이름 뒤 *, 선수 페이지 징계 목록 */
+.ped-mark {
+  color: var(--negative, #c0392b);
+  font-weight: 700;
+  margin-left: 1px;
+  cursor: help;
+}
+.ped-list {
+  flex: 1 1 100%;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.ped-list h2 { font-size: 13px; color: var(--text-sub); margin: 0 0 8px; }
+.ped-list ul { margin: 0 0 6px; padding-left: 18px; font-size: 14px; }
+.ped-list li { margin-bottom: 2px; }
+.ped-list .muted { font-size: 12px; margin: 0; }
+.ped-list a { color: inherit; }
+
 /* 구단 페이지 구단 역사 */
 .history-card {
   background: var(--surface);

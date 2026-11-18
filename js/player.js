@@ -4,7 +4,7 @@
 (function () {
   "use strict";
 
-  const { COLUMNS, escapeHtml, loadJson, cell, visibleColumns, fmt, hof } = window.BB;
+  const { COLUMNS, escapeHtml, loadJson, cell, visibleColumns, fmt, hof, pedData, pedMark } = window.BB;
 
   const $ = (id) => document.getElementById(id);
   const HAND = { L: "좌", R: "우", S: "양" };
@@ -58,6 +58,17 @@
   // data/arrivals.json(scripts/moves.py)의 마지막 영입이 현재 구단이면 트레이드·FA 계약·웨이버 클레임을,
   // 아니면 지명·국제 계약 구단이 현재 구단일 때 그 경로를 보여준다. 둘 다 아니면 수집 범위 이전의 이동이다.
   const ARRIVAL_LABEL = { trade: "트레이드", sign: "FA 계약", claim: "웨이버 클레임" };
+  // 지명 없는 첫 계약의 종류 (scripts/recruitment.py, scripts/signings.py)
+  const ENTRY_TYPE = {
+    international: "국제 아마추어 계약",
+    free_agent: "FA 계약 (지명 없음)",
+    posting: "포스팅",
+    foreign: "해외 리그 이적 (포스팅 아님)",
+  };
+  const SOURCE_LABEL = (url) =>
+    url.includes("wikipedia.org") ? "위키백과 (CC BY-SA)" :
+    url.includes("/transactions") ? "MLB 공식 이동 기록" :
+    url.includes("/prospects/") ? "MLB Pipeline" : "MLB 공식 자료";
   function renderArrival(club, teams, arrivals) {
     const abbr = (id) => (teams.clubs.find((item) => item.id === id) || {}).abbr || "";
     const last = arrivals[String(player.id)];
@@ -66,7 +77,7 @@
       const from = last[3] ? ", " + abbr(last[3]) + "에서" : "";
       text = ARRIVAL_LABEL[last[1]] + " (" + last[0] + from + ")";
     } else if (recruitment && recruitment.team === club.name) {
-      text = recruitment.type === "draft" ? "드래프트 지명 (" + recruitment.year + "년)" : "국제 아마추어 계약";
+      text = recruitment.type === "draft" ? "드래프트 지명 (" + recruitment.year + "년)" : ENTRY_TYPE[recruitment.type] || "지명 없이 계약";
     } else {
       text = "2024년 이전 이동 (기록 범위 밖)";
     }
@@ -107,7 +118,14 @@
     } else if (signing && signing.type === "international") {
       entryLabel = "프로 계약";
       entryText = (signing.date || signing.year + "년") + " · 국제 아마추어 계약 (지명 없음)";
+    } else if (signing && ENTRY_TYPE[signing.type]) {
+      // 포스팅·해외 FA는 전 소속 리그·구단을 함께 적는다. 계약일을 모르면 MLB 데뷔 연도만 있으므로 날짜를 쓰지 않는다.
+      entryLabel = "프로 계약";
+      const when = signing.date || (signing.type === "foreign" ? "" : signing.year ? signing.year + "년" : "");
+      const from = signing.foreignTeam ? " · " + signing.league + " " + signing.foreignTeam : "";
+      entryText = (when ? when + " · " : "") + ENTRY_TYPE[signing.type] + from;
     }
+    const contract = signing && (signing.type === "posting" || signing.type === "foreign" || signing.type === "free_agent");
     const facts = [
       ["생년월일", player.birthDate ? player.birthDate + (player.age && !player.deathDate ? " (" + player.age + "세)" : "") : ""],
       ["사망", player.deathDate ? player.deathDate + (player.age ? " (향년 " + player.age + "세)" : "") : ""],
@@ -117,8 +135,11 @@
       ["MLB 데뷔", player.debut || "없음"],
       ["마지막 출전", player.lastPlayed],
       [entryLabel, entryText],
-      [signing && signing.type === "international" ? "계약 구단" : "지명 구단", signing && signing.team],
-      ["계약금", signing && Number.isFinite(signing.bonusUSD) ? "$" + signing.bonusUSD.toLocaleString("en-US") + " USD" : "미확인"],
+      [signing && signing.type !== "draft" ? "계약 구단" : "지명 구단", signing && signing.team],
+      ["포스팅 금액", signing && signing.type === "posting" ? signing.fee : ""],
+      // MLB 계약 내용은 포스팅 표에 있는 것만 보여준다. 국제 계약금과 같은 칸에 넣지 않는다.
+      ["MLB 계약", signing && signing.contract],
+      ["계약금", contract ? "" : signing && Number.isFinite(signing.bonusUSD) ? "$" + signing.bonusUSD.toLocaleString("en-US") + " USD" : "미확인"],
     ];
     $("playerFacts").innerHTML = facts
       .filter((fact) => fact[1])
@@ -126,7 +147,7 @@
       .join("");
     if (signing && /^https:\/\//.test(signing.source || "")) {
       $("playerFacts").insertAdjacentHTML("beforeend", '<div><dt>입단 정보 출처</dt><dd><a target="_blank" rel="noopener noreferrer" href="' + escapeHtml(signing.source) + '">' +
-        (signing.source.includes("/prospects/") ? "MLB Pipeline" : "MLB 공식 자료") + "</a></dd></div>");
+        SOURCE_LABEL(signing.source) + "</a></dd></div>");
     }
     $("profile").hidden = false;
   }
@@ -158,6 +179,20 @@
 
   // 수상 경력 (2026-11-18 가독성 개선): 명예의 전당은 맨 위 한 줄에 선출 방식·득표율·투표 차수와 함께,
   // 나머지 상은 상별 카드(횟수 + 수상 연도)로 보여준다. 횟수가 많은 상이 먼저다.
+  // 금지약물 징계: 이름 뒤 *와 징계 목록 (data/ped.json, 위키백과의 공식 징계 목록)
+  function renderPed(data) {
+    const items = (data.players || {})[String(player.id)];
+    if (!items || !items.length) return;
+    $("playerName").insertAdjacentHTML("beforeend", pedMark());
+    $("pedList").innerHTML = "<h2>금지약물 징계 <sup class=\"ped-mark\">*</sup></h2><ul>" +
+      items.map((item) => "<li><strong>" + escapeHtml(item.date) + "</strong> " +
+        escapeHtml([item.team, item.penalty ? item.penalty.replace(/(\d+) games?/, "$1경기").replace("season", "시즌") + " 출장 정지" : "",
+          item.drug ? "검출 약물: " + item.drug : ""].filter(Boolean).join(" · ")) + "</li>").join("") + "</ul>" +
+      '<p class="muted">MLB·마이너리그 약물 방지 프로그램에 따른 공식 징계 발표만 표시합니다. 출처: <a target="_blank" rel="noopener noreferrer" href="' +
+      escapeHtml(data.source) + '">위키백과 (CC BY-SA)</a></p>';
+    $("pedList").hidden = false;
+  }
+
   function renderAwards(awards, votes) {
     const mine = awards.rows.filter((row) => String(row[3]) === String(player.id));
     if (!mine.length) return;
@@ -591,6 +626,7 @@
       renderCareer();
     }).catch(() => {});
     loadJson("data/teams.json").then(linkTeam).catch(() => {});
+    if (pedData) pedData.then(renderPed); // 예전 common.js가 캐시돼 있으면 건너뛴다
     $("careerToolbar").hidden = false;
     $("status").textContent = player.careerStatus === "no_records"
       ? "공식 데이터에서 제공된 프로 경기 기록이 없습니다."
