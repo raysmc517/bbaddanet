@@ -4,7 +4,7 @@
 (function () {
   "use strict";
 
-  const { escapeHtml, loadJson, has } = window.BB;
+  const { escapeHtml, loadJson, has, hof } = window.BB;
   const $ = (id) => document.getElementById(id);
 
   // value: 정렬에 쓰는 값. left: 왼쪽 정렬 열
@@ -15,9 +15,16 @@
     { key: "pos", label: "포지션", left: true, value: (r) => r.pos },
     { key: "team", label: "팀", left: true, value: (r) => r.team },
     { key: "count", label: "통산", desc: "이 상을 받은 통산 횟수", value: (r) => r.count },
+    // 명예의 전당만: 선출 방식·득표율·득표수·투표 차수 (2026-11-18 사용자 요구)
+    { key: "method", label: "선출 방식", left: true, hofOnly: true, value: (r) => (r.vote ? hof.method(r.vote) : null) },
+    { key: "pct", label: "득표율", hofOnly: true, desc: "기자단(BBWAA) 득표율. 75% 이상이면 선출", value: (r) => (hof.isWriters(r.vote) ? r.vote.pct : null) },
+    { key: "votes", label: "득표수", hofOnly: true, value: (r) => (hof.isWriters(r.vote) ? r.vote.votes : null) },
+    { key: "ballot", label: "투표 차수", hofOnly: true, desc: "기자단 투표 후보로 몇 번째 해에 선출됐는지. 옛 시즌은 원본에 없음", value: (r) => (hof.isWriters(r.vote) ? r.vote.ballot : null) },
   ];
+  let votes = {}; // 선수 ID → 명예의 전당 투표 (data/hof_votes.json)
 
-  const state = { award: "hof", league: "", season: "", search: "", sortKey: "season", sortDir: "desc" };
+  // from·to: 기간(시즌) 조건. 빈 값이면 처음·끝까지 (2026-11-18 사용자 요구: 기간 선택)
+  const state = { award: "hof", league: "", from: "", to: "", search: "", sortKey: "season", sortDir: "desc" };
   let data = null;
   let rowsByAward = {}; // 상 키 → 행 목록
 
@@ -39,6 +46,7 @@
         pos: person[1],
         page: person[2] === 1,
         count: counts[row[0] + ":" + row[3]],
+        vote: row[0] === "hof" ? votes[String(row[3])] || null : null,
       });
     });
   }
@@ -47,7 +55,10 @@
     const params = new URLSearchParams(location.search);
     if (params.get("award")) state.award = params.get("award");
     if (["AL", "NL"].includes(params.get("league"))) state.league = params.get("league");
-    if (/^\d{4}$/.test(params.get("season") || "")) state.season = params.get("season");
+    if (/^\d{4}$/.test(params.get("from") || "")) state.from = params.get("from");
+    if (/^\d{4}$/.test(params.get("to") || "")) state.to = params.get("to");
+    // 예전 주소(season=한 시즌)는 그 시즌 하나의 기간으로 연다
+    if (/^\d{4}$/.test(params.get("season") || "")) state.from = state.to = params.get("season");
     if (params.get("q")) state.search = params.get("q");
     if (params.get("sort")) {
       state.sortKey = params.get("sort");
@@ -59,7 +70,8 @@
     const params = new URLSearchParams();
     if (state.award !== "hof") params.set("award", state.award);
     if (state.league) params.set("league", state.league);
-    if (state.season) params.set("season", state.season);
+    if (state.from) params.set("from", state.from);
+    if (state.to) params.set("to", state.to);
     if (state.search) params.set("q", state.search);
     if (state.sortKey !== "season" || state.sortDir !== "desc") {
       params.set("sort", state.sortKey);
@@ -78,12 +90,18 @@
     if (!hasLeagues()) state.league = "";
     $("leagueSelect").value = state.league;
 
+    // 시즌 목록은 최신 시즌부터(내림차순). 그 상에 없는 시즌 조건은 푼다
     const seasons = [...new Set(awardRows().map((r) => r.season))].sort((a, b) => b - a);
-    if (!seasons.includes(Number(state.season))) state.season = "";
-    $("seasonLabel").textContent = state.award === "hof" ? "헌액 연도" : "시즌";
-    $("seasonSelect").innerHTML =
-      '<option value="">전체</option>' + seasons.map((s) => '<option value="' + s + '">' + s + "</option>").join("");
-    $("seasonSelect").value = state.season;
+    if (!seasons.includes(Number(state.from))) state.from = "";
+    if (!seasons.includes(Number(state.to))) state.to = "";
+    const unit = state.award === "hof" ? "헌액 연도" : "시즌";
+    $("fromLabel").textContent = "시작 " + unit;
+    $("toLabel").textContent = "끝 " + unit;
+    const options = seasons.map((s) => '<option value="' + s + '">' + s + "</option>").join("");
+    $("fromSelect").innerHTML = '<option value="">처음부터</option>' + options;
+    $("toSelect").innerHTML = '<option value="">최근까지</option>' + options;
+    $("fromSelect").value = state.from;
+    $("toSelect").value = state.to;
   }
 
   // 값이 없는 행은 정렬 방향과 관계없이 맨 아래에 둔다. 같은 값이면 최근 시즌, 이름 순
@@ -123,7 +141,12 @@
       return '<td class="col-name' + sortedClass + '">' + (row.page ? '<a href="player.html?id=' + row.id + '">' + name + "</a>" : name) + "</td>";
     }
     const value = column.value(row);
-    const text = column.key === "count" ? value + "회" : has(value) ? escapeHtml(value) : "-";
+    let text = column.key === "count" ? value + "회" : has(value) ? escapeHtml(value) : "-";
+    if (column.key === "pct" && has(value)) text = escapeHtml(hof.pct(row.vote));
+    if (column.key === "ballot" && has(value)) text = escapeHtml(hof.ballot(row.vote));
+    if (column.key === "method" && row.vote && !hof.isWriters(row.vote) && Number.isFinite(row.vote.pct)) {
+      text += ' <span class="muted">위원회 득표 ' + escapeHtml(hof.pct(row.vote)) + "</span>";
+    }
     return '<td class="' + (column.left ? "col-team" : "") + sortedClass + '">' + text + "</td>";
   }
 
@@ -131,6 +154,7 @@
     const all = awardRows();
     // 리그 구분이 없는 상은 리그 열을, 모두 1회뿐인 상은 통산 열을 뺀다
     const columns = COLUMNS.filter((column) => {
+      if (column.hofOnly) return state.award === "hof" && Object.keys(votes).length > 0;
       if (column.key === "league") return hasLeagues();
       if (column.key === "count") return all.some((r) => r.count > 1);
       return true;
@@ -144,7 +168,8 @@
     const rows = sortRows(
       all.filter((r) => {
         if (state.league && r.league !== state.league) return false;
-        if (state.season && r.season !== Number(state.season)) return false;
+        if (state.from && r.season < Number(state.from)) return false;
+        if (state.to && r.season > Number(state.to)) return false;
         if (keyword && !(r.name + " " + r.team).toLowerCase().includes(keyword)) return false;
         return true;
       })
@@ -175,50 +200,19 @@
       state.league = $("leagueSelect").value;
       render();
     });
-    $("seasonSelect").addEventListener("change", () => {
-      state.season = $("seasonSelect").value;
-      render();
-    });
-    $("searchInput").addEventListener("input", () => {
-      state.search = $("searchInput").value;
-      render();
-    });
-    $("tableHead").addEventListener("click", (event) => {
-      const th = event.target.closest("th[data-key]");
-      if (!th) return;
-      const column = COLUMNS.find((c) => c.key === th.dataset.key);
-      if (state.sortKey === column.key) {
-        state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
-      } else {
-        // 글자 열은 오름차순, 숫자 열은 내림차순으로 시작
-        state.sortKey = column.key;
-        state.sortDir = column.left ? "asc" : "desc";
+    // 시작이 끝보다 늦으면 두 값을 맞바꿔 기간이 뒤집히지 않게 한다
+    const changePeriod = () => {
+      state.from = $("fromSelect").value;
+      state.to = $("toSelect").value;
+      if (state.from && state.to && Number(state.from) > Number(state.to)) {
+        [state.from, state.to] = [state.to, state.from];
+        $("fromSelect").value = state.from;
+        $("toSelect").value = state.to;
       }
       render();
-    });
-  }
-
-  async function init() {
-    readUrl();
-    try {
-      data = await loadJson("data/awards.json");
-    } catch (error) {
-      $("status").className = "status error";
-      $("status").textContent = "수상 기록을 불러오지 못했습니다: " + error.message;
-      return;
-    }
-    prepare();
-    if (!data.awards.some((a) => a.key === state.award)) state.award = "hof";
-    $("awardSelect").innerHTML = data.awards
-      .map((a) => '<option value="' + escapeHtml(a.key) + '">' + escapeHtml(a.name) + "</option>")
-      .join("");
-    $("awardSelect").value = state.award;
-    $("searchInput").value = state.search;
-    renderFilters();
-    bindEvents();
-    render();
-    $("updatedText").textContent = "수상 기록 갱신: " + new Date(data.updated).toLocaleString("ko-KR");
-  }
-
-  init();
-})();
+    };
+    $("fromSelect").addEventListener("change", changePeriod);
+    $("toSelect").addEventListener("change", changePeriod);
+    $("searchInput").addEventListener("input", () => {
+      state.search = $("searchInput").value;
+      render(

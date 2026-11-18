@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>빠따넷 · 구단 연도별 성적</title>
+  <meta name="description" content="MLB 구단의 시즌별 승패, 순위, 득실점, 포스트시즌 결과">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="./">빠따넷</a>
+      <nav class="header-nav">
+        <a href="./">리더보드</a>
+        <a href="standings.html">순위</a>
+        <a href="prospects.html">유망주</a>
+        <a href="teams.html" aria-current="page">구단</a>
+        <a href="moves.html">이동</a>
+        <a href="awards.html">수상</a>
+        <a href="search.html">선수 검색</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <p class="status" id="status" role="status">불러오는 중...</p>
+
+    <div id="content" hidden>
+      <section class="profile" aria-label="구단">
+        <picture class="team-logo" id="teamLogo" hidden></picture>
+        <div>
+          <h1 id="teamName"></h1>
+          <p class="profile-sub" id="teamSub"></p>
+        </div>
+        <dl class="profile-facts" id="seasonFacts"></dl>
+        <p class="team-links" id="teamLinks"></p>
+      </section>
+
+      <div class="career-toolbar">
+        <label class="field">
+          <span>시작 시즌</span>
+          <select id="fromSelect"></select>
+        </label>
+        <label class="field">
+          <span>끝 시즌</span>
+          <select id="toSelect"></select>
+        </label>
+        <label class="field field-check">
+          <input type="checkbox" id="postOnly">
+          <span>포스트시즌 진출 시즌만</span>
+        </label>
+        <span class="career-note" id="seasonCount"></span>
+      </div>
+
+      <section class="career-section" aria-label="연도별 성적">
+        <div class="table-scroll">
+          <table class="stats career franchise">
+            <thead id="seasonHead"></thead>
+            <tbody id="seasonBody"></tbody>
+          </table>
+        </div>
+        <p class="page-note">정규시즌 승패·순위는 MLB 공식 순위 기준입니다. 1969년 이전은 지구가 없어 리그 순위이며, 1892년은 원본에 순위가 없어 빠져 있습니다. 포스트시즌은 1903년(현대 월드시리즈)부터이며 동률 결정전은 넣지 않습니다. 리그 우승은 월드시리즈 진출이며, 월드시리즈가 없던 시즌(1903년 이전, 1904년)은 리그 1위를 셉니다. 기대 승패는 빠따넷이 득점·실점으로 계산한 값(피타고리안, 지수 1.83)입니다. 연고지를 옮기기 전 시즌도 같은 구단으로 보여주며, 그 시즌의 팀 이름을 표시합니다.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>구단 성적 출처: MLB Stats API. Copyright MLB Advanced Media, L.P. 비상업적 개인 프로젝트입니다.</p>
+    </div>
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script src="js/franchise.js"></script>
+</body>
+</html>

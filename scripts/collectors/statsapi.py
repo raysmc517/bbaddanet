@@ -209,6 +209,8 @@ def _batter(split, teams, qualified_ids):
             "ISO": round(slg - avg, 3) if avg is not None and slg is not None else None,
             "BABIP": _div(h - hr, ab - so - hr + sf),
             "BBp": _div(bb, pa, 4), "Kp": _div(so, pa, 4),
+            # MLB.com 표의 GO/AO용 땅볼·뜬공 아웃. 원본에 없으면(옛 시즌) None
+            "GO": g("groundOuts"), "AO": g("airOuts"),
         }
     )
     return row
@@ -232,6 +234,10 @@ def _pitcher(split, teams, qualified_ids):
             "HR9": _div(hr * 27, outs, 2),
             "Kp": _div(so, bf, 4), "BBp": _div(bb, bf, 4), "KBBp": _div(so - bb, bf, 4),
             "BABIP": _div(h - hr, g("atBats", 0) - so - hr + g("sacFlies", 0)),
+            # MLB.com 표 항목: 완투, 완봉, 세이브 기회, 투구 수, 상대 타수(피안타율용), 땅볼·뜬공 아웃.
+            # 원본에 없으면(옛 시즌) 0이 아닌 None
+            "CG": g("completeGames"), "SHO": g("shutouts"), "SVO": g("saveOpportunities"),
+            "NP": g("numberOfPitches"), "AB": g("atBats"), "GO": g("groundOuts"), "AO": g("airOuts"),
         }
     )
     return row

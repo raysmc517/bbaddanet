@@ -4,7 +4,7 @@
 (function () {
   "use strict";
 
-  const { COLUMNS, escapeHtml, loadJson, cell, visibleColumns, fmt } = window.BB;
+  const { COLUMNS, escapeHtml, loadJson, cell, visibleColumns, fmt, hof } = window.BB;
 
   const $ = (id) => document.getElementById(id);
   const HAND = { L: "좌", R: "우", S: "양" };
@@ -14,7 +14,11 @@
   let recruitment = null;
   let view = "basic";
   // 커리어 표 필터. 시즌은 "" 이면 전체, 레벨은 "all"(전체)·"mlb"·"milb"
-  const filter = { season: "", league: "all" };
+  // from·to: 기간(시즌). 빈 값이면 처음·끝까지 (2026-11-18 사용자 요구: 기간 선택)
+  const filter = { from: "", to: "", league: "all" };
+  const inPeriod = (row) =>
+    (!filter.from || row.season >= Number(filter.from)) && (!filter.to || row.season <= Number(filter.to));
+  const periodSet = () => Boolean(filter.from || filter.to);
 
   // 은퇴 선수 중 마이너리그 기록을 받는 기준(scripts/careers.py의 PAST_MINOR_FROM과 같게 유지)
   const PAST_MINOR_FROM = 2000;
@@ -43,9 +47,33 @@
       const found = [club].concat(club.affiliates || []).find((t) => t.name === player.team);
       if (found) {
         renderSub(found.id);
+        // 산하 마이너리그 구단 소속이면 모구단 기준으로 입단 경로를 찾는다
+        if (!player.past) loadJson("data/arrivals.json").then((arrivals) => renderArrival(club, data, arrivals)).catch(() => {});
         return;
       }
     }
+  }
+
+  // 입단 경로: 현재 소속 구단(조직)에 어떻게 왔는지 (2026-11-18 사용자 요구)
+  // data/arrivals.json(scripts/moves.py)의 마지막 영입이 현재 구단이면 트레이드·FA 계약·웨이버 클레임을,
+  // 아니면 지명·국제 계약 구단이 현재 구단일 때 그 경로를 보여준다. 둘 다 아니면 수집 범위 이전의 이동이다.
+  const ARRIVAL_LABEL = { trade: "트레이드", sign: "FA 계약", claim: "웨이버 클레임" };
+  function renderArrival(club, teams, arrivals) {
+    const abbr = (id) => (teams.clubs.find((item) => item.id === id) || {}).abbr || "";
+    const last = arrivals[String(player.id)];
+    let text = "";
+    if (last && last[2] === club.id) {
+      const from = last[3] ? ", " + abbr(last[3]) + "에서" : "";
+      text = ARRIVAL_LABEL[last[1]] + " (" + last[0] + from + ")";
+    } else if (recruitment && recruitment.team === club.name) {
+      text = recruitment.type === "draft" ? "드래프트 지명 (" + recruitment.year + "년)" : "국제 아마추어 계약";
+    } else {
+      text = "2024년 이전 이동 (기록 범위 밖)";
+    }
+    $("playerFacts").insertAdjacentHTML("afterbegin",
+      '<div><dt>입단 경로</dt><dd>' + escapeHtml(text) +
+      (last && last[2] === club.id ? ' <a class="muted" href="moves.html?season=' + last[0].slice(0, 4) + "&q=" +
+        encodeURIComponent(player.name) + '">기록</a>' : "") + "</dd></div>");
   }
 
   // MLB 공식 얼굴 사진. 파일을 저장하지 않고 MLB 이미지 서버 주소로만 표시한다.
@@ -127,20 +155,43 @@
       '<thead><tr><th class="col-season">주차</th><th>전체 순위</th><th>팀 내 순위</th></tr></thead><tbody>' + rows + "</tbody></table></div></section>";
   }
 
-  // 수상 경력: 명예의 전당을 맨 앞에, 나머지는 상별로 횟수와 시즌을 보여준다
-  function renderAwards(awards) {
+  // 수상 경력 (2026-11-18 가독성 개선): 명예의 전당은 맨 위 한 줄에 선출 방식·득표율·투표 차수와 함께,
+  // 나머지 상은 상별 카드(횟수 + 수상 연도)로 보여준다. 횟수가 많은 상이 먼저다.
+  function renderAwards(awards, votes) {
     const mine = awards.rows.filter((row) => String(row[3]) === String(player.id));
     if (!mine.length) return;
-    const items = awards.awards.map((award) => {
+    const link = (award) => '<a href="awards.html' + (award.key === "hof" ? "" : "?award=" + encodeURIComponent(award.key)) + '">' +
+      escapeHtml(award.name) + "</a>";
+    let hofLine = "";
+    const cards = [];
+    awards.awards.forEach((award, order) => {
       const seasons = mine.filter((row) => row[0] === award.key).map((row) => row[1]).sort((a, b) => a - b);
-      if (!seasons.length) return "";
-      const link = '<a href="awards.html' + (award.key === "hof" ? "" : "?award=" + encodeURIComponent(award.key)) + '">' + escapeHtml(award.name) + "</a>";
+      if (!seasons.length) return;
       if (award.key === "hof") {
-        return '<li class="award-hof"><span class="prospect-label">' + link + "</span> " + seasons[0] + "년 헌액</li>";
+        const vote = votes && votes[String(player.id)];
+        const detail = [];
+        if (vote) {
+          detail.push(hof.method(vote));
+          if (hof.isWriters(vote)) {
+            if (Number.isFinite(vote.pct)) detail.push("득표율 " + hof.pct(vote) + (vote.votes ? " (" + vote.votes + "표)" : ""));
+            if (vote.ballot) detail.push(hof.ballot(vote));
+          } else if (Number.isFinite(vote.pct)) {
+            detail.push("위원회 득표 " + hof.pct(vote));
+          }
+        }
+        hofLine = '<div class="award-hof"><span class="award-hof-badge">명예의 전당</span> <strong>' + seasons[0] + "년 헌액</strong>" +
+          (detail.length ? ' <span class="muted">' + detail.map(escapeHtml).join(" · ") + "</span>" : "") +
+          ' <a class="muted" href="awards.html">전체 보기</a></div>';
+        return;
       }
-      return "<li><strong>" + link + "</strong> " + seasons.length + '회 <span class="muted">(' + seasons.join(", ") + ")</span></li>";
-    }).join("");
-    $("awardList").innerHTML = "<h2>수상 경력</h2><ul>" + items + "</ul>";
+      cards.push({ order, count: seasons.length, html:
+        '<li class="award-card"><span class="award-count">' + seasons.length + '<small>회</small></span>' +
+        '<span class="award-name">' + link(award) + "</span>" +
+        '<span class="award-years">' + seasons.join(" · ") + "</span></li>" });
+    });
+    cards.sort((a, b) => b.count - a.count || a.order - b.order);
+    $("awardList").innerHTML = "<h2>수상 경력</h2>" + hofLine +
+      (cards.length ? '<ul class="award-cards">' + cards.map((card) => card.html).join("") + "</ul>" : "");
     $("awardList").hidden = false;
   }
 
@@ -157,8 +208,9 @@
   // 한 시즌이라도 값이 없는 항목(옛 시즌의 도루 실패 등)은 0으로 채우지 않고 미제공으로 둔다.
   // 시즌별 리그 기준이 필요한 지표(wOBA, wRC+, FIP, ERA-, FIP-, LOB%)와 피BABIP는 계산하지 않는다.
   const SUM_KEYS = {
-    batting: ["G", "PA", "AB", "R", "H", "2B", "3B", "HR", "RBI", "SB", "CS", "BB", "IBB", "SO", "HBP", "SF", "TB", "sWAR", "WAR"],
-    pitching: ["G", "GS", "W", "L", "SV", "HLD", "outs", "H", "R", "ER", "HR", "BB", "IBB", "SO", "HBP", "BF", "sWAR", "WAR"],
+    batting: ["G", "PA", "AB", "R", "H", "2B", "3B", "HR", "RBI", "SB", "CS", "BB", "IBB", "SO", "HBP", "SF", "TB", "GO", "AO", "sWAR", "WAR"],
+    pitching: ["G", "GS", "CG", "SHO", "W", "L", "SV", "SVO", "HLD", "outs", "H", "R", "ER", "HR", "BB", "IBB", "SO", "HBP", "BF",
+      "NP", "AB", "GO", "AO", "sWAR", "WAR"],
   };
   const ok = (v) => v !== null && v !== undefined && Number.isFinite(v);
   const div = (a, b) => (ok(a) && ok(b) && b > 0 ? a / b : null);
@@ -193,7 +245,14 @@
       t.BBp = div(t.BB, t.BF);
       t.KBBp = ok(t.Kp) && ok(t.BBp) ? t.Kp - t.BBp : null;
     }
-    return t;
+    return derive(group, t);
+  }
+
+  // 저장된 누적 기록으로 만드는 MLB.com 표 항목: 땅볼/뜬공 아웃 비율(GO/AO), 투수의 피안타율(AVG)
+  function derive(group, row) {
+    row.GOAO = div(row.GO, row.AO);
+    if (group === "pitching") row.oAVG = div(row.H, row.AB);
+    return row;
   }
 
   // MLB와 MiLB를 따로 합친다(2026-11-17 사용자 결정: 평균 행 없이 통산만).
@@ -205,7 +264,8 @@
       const seasons = new Set(mine.map((row) => row.season)).size;
       const total = addRates(group, sumRows(group, mine));
       // 한 시즌만 남으면(시즌 필터, 시즌 중 이적) 여러 팀 기록의 시즌 합계다
-      result.push({ title: seasons > 1 ? "통산" : "합계", label, league, note: seasons + "시즌", row: total });
+      // 기간을 골랐거나 한 시즌만 남으면(시즌 중 이적) "합계", 전체 기간이면 "통산"
+      result.push({ title: seasons > 1 && !periodSet() ? "통산" : "합계", label, league, note: seasons + "시즌", row: total });
     });
     return result;
   }
@@ -259,15 +319,21 @@
   }
 
   // 연도별 표의 기본 지표는 MLB.com 선수 페이지의 Standard 표와 같은 순서다 (2026-11-18 확인).
-  // 원본에 없는 항목(투수의 CG·SHO·SVO·NP·피안타율, GO/AO)은 넣지 않는다. 타석(PA)은 세이버 보기에 있다.
+  // 옛 시즌처럼 원본에 없는 항목은 "-"로 표시한다. 타석(PA)은 세이버 보기에 있다.
   const extra = (key, label, desc) => ({ key, label, desc, format: fmt.int, asc: false });
+  const GOAO = { key: "GOAO", label: "GO/AO", desc: "땅볼 아웃 / 뜬공 아웃", format: fmt.dec2, asc: false };
   const EXTRA_COLUMNS = {
-    batting: { TB: extra("TB", "TB", "루타"), IBB: extra("IBB", "IBB", "고의4구") },
-    pitching: { HBP: extra("HBP", "HB", "몸에 맞는 공 허용"), IBB: extra("IBB", "IBB", "고의4구 허용") },
+    batting: { TB: extra("TB", "TB", "루타"), IBB: extra("IBB", "IBB", "고의4구"), GOAO },
+    pitching: {
+      CG: extra("CG", "CG", "완투"), SHO: extra("SHO", "SHO", "완봉"), SVO: extra("SVO", "SVO", "세이브 기회"),
+      NP: extra("NP", "NP", "투구 수"), HBP: extra("HBP", "HB", "몸에 맞는 공 허용"), IBB: extra("IBB", "IBB", "고의4구 허용"),
+      oAVG: { key: "oAVG", label: "AVG", desc: "피안타율", format: fmt.rate, asc: true }, GOAO,
+    },
   };
   const CAREER_BASIC = {
-    batting: ["G", "AB", "R", "H", "TB", "2B", "3B", "HR", "RBI", "BB", "IBB", "SO", "SB", "CS", "AVG", "OBP", "SLG", "OPS"],
-    pitching: ["W", "L", "ERA", "G", "GS", "HLD", "SV", "outs", "H", "R", "ER", "HR", "HBP", "BB", "IBB", "SO", "WHIP"],
+    batting: ["G", "AB", "R", "H", "TB", "2B", "3B", "HR", "RBI", "BB", "IBB", "SO", "SB", "CS", "AVG", "OBP", "SLG", "OPS", "GOAO"],
+    pitching: ["W", "L", "ERA", "G", "GS", "CG", "SHO", "HLD", "SV", "SVO", "outs", "H", "R", "ER", "HR", "NP", "HBP", "BB", "IBB",
+      "SO", "oAVG", "WHIP", "GOAO"],
   };
   const careerColumns = (group) => view === "basic"
     ? CAREER_BASIC[group].map((key) => EXTRA_COLUMNS[group][key] || COLUMNS[group].basic.find((column) => column.key === key))
@@ -280,7 +346,7 @@
     rows.slice().sort((a, b) => a.season - b.season || levelRank(b.level) - levelRank(a.level));
 
   function renderTable(group, filtered, withAwards) {
-    const rows = chronological(filtered);
+    const rows = chronological(filtered.map((row) => derive(group, Object.assign({}, row))));
     if (!rows.length) return "";
     const groups = groupBySeason(rows).map((item) => {
       const total = item.rows.length > 1
@@ -351,7 +417,7 @@
     // MLB만 보는 중이면 숨겨진 마이너리그 기록이 있다는 것을 알리고 바로 펼칠 수 있게 한다
     let more = "";
     if (filter.league === "mlb") {
-      const minors = player[group].filter((row) => row.league === "milb" && (!filter.season || String(row.season) === filter.season));
+      const minors = player[group].filter((row) => row.league === "milb" && inPeriod(row));
       const seasons = new Set(minors.map((row) => row.season)).size;
       if (seasons) more = '<p class="career-more"><button type="button" class="link-button" data-show-minors>마이너리그 기록 ' + seasons + "시즌도 함께 보기</button></p>";
     }
@@ -369,7 +435,8 @@
   // ---------- 상단 통산 요약 (MLB.com 방식: 최근 시즌과 통산) ----------
   // MLB.com 선수 페이지 상단 요약과 같은 항목·순서 (2026-11-18 확인). 승-패는 한 칸으로 보여준다.
   const SUMMARY_KEYS = {
-    batting: ["AB", "AVG", "HR", "RBI", "SB", "OPS"],
+    // 경기 수(G)는 MLB.com 요약에는 없지만 출전 경기를 중요하게 보므로 맨 앞에 둔다 (2026-11-18 사용자 요구)
+    batting: ["G", "AB", "AVG", "HR", "RBI", "SB", "OPS"],
     pitching: ["G", "WL", "ERA", "outs", "SO", "WHIP"],
   };
   const WIN_LOSS = {
@@ -417,7 +484,7 @@
   }
 
   const matchesFilter = (row) =>
-    (!filter.season || String(row.season) === filter.season) &&
+    inPeriod(row) &&
     (filter.league === "all" || row.league === filter.league);
 
   function renderCareer() {
@@ -443,22 +510,37 @@
     defaultLeague = rowsAll.some((row) => row.league === "mlb") && rowsAll.some((row) => row.league === "milb") ? "mlb" : "all";
     const seasons = [...new Set(rowsAll.map((row) => row.season))].sort((a, b) => b - a);
     const params = new URLSearchParams(location.search);
-    if (seasons.map(String).includes(params.get("season"))) filter.season = params.get("season");
+    if (seasons.map(String).includes(params.get("from"))) filter.from = params.get("from");
+    if (seasons.map(String).includes(params.get("to"))) filter.to = params.get("to");
+    // 예전 주소(season=한 시즌)는 그 시즌 하나의 기간으로 연다
+    if (seasons.map(String).includes(params.get("season"))) filter.from = filter.to = params.get("season");
     filter.league = ["all", "mlb", "milb"].includes(params.get("level")) ? params.get("level") : defaultLeague;
-    $("careerSeason").innerHTML = '<option value="">전체 시즌</option>' +
-      seasons.map((season) => '<option value="' + season + '">' + season + "</option>").join("");
-    $("careerSeason").value = filter.season;
+    // 시즌 목록은 최신 시즌부터(내림차순)
+    const options = seasons.map((season) => '<option value="' + season + '">' + season + "</option>").join("");
+    $("careerFrom").innerHTML = '<option value="">처음부터</option>' + options;
+    $("careerTo").innerHTML = '<option value="">최근까지</option>' + options;
+    $("careerFrom").value = filter.from;
+    $("careerTo").value = filter.to;
     $("careerLevel").value = filter.league;
     const update = () => {
-      filter.season = $("careerSeason").value;
+      filter.from = $("careerFrom").value;
+      filter.to = $("careerTo").value;
+      if (filter.from && filter.to && Number(filter.from) > Number(filter.to)) {
+        [filter.from, filter.to] = [filter.to, filter.from]; // 시작이 끝보다 늦으면 맞바꾼다
+        $("careerFrom").value = filter.from;
+        $("careerTo").value = filter.to;
+      }
       filter.league = $("careerLevel").value;
       const next = new URLSearchParams(location.search);
-      filter.season ? next.set("season", filter.season) : next.delete("season");
+      next.delete("season");
+      filter.from ? next.set("from", filter.from) : next.delete("from");
+      filter.to ? next.set("to", filter.to) : next.delete("to");
       filter.league !== defaultLeague ? next.set("level", filter.league) : next.delete("level");
       history.replaceState(null, "", "?" + next.toString());
       renderCareer();
     };
-    $("careerSeason").addEventListener("change", update);
+    $("careerFrom").addEventListener("change", update);
+    $("careerTo").addEventListener("change", update);
     $("careerLevel").addEventListener("change", update);
     // 표 아래 버튼: 마이너리그 기록 함께 보기
     $("career").addEventListener("click", (event) => {
@@ -494,9 +576,11 @@
     renderSummary();
     renderCareer();
     // 수상·리그 1위 기록은 없어도 나머지 화면에 영향이 없으므로 따로 불러오고, 오면 표를 다시 그린다
-    loadJson("data/awards.json").then((data) => {
+    loadJson("data/awards.json").then(async (data) => {
       awardData = data;
-      renderAwards(data);
+      // 명예의 전당 투표 자료는 없어도 수상 경력은 그린다
+      const votes = await loadJson("data/hof_votes.json").then((item) => item.players).catch(() => null);
+      renderAwards(data, votes);
       renderCareer();
     }).catch(() => {});
     loadJson("data/leaders.json").then((data) => {
@@ -508,28 +592,4 @@
     $("status").textContent = player.careerStatus === "no_records"
       ? "공식 데이터에서 제공된 프로 경기 기록이 없습니다."
       : player.past && pastWithMinors(player)
-      ? "2000년 이후 MLB에 출전한 은퇴 선수는 MLB·마이너리그 정규시즌 기록을 제공합니다. 마이너리그 재활 경기도 포함되며, 해외 리그 기록과 과거 시즌 세이버 지표는 제공하지 않습니다."
-      : player.past
-      ? "2000년 이전에 MLB 경력을 마친 은퇴 선수는 MLB 정규시즌 기록만 제공합니다. 마이너리그와 해외 리그 기록은 포함하지 않으며, 과거 시즌 세이버 지표는 아직 제공하지 않습니다."
-      : player.careerUpdated
-      ? "MLB·마이너리그의 최초 제공 시즌부터 표시합니다. 해외 리그 및 원본 미제공 기록은 포함되지 않을 수 있습니다. 과거 세이버 지표는 계산 근거가 있는 경우에만 제공합니다."
-      : "저장된 시즌 기록입니다. 전체 프로 커리어 데이터는 아직 수집되지 않았습니다.";
-
-    // 리더보드에서 넘어왔으면 보던 조건 그대로 돌아가게 한다
-    if (document.referrer && new URL(document.referrer).origin === location.origin && /(\/|index\.html)$/.test(new URL(document.referrer).pathname)) {
-      $("backLink").href = document.referrer;
-    }
-
-    $("viewSwitch").addEventListener("click", (event) => {
-      const button = event.target.closest("button");
-      if (!button || button.dataset.value === view) return;
-      view = button.dataset.value;
-      $("viewSwitch").querySelectorAll("button").forEach((item) => {
-        item.setAttribute("aria-pressed", String(item.dataset.value === view));
-      });
-      renderCareer();
-    });
-  }
-
-  init();
-})();
+      ? "2000년 이후 MLB에 출전한 은퇴 선수는 MLB·마이너리그 정규시즌 기록을 제공합니다. 마이너리그 재활 경기�

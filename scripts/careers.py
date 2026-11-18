@@ -5,6 +5,7 @@
 """
 import argparse
 import json
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -25,14 +26,32 @@ SOURCE_FIELDS = {
         "PA": "plateAppearances", "R": "runs", "2B": "doubles", "3B": "triples", "RBI": "rbi",
         "BB": "baseOnBalls", "IBB": "intentionalWalks", "SO": "strikeOuts", "HBP": "hitByPitch",
         "SB": "stolenBases", "CS": "caughtStealing", "SF": "sacFlies", "SH": "sacBunts",
-        "GDP": "groundIntoDoublePlay", "TB": "totalBases",
+        "GDP": "groundIntoDoublePlay", "TB": "totalBases", "GO": "groundOuts", "AO": "airOuts",
     },
     "pitching": {
         "GS": "gamesStarted", "W": "wins", "L": "losses", "SV": "saves", "HLD": "holds",
         "R": "runs", "ER": "earnedRuns", "HR": "homeRuns", "BB": "baseOnBalls",
         "IBB": "intentionalWalks", "SO": "strikeOuts", "HBP": "hitByPitch", "BF": "battersFaced",
+        "CG": "completeGames", "SHO": "shutouts", "SVO": "saveOpportunities", "NP": "numberOfPitches",
+        "AB": "atBats", "GO": "groundOuts", "AO": "airOuts",
     },
 }
+# 2026-11-18 추가 항목. 최근 시즌 행(리더보드 자료)에 없으면 같은 시즌·레벨 커리어 행의 합으로 채운다.
+ADDED_FIELDS = {"batting": ["GO", "AO"], "pitching": ["CG", "SHO", "SVO", "NP", "AB", "GO", "AO"]}
+
+
+def fill_added(recent, cached_rows, group):
+    """최근 시즌 행에 없는 추가 항목을 커리어 캐시의 같은 시즌·레벨 팀별 행 합으로 채운다.
+    한 팀이라도 값이 없으면 None으로 둔다. 커리어 행이 없으면 건드리지 않는다."""
+    for row in recent:
+        same = [r for r in cached_rows if r["season"] == row["season"] and r["level"] == row["level"]]
+        if not same:
+            continue
+        for key in ADDED_FIELDS[group]:
+            if row.get(key) is not None:
+                continue
+            values = [r.get(key) for r in same]
+            row[key] = sum(values) if all(v is not None for v in values) else None
 
 
 def write(path, data):
@@ -42,7 +61,15 @@ def write(path, data):
         return
     temporary = path.with_suffix(".tmp")
     temporary.write_text(text, encoding="utf-8")
-    temporary.replace(path)
+    # OneDrive 등 동기화 프로그램이 파일을 잠깐 잡고 있으면 바꾸기가 거부될 수 있으므로 몇 번 다시 시도한다
+    for attempt in range(6):
+        try:
+            temporary.replace(path)
+            return
+        except PermissionError:
+            if attempt == 5:
+                raise
+            time.sleep(0.5 * (attempt + 1))
 
 
 def convert(person, sport):
@@ -134,6 +161,7 @@ def merge_cached(player, data=DATA):
     for group in ("batting", "pitching"):
         recent = [r for r in player[group] if not r.get("careerSource") and "teamId" not in r]
         keys = {(r["season"], r["level"]) for r in recent}
+        fill_added(recent, cached[group], group)
         # 현재 시즌의 자체 계산 지표를 보존하고, 과거 및 Rookie 기록을 추가한다.
         history = [r for r in cached[group] if (r["season"], r["level"]) not in keys]
         player[group] = sorted(recent + history, key=lambda r: (-r["season"], r["level"], r["team"]))

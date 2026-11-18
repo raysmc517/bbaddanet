@@ -257,7 +257,13 @@ table.stats {
 .header-nav {
   display: flex;
   gap: 20px;
+  /* 메뉴가 많아 좁은 화면에서는 글자를 끊지 않고 가로로 넘긴다 */
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
+.header-nav::-webkit-scrollbar { display: none; }
+.header-nav a { white-space: nowrap; }
 .header-nav-end { margin-left: auto; }
 
 /* 유망주 */
@@ -749,3 +755,60 @@ table.stats {
 .post-result { font-size: 13px; white-space: nowrap; }
 .post-result.post-WS { font-weight: 800; color: var(--accent); }
 .post-result.post-W { font-weight: 700; }
+.field.field-check {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text);
+  padding-bottom: 8px;
+}
+.field.field-check input { padding: 0; width: 16px; height: 16px; }
+
+/* 선수 이동 소식 */
+.move-date {
+  font-size: 15px;
+  color: var(--text-sub);
+  margin: 20px 0 6px;
+}
+.move-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.move-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.move-item:last-child { border-bottom: 0; }
+.move-badge {
+  flex: 0 0 auto;
+  min-width: 92px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.8;
+  border-radius: 999px;
+  background: var(--surface-alt);
+  color: var(--text-sub);
+}
+.move-badge.move-trade { background: var(--accent); color: var(--surface); }
+.move-badge.move-sign,
+.move-badge.move-claim { background: var(--accent-soft); color: var(--accent); }
+.move-body { min-width: 0; flex: 1; }
+.move-body p { margin: 2px 0 0; }
+.move-title { font-weight: 700; }
+.move-team { color: inherit; font-weight: 700; }
+.move-lines { margin: 4px 0 0; padding-left: 0; list-style: none; }
+.move-lines li { margin: 2px 0; }
+.move-desc { font-size: 12px; color: var(--text-sub); }
+@media (max-width: 560px) {
+  .move-item { flex-direction: column; gap: 6px; }
+  .move-badge { min-width: 0; padding: 0 10px; }
+}

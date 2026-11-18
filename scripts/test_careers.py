@@ -126,5 +126,23 @@ class CareerTests(unittest.TestCase):
         self.assertFalse(careers.apply_team_abbr(career, table))
 
 
+class FillAddedTest(unittest.TestCase):
+    def test_recent_row_filled_from_team_rows(self):
+        recent = [{"season": 2025, "level": "MLB", "team": "BOS", "nt": 2, "CG": None}]
+        cached = [
+            {"season": 2025, "level": "MLB", "team": "LAD", "CG": 1, "SHO": 0, "SVO": 0, "NP": 900, "AB": 200, "GO": 50, "AO": 40},
+            {"season": 2025, "level": "MLB", "team": "BOS", "CG": 0, "SHO": 0, "SVO": 1, "NP": 600, "AB": 150, "GO": 30, "AO": None},
+            {"season": 2024, "level": "MLB", "team": "LAD", "CG": 5, "SHO": 2, "SVO": 0, "NP": 1, "AB": 1, "GO": 1, "AO": 1},
+        ]
+        careers.fill_added(recent, cached, "pitching")
+        self.assertEqual((recent[0]["CG"], recent[0]["NP"], recent[0]["AB"]), (1, 1500, 350))
+        self.assertIsNone(recent[0]["AO"])  # 한 팀이라도 없으면 합치지 않는다
+
+    def test_row_without_career_rows_untouched(self):
+        recent = [{"season": 2026, "level": "AAA", "team": "X"}]
+        careers.fill_added(recent, [], "batting")
+        self.assertNotIn("GO", recent[0])
+
+
 if __name__ == "__main__":
     unittest.main()

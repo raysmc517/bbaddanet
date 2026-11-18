@@ -82,7 +82,10 @@ jobs:
         run: |
           set +e
           python scripts/rosters.py --current-season
-          echo "code=$?" >> "$GITHUB_OUTPUT"
+          code=$?
+          # 리그 전체 이동 소식과 입단 경로는 선수단 파일로 만든다 (외부 요청 없음)
+          python scripts/moves.py --season 2026 || code=1
+          echo "code=$code" >> "$GITHUB_OUTPUT"
 
       # 수상 기록과 구단 역사(우승·영구결번 등)는 자주 바뀌지 않으므로 월요일(UTC)에만 다시 받는다.
       # 두 스크립트 모두 실패하면 기존 파일을 유지한다. teams.py는 awards.json을 읽으므로 뒤에 실행한다.
