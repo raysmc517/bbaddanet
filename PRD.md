@@ -389,7 +389,7 @@ bbaddanet/
    - 프로필 아래에 최근 시즌과 통산을 나란히 보여주는 요약 표(MLB 기록이 있으면 MLB, 없으면 마이너리그). 투구·타격 요약은 한 줄에 하나씩 위아래로 쌓는다. 주 포지션이 아닌 기록은 투타겸업 수준(1,000타석 또는 100이닝 이상)일 때만 넣는다.
    - MLB와 마이너리그 기록이 모두 있는 선수는 레벨 기본값이 "MLB만"이다. 표 아래 버튼으로 마이너리그 기록을 함께 볼 수 있다. 주소의 `level=all`로 전체를 연다.
    - 최근 시즌(리더보드 자료)은 원래 합계 한 줄이며 팀 칸은 마지막 소속이다.
-   - 요약 항목은 MLB.com 선수 페이지 상단을 바탕으로 사용자 요구에 따라 더했다(2026-11-18): 타격 G·AB·H·HR·RBI·BB·SB·AVG·OBP·SLG·OPS, 투구 G·W-L·ERA·IP·SO·BB·SV·HLD·WHIP(마무리·중간 투수 성적이 보이도록).
+   - 요약 항목은 MLB.com 선수 페이지 상단을 바탕으로 사용자 요구에 따라 더했다(2026-11-18): 타격 G·AB·H·HR·RBI·BB·SO·SB·AVG·OBP·SLG·OPS, 투구 G·W-L·ERA·IP·SO·BB·SV·HLD·WHIP(마무리·중간 투수 성적이 보이도록).
    - 연도별 표는 시작·끝 시즌 드롭다운(최신 시즌부터)으로 기간을 고른다(2026-11-18 사용자 요구). 기간을 고르면 아래 행은 "MLB 합계"로 그 기간만 더한다. 주소는 `from`·`to`이며 예전 `season` 주소는 그 시즌 하나의 기간으로 연다. 위 요약(최근 시즌·통산)은 기간과 관계없이 그대로다.
    - 연도별 표는 MLB.com 선수 페이지의 Standard 표 형식을 따른다(2026-11-18 사용자 요구, MLB.com 화면으로 확인).
      - 기본 지표: 타격 G AB R H TB 2B 3B HR RBI BB IBB SO SB CS AVG OBP SLG OPS GO/AO, 투구 W L ERA G GS CG SHO HLD SV SVO IP H R ER HR NP HB BB IBB SO AVG WHIP GO/AO. 2026-11-18 보강으로 투구 CG·SHO·SVO·NP·피안타율(AVG)·GO/AO와 타격 TB·IBB·GO/AO까지 MLB.com Standard 표 항목을 모두 보여준다. 피안타율은 상대 타수(`AB`), GO/AO는 땅볼·뜬공 아웃(`GO`·`AO`)을 저장해 화면에서 계산한다. 옛 시즌처럼 원본에 없는 항목은 None으로 저장해 "-"로 표시한다. 최근 시즌 행(리더보드 자료)에 없는 이 항목들은 `careers.fill_added`가 같은 시즌·레벨 커리어 행의 합으로 채운다. 타석(PA)은 세이버 보기에 둔다. 리더보드 열 순서는 바꾸지 않는다.
