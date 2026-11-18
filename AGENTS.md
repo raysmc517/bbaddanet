@@ -26,7 +26,7 @@
 - `scripts/build.py`: 데이터 생성 진입점. `scripts/prospects.py`: 유망주 스냅샷과 화면용 데이터. `scripts/validate.py`: MLB 공식 값과 비교.
 - `scripts/teams.py`: MLB 구단·산하 구단·구장 정보와 구단 역사(`data/teams.json`). `scripts/awards.py`: 수상 기록·명예의 전당(`data/awards.json`).
 - `scripts/past_players.py`: 은퇴 선수 등 과거 MLB 선수 추가. `scripts/search_index.py`: 선수 검색 색인(`data/search.json`).
-- `scripts/standings.py`: 리그·지구별 순위(`data/standings_{시즌}.json`). `scripts/rosters.py`: MLB 구단 선수단(`data/rosters/{시즌}/{구단 ID}.json`).
+- `scripts/leaders.py`: 시즌·리그별 기록 1위(`data/leaders.json`). `scripts/standings.py`: 리그·지구별 순위(`data/standings_{시즌}.json`). `scripts/rosters.py`: MLB 구단 선수단(`data/rosters/{시즌}/{구단 ID}.json`).
 - `index.html`, `standings.html`, `roster.html`, `player.html`, `prospects.html`, `teams.html`, `team.html`, `awards.html`, `search.html`: 화면 진입점. `js/common.js`: 공통 표시 형식과 열 정의. `css/style.css`: 스타일.
 - `data/`: 생성된 JSON과 랭킹 기록. 데이터 오류는 수집·계산 원인을 먼저 고친다. 대량 JSON을 손으로 수정하지 않는다.
 - 기존 코드 스타일과 UTF-8 인코딩을 유지한다. JSON 필드 변경 시 생성 코드, 소비하는 화면, 기존 데이터와의 호환성을 함께 확인한다.
@@ -99,6 +99,13 @@
 - 포지션은 선수의 주 포지션이며 수상 당시 포지션이 아니다. 명예의 전당의 팀은 명판 기준이고 원본에 없으면 비운다.
 - 자동 갱신에서는 월요일에만 `awards.py` → `teams.py` 순서로 실행한다.
 - `python -m unittest discover -s scripts -p test_awards.py`: 리그 묶기, 중복 제거, 정렬을 검증한다.
+
+## 리그 1위 실행
+
+- `python scripts/leaders.py`: 1876년부터 시즌·리그(AL·NL)별 주요 기록 1위를 `data/leaders.json`으로 만든다. 받은 시즌은 다시 받지 않고 최근 시즌만 다시 받는다. 처음 전체 실행은 요청 약 550회다. `--current-season`은 최근 시즌만 받으며(요청 4회) 자동 갱신이 매일 실행한다. `--refresh`는 전 시즌을 다시 받는다.
+- 선수 페이지 연도별 성적의 MLB 행에서 1위 기록을 굵게 표시하는 데 쓴다. 동률은 모두 1위이고, 값이 0이거나 동률이 요청 한도(10명) 이상이면 비운다. 기록 키를 바꾸면 `js/common.js` 열 키와 맞춘다.
+- 중간에 실패하면 받은 시즌까지만 저장하고 실패한 시즌은 기존 값을 유지한다. 다시 실행하면 이어서 받는다.
+- `python -m unittest discover -s scripts -p test_leaders.py`: 1위 추출(동률, 0 값, 동률 한도)을 검증한다.
 
 ## 순위 실행
 

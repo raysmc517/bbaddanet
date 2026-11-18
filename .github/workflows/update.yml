@@ -60,6 +60,14 @@ jobs:
           python scripts/standings.py --current-season
           echo "code=$?" >> "$GITHUB_OUTPUT"
 
+      # 최근 시즌 리그(AL·NL) 1위 (요청 4회). 선수 페이지 연도별 성적의 굵은 표시용. 실패하면 기존 값을 유지한다.
+      - name: 최근 시즌 리그 1위
+        id: leaders
+        run: |
+          set +e
+          python scripts/leaders.py --current-season
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+
       # MLB 구단 선수단: 최근 시즌 선수단·구단 성적과 오늘의 40인·액티브 로스터·부상자 명단 (요청 약 152회). 실패하면 기존 파일을 유지한다.
       - name: 구단 선수단
         id: rosters
@@ -97,9 +105,9 @@ jobs:
           git push origin HEAD:main
 
       - name: 수집 실패 알림
-        if: steps.build.outputs.code != '0' || steps.standings.outputs.code != '0' || steps.rosters.outputs.code != '0' || steps.weekly.outputs.code != '0'
+        if: steps.build.outputs.code != '0' || steps.standings.outputs.code != '0' || steps.rosters.outputs.code != '0' || steps.leaders.outputs.code != '0' || steps.weekly.outputs.code != '0'
         run: |
-          echo "::warning::수집 일부 실패 (build.py 코드 ${{ steps.build.outputs.code }}, 순위 코드 ${{ steps.standings.outputs.code }}, 선수단 코드 ${{ steps.rosters.outputs.code }}, 주간 수집 코드 ${{ steps.weekly.outputs.code }}). 실패한 부분은 직전 데이터를 유지했다. 로그를 확인한다."
+          echo "::warning::수집 일부 실패 (build.py 코드 ${{ steps.build.outputs.code }}, 순위 코드 ${{ steps.standings.outputs.code }}, 선수단 코드 ${{ steps.rosters.outputs.code }}, 리그 1위 코드 ${{ steps.leaders.outputs.code }}, 주간 수집 코드 ${{ steps.weekly.outputs.code }}). 실패한 부분은 직전 데이터를 유지했다. 로그를 확인한다."
 
   deploy:
     needs: update
