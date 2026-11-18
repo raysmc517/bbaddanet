@@ -1,7 +1,8 @@
 # 빠따넷 개발 일지
 
 MLB·MiLB 성적과 자체 계산 세이버매트릭스를 보여주는 정적 사이트 **빠따넷**의 개발 기록이다.
-Git 커밋 기록과 `PRD.md`를 바탕으로 정리했다. 시각은 한국 시간이다.
+Git 커밋 기록과 [`PRD.md`](../PRD.md)를 바탕으로 정리했다. 시각은 한국 시간이다.
+결과만 짧게 보려면 [변경점](changelog.md), 알려진 한계는 [보완점](improvements.md)을 본다.
 
 - 사이트: https://raysmc517.github.io/bbaddanet/
 - 구조: Python으로 수집·계산 → JSON 저장 → HTML/CSS/JavaScript가 JSON을 읽어 표시 (서버·DB·프레임워크 없음)

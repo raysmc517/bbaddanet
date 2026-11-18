@@ -186,7 +186,11 @@ bbaddanet/
 ├─ awards.html         수상 기록·명예의 전당
 ├─ search.html         선수 검색
 ├─ css/
-└─ js/
+├─ js/
+└─ docs/               개발 문서 (사이트에 배포하지 않음)
+   ├─ devlog.md        개발 일지
+   ├─ changelog.md     변경점
+   └─ improvements.md  보완점 (알려진 한계, 앞으로 고칠 것)
 ```
 
 ## 진행 단계
