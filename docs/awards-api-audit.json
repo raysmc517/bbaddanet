@@ -1,0 +1,8010 @@
+{
+  "checked": "2026-11-18T14:40:10.250963+00:00",
+  "local_updated": "2026-11-17T07:01:14+00:00",
+  "cache": "C:\\Users\\barya\\AppData\\Local\\Temp\\bbaddanet-awards-audit",
+  "sources": {
+    "MLBHOF": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/MLBHOF/recipients?sportId=1&hydrate=team",
+      "raw": 346,
+      "valid": 346
+    },
+    "ALMVP": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/ALMVP/recipients?sportId=1&hydrate=team",
+      "raw": 96,
+      "valid": 96
+    },
+    "NLMVP": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/NLMVP/recipients?sportId=1&hydrate=team",
+      "raw": 97,
+      "valid": 97
+    },
+    "ALCY": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/ALCY/recipients?sportId=1&hydrate=team",
+      "raw": 61,
+      "valid": 61
+    },
+    "NLCY": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/NLCY/recipients?sportId=1&hydrate=team",
+      "raw": 60,
+      "valid": 60
+    },
+    "MLBCY": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/MLBCY/recipients?sportId=1&hydrate=team",
+      "raw": 11,
+      "valid": 11
+    },
+    "ALROY": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/ALROY/recipients?sportId=1&hydrate=team",
+      "raw": 79,
+      "valid": 79
+    },
+    "NLROY": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/NLROY/recipients?sportId=1&hydrate=team",
+      "raw": 79,
+      "valid": 79
+    },
+    "MLBROY": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/MLBROY/recipients?sportId=1&hydrate=team",
+      "raw": 2,
+      "valid": 2
+    },
+    "WSMVP": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/WSMVP/recipients?sportId=1&hydrate=team",
+      "raw": 74,
+      "valid": 74
+    },
+    "ALCSMVP": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/ALCSMVP/recipients?sportId=1&hydrate=team",
+      "raw": 46,
+      "valid": 46
+    },
+    "NLCSMVP": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/NLCSMVP/recipients?sportId=1&hydrate=team",
+      "raw": 52,
+      "valid": 52
+    },
+    "ASMVP": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/ASMVP/recipients?sportId=1&hydrate=team",
+      "raw": 65,
+      "valid": 65
+    },
+    "ALAS": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/ALAS/recipients?sportId=1&hydrate=team",
+      "raw": 2903,
+      "valid": 2903
+    },
+    "NLAS": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/NLAS/recipients?sportId=1&hydrate=team",
+      "raw": 2879,
+      "valid": 2879
+    },
+    "MLBAFIRST": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/MLBAFIRST/recipients?sportId=1&hydrate=team",
+      "raw": 126,
+      "valid": 126
+    },
+    "MLBSECOND": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/MLBSECOND/recipients?sportId=1&hydrate=team",
+      "raw": 127,
+      "valid": 127
+    },
+    "ALGG": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/ALGG/recipients?sportId=1&hydrate=team",
+      "raw": 628,
+      "valid": 628
+    },
+    "NLGG": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/NLGG/recipients?sportId=1&hydrate=team",
+      "raw": 628,
+      "valid": 628
+    },
+    "MLGG": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/MLGG/recipients?sportId=1&hydrate=team",
+      "raw": 9,
+      "valid": 9
+    },
+    "ALPG": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/ALPG/recipients?sportId=1&hydrate=team",
+      "raw": 15,
+      "valid": 15
+    },
+    "NLPG": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/NLPG/recipients?sportId=1&hydrate=team",
+      "raw": 16,
+      "valid": 16
+    },
+    "ALSS": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/ALSS/recipients?sportId=1&hydrate=team",
+      "raw": 429,
+      "valid": 429
+    },
+    "NLSS": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/NLSS/recipients?sportId=1&hydrate=team",
+      "raw": 428,
+      "valid": 428
+    },
+    "ALHAA": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/ALHAA/recipients?sportId=1&hydrate=team",
+      "raw": 27,
+      "valid": 27
+    },
+    "NLHAA": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/NLHAA/recipients?sportId=1&hydrate=team",
+      "raw": 27,
+      "valid": 27
+    },
+    "ALREL": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/ALREL/recipients?sportId=1&hydrate=team",
+      "raw": 13,
+      "valid": 13
+    },
+    "NLREL": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/NLREL/recipients?sportId=1&hydrate=team",
+      "raw": 13,
+      "valid": 13
+    },
+    "ALCPOY": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/ALCPOY/recipients?sportId=1&hydrate=team",
+      "raw": 23,
+      "valid": 23
+    },
+    "NLCPOY": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/NLCPOY/recipients?sportId=1&hydrate=team",
+      "raw": 22,
+      "valid": 22
+    },
+    "MLBRC": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/MLBRC/recipients?sportId=1&hydrate=team",
+      "raw": 57,
+      "valid": 57
+    },
+    "ALMOY": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/ALMOY/recipients?sportId=1&hydrate=team",
+      "raw": 45,
+      "valid": 45
+    },
+    "NLMOY": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/NLMOY/recipients?sportId=1&hydrate=team",
+      "raw": 44,
+      "valid": 44
+    },
+    "WSCHAMP": {
+      "url": "https://statsapi.mlb.com/api/v1/awards/WSCHAMP/recipients?sportId=1&hydrate=team",
+      "raw": 2510,
+      "valid": 2510
+    }
+  },
+  "errors": [],
+  "raw_rejected": [],
+  "raw_duplicates": [
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 119346,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 121161,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 121301,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 120266,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 122738,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 113462,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 110690,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 116204,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 110091,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 124261,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 111691,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 114696,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 117451,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 121419,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 123252,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 123786,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 110290,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 118258,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 120213,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 122209,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 123200,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 121413,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 112455,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 118287,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1962,
+      "id": 123461,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 116822,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 121301,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 113462,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 116236,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 116204,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 117051,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 124261,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 111388,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 111691,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 114696,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 121419,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 123180,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 118258,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 114361,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 112090,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 112455,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 118287,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 117343,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 114299,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1961,
+      "id": 110925,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 116822,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 122350,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 119243,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 122303,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 121301,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 113008,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 120266,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 113917,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 122793,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 124633,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 116204,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 117519,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 118223,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 110822,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 122646,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 117354,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 112427,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 114696,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 117670,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 110290,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 118258,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 119176,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 114361,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 121555,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 118287,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 115440,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 117877,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 124341,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 120730,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 114299,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1960,
+      "id": 110925,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 116822,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 113008,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 124633,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 118223,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 117051,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 124261,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 110290,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 118258,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 119176,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 114361,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 121555,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 112455,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 122221,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 113653,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 117877,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 124341,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 120730,
+      "count": 2
+    },
+    {
+      "award": "ALAS",
+      "year": 1959,
+      "id": 110925,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 118497,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 114756,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 120807,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 112788,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 115176,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 110533,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 111176,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 110001,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 113081,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 121456,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 111895,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 118283,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 111321,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 124371,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 112157,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 110349,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 112391,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 119602,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 113112,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 114028,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 122557,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1962,
+      "id": 118495,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 118152,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 124191,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 120807,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 122897,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 124768,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 116856,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 118416,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 111176,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 121311,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 110199,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 110001,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 116507,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 121456,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 111321,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 124371,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 118598,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 112157,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 112391,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 113968,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 117277,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 111705,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 119602,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 119121,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 122557,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1961,
+      "id": 118495,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 115793,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 118497,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 124191,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 111675,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 114442,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 122299,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 119675,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 112788,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 115176,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 110449,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 118416,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 110533,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 110001,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 110071,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 120637,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 111321,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 116434,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 118624,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 118598,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 117499,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 112157,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 112391,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 113968,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 111705,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 119602,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 124340,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 123122,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 120590,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 117552,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1960,
+      "id": 118495,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 118497,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 112788,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 115176,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 113581,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 113829,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 118416,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 110533,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 121311,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 112562,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 122400,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 110001,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 112944,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 110287,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 123180,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 111321,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 111701,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 112157,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 113968,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 111705,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 119602,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 120590,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 119208,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 119279,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 122557,
+      "count": 2
+    },
+    {
+      "award": "NLAS",
+      "year": 1959,
+      "id": 118495,
+      "count": 2
+    },
+    {
+      "award": "ALSS",
+      "year": 2018,
+      "id": 502110,
+      "count": 2
+    },
+    {
+      "award": "ALCPOY",
+      "year": 2026,
+      "id": 670541,
+      "count": 2
+    }
+  ],
+  "missing_from_local": [
+    [
+      "ss",
+      2026,
+      "AL",
+      677951,
+      "KC",
+      118
+    ],
+    [
+      "ss",
+      2026,
+      "AL",
+      800050,
+      "CLE",
+      114
+    ],
+    [
+      "ss",
+      2026,
+      "AL",
+      805367,
+      "CWS",
+      145
+    ],
+    [
+      "ss",
+      2026,
+      "AL",
+      693307,
+      "DET",
+      116
+    ],
+    [
+      "ss",
+      2026,
+      "AL",
+      691406,
+      "TB",
+      139
+    ],
+    [
+      "ss",
+      2026,
+      "AL",
+      805808,
+      "DET",
+      116
+    ],
+    [
+      "ss",
+      2026,
+      "AL",
+      624413,
+      "BAL",
+      110
+    ],
+    [
+      "ss",
+      2026,
+      "AL",
+      668227,
+      "SEA",
+      136
+    ],
+    [
+      "ss",
+      2026,
+      "AL",
+      682985,
+      "DET",
+      116
+    ],
+    [
+      "ss",
+      2026,
+      "AL",
+      670541,
+      "HOU",
+      117
+    ],
+    [
+      "ss",
+      2026,
+      "NL",
+      608324,
+      "CHC",
+      112
+    ],
+    [
+      "ss",
+      2026,
+      "NL",
+      664040,
+      "PIT",
+      134
+    ],
+    [
+      "ss",
+      2026,
+      "NL",
+      682829,
+      "CIN",
+      113
+    ],
+    [
+      "ss",
+      2026,
+      "NL",
+      672515,
+      "AZ",
+      109
+    ],
+    [
+      "ss",
+      2026,
+      "NL",
+      694192,
+      "MIL",
+      158
+    ],
+    [
+      "ss",
+      2026,
+      "NL",
+      641343,
+      "MIL",
+      158
+    ],
+    [
+      "ss",
+      2026,
+      "NL",
+      695578,
+      "WSH",
+      120
+    ],
+    [
+      "ss",
+      2026,
+      "NL",
+      656941,
+      "PHI",
+      143
+    ],
+    [
+      "ss",
+      2026,
+      "NL",
+      621566,
+      "ATL",
+      144
+    ],
+    [
+      "ss",
+      2026,
+      "NL",
+      691718,
+      "CHC",
+      112
+    ]
+  ],
+  "api_comparison_complete": true,
+  "local_only": [],
+  "changed_team": [],
+  "changed_people": [
+    {
+      "id": "691718",
+      "local": [
+        "Pete Crow-Armstrong",
+        "CF",
+        1
+      ],
+      "remote": [
+        "Pete Crow-Armstrong",
+        "OF",
+        1
+      ]
+    },
+    {
+      "id": "805808",
+      "local": [
+        "Kevin McGonigle",
+        "SS",
+        1
+      ],
+      "remote": [
+        "Kevin McGonigle",
+        "UT",
+        1
+      ]
+    },
+    {
+      "id": "800050",
+      "local": null,
+      "remote": [
+        "Chase DeLauter",
+        "OF",
+        1
+      ]
+    },
+    {
+      "id": "805367",
+      "local": null,
+      "remote": [
+        "Chase Meidroth",
+        "2B",
+        1
+      ]
+    }
+  ],
+  "duplicate_local": [],
+  "broken_references": [],
+  "page_flag_mismatch": [],
+  "overwritten_positions": [
+    {
+      "id": "282332",
+      "name": "CC Sabathia",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "120225",
+      "name": "Dave Parker",
+      "available": [
+        "1B",
+        "DH",
+        "OF"
+      ]
+    },
+    {
+      "id": "492447",
+      "name": "Jim Leyland",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "118730",
+      "name": "Fred McGriff",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "121409",
+      "name": "Scott Rolen",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "120074",
+      "name": "David Ortiz",
+      "available": [
+        "1B",
+        "DH",
+        "OF"
+      ]
+    },
+    {
+      "id": "116008",
+      "name": "Gil Hodges",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "116803",
+      "name": "Jim Kaat",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "116539",
+      "name": "Derek Jeter",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "121250",
+      "name": "Mariano Rivera",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "123437",
+      "name": "Alan Trammell",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "119399",
+      "name": "Jack Morris",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "116706",
+      "name": "Chipper Jones",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "121358",
+      "name": "Ivan Rodriguez",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "120891",
+      "name": "Tim Raines Sr.",
+      "available": [
+        "LF",
+        "OF"
+      ]
+    },
+    {
+      "id": "122477",
+      "name": "John Smoltz",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "118377",
+      "name": "Pedro Martínez",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "116615",
+      "name": "Randy Johnson",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "123406",
+      "name": "Joe Torre",
+      "available": [
+        "3B",
+        "C"
+      ]
+    },
+    {
+      "id": "118120",
+      "name": "Greg Maddux",
+      "available": [
+        "C",
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "114849",
+      "name": "Tom Glavine",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "117501",
+      "name": "Barry Larkin",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "111126",
+      "name": "Bert Blyleven",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "110183",
+      "name": "Roberto Alomar",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "114967",
+      "name": "Joe Gordon",
+      "available": [
+        "2B",
+        "3B"
+      ]
+    },
+    {
+      "id": "115749",
+      "name": "Rickey Henderson",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "114989",
+      "name": "Rich Gossage",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "121222",
+      "name": "Cal Ripken Jr.",
+      "available": [
+        "3B",
+        "SS"
+      ]
+    },
+    {
+      "id": "123004",
+      "name": "Bruce Sutter",
+      "available": [
+        "P",
+        "RP"
+      ]
+    },
+    {
+      "id": "111153",
+      "name": "Wade Boggs",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "113726",
+      "name": "Dennis Eckersley",
+      "available": [
+        "P",
+        "RP"
+      ]
+    },
+    {
+      "id": "119236",
+      "name": "Paul Molitor",
+      "available": [
+        "1B",
+        "2B",
+        "3B",
+        "DH"
+      ]
+    },
+    {
+      "id": "119579",
+      "name": "Eddie Murray",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "112061",
+      "name": "Gary Carter",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "122439",
+      "name": "Ozzie Smith",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "118497",
+      "name": "Bill Mazeroski",
+      "available": [
+        "2B",
+        "C"
+      ]
+    },
+    {
+      "id": "124448",
+      "name": "Dave Winfield",
+      "available": [
+        "DH",
+        "OF",
+        "P"
+      ]
+    },
+    {
+      "id": "120790",
+      "name": "Kirby Puckett",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "120404",
+      "name": "Tony Perez",
+      "available": [
+        "1B",
+        "3B"
+      ]
+    },
+    {
+      "id": "111437",
+      "name": "George Brett",
+      "available": [
+        "1B",
+        "3B"
+      ]
+    },
+    {
+      "id": "121597",
+      "name": "Nolan Ryan Jr.",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "112157",
+      "name": "Orlando Cepeda",
+      "available": [
+        "1B",
+        "OF"
+      ]
+    },
+    {
+      "id": "113106",
+      "name": "George Davis",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "113411",
+      "name": "Larry Doby",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "121836",
+      "name": "Mike Schmidt",
+      "available": [
+        "2B",
+        "3B"
+      ]
+    },
+    {
+      "id": "124364",
+      "name": "Vic Willis",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "113664",
+      "name": "Leo Durocher",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "121257",
+      "name": "Phil Rizzuto",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "112008",
+      "name": "Steve Carlton",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "116439",
+      "name": "Reggie Jackson",
+      "available": [
+        "DH",
+        "OF"
+      ]
+    },
+    {
+      "id": "119739",
+      "name": "Hal Newhouser",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "114129",
+      "name": "Rollie Fingers",
+      "available": [
+        "P",
+        "RP"
+      ]
+    },
+    {
+      "id": "121961",
+      "name": "Tom Seaver",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "117577",
+      "name": "Tony Lazzeri",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "120196",
+      "name": "Jim Palmer",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "119371",
+      "name": "Joe Morgan",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "110849",
+      "name": "Johnny Bench",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "121851",
+      "name": "Red Schoendienst",
+      "available": [
+        "2B",
+        "OF"
+      ]
+    },
+    {
+      "id": "122685",
+      "name": "Willie Stargell",
+      "available": [
+        "1B",
+        "OF"
+      ]
+    },
+    {
+      "id": "116334",
+      "name": "Catfish Hunter",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "117880",
+      "name": "Ernie Lombardi",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "122319",
+      "name": "Enos Slaughter",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "124261",
+      "name": "Hoyt Wilhelm",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111495",
+      "name": "Lou Brock",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "113581",
+      "name": "Don Drysdale",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "110290",
+      "name": "Luis Aparicio",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "121010",
+      "name": "Pee Wee Reese",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "121301",
+      "name": "Brooks Robinson",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "121311",
+      "name": "Frank Robinson",
+      "available": [
+        "1B",
+        "OF",
+        "RF"
+      ]
+    },
+    {
+      "id": "110001",
+      "name": "Hank Aaron",
+      "available": [
+        "1B",
+        "OF",
+        "RF"
+      ]
+    },
+    {
+      "id": "116445",
+      "name": "Travis Jackson",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "114756",
+      "name": "Bob Gibson",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "119207",
+      "name": "Johnny Mize",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "116822",
+      "name": "Al Kaline",
+      "available": [
+        "CF",
+        "OF",
+        "RF"
+      ]
+    },
+    {
+      "id": "122488",
+      "name": "Duke Snider",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "118495",
+      "name": "Willie Mays",
+      "available": [
+        "CF",
+        "OF"
+      ]
+    },
+    {
+      "id": "118416",
+      "name": "Eddie Mathews",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "122023",
+      "name": "Joe Sewell",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "117671",
+      "name": "Bob Lemon",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111266",
+      "name": "Jim Bottomley",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "118258",
+      "name": "Mickey Mantle",
+      "available": [
+        "1B",
+        "OF"
+      ]
+    },
+    {
+      "id": "114299",
+      "name": "Whitey Ford",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "116942",
+      "name": "George Kelly",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "116403",
+      "name": "Monte Irvin",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "112391",
+      "name": "Roberto Clemente",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "122557",
+      "name": "Warren Spahn",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "114917",
+      "name": "Lefty Gomez",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "124717",
+      "name": "Ross Youngs",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "117277",
+      "name": "Sandy Koufax",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "110925",
+      "name": "Yogi Berra",
+      "available": [
+        "C",
+        "OF"
+      ]
+    },
+    {
+      "id": "115295",
+      "name": "Chick Hafey",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "110524",
+      "name": "Dave Bancroft",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "116127",
+      "name": "Harry Hooper",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "120181",
+      "name": "Satchel Paige",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "112533",
+      "name": "Earle Combs",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "115314",
+      "name": "Jesse Haines",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111272",
+      "name": "Lou Boudreau",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "111915",
+      "name": "Roy Campanella",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "112743",
+      "name": "Stan Coveleski",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "119602",
+      "name": "Stan Musial",
+      "available": [
+        "1B",
+        "OF"
+      ]
+    },
+    {
+      "id": "116241",
+      "name": "Waite Hoyt",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "114987",
+      "name": "Goose Goslin",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "118904",
+      "name": "Joe Medwick",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "112979",
+      "name": "Kiki Cuyler",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "121547",
+      "name": "Red Ruffing",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "115162",
+      "name": "Burleigh Grimes",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "113965",
+      "name": "Red Faber",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "121137",
+      "name": "Sam Rice",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "114055",
+      "name": "Bob Feller",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "121497",
+      "name": "Edd Roush",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "121314",
+      "name": "Jackie Robinson",
+      "available": [
+        "1B",
+        "2B",
+        "3B",
+        "OF"
+      ]
+    },
+    {
+      "id": "111989",
+      "name": "Max Carey",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "115096",
+      "name": "Hank Greenberg",
+      "available": [
+        "1B",
+        "OF"
+      ]
+    },
+    {
+      "id": "123630",
+      "name": "Dazzy Vance",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "110480",
+      "name": "Home Run Baker",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "113376",
+      "name": "Joe DiMaggio",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "121766",
+      "name": "Ray Schalk",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "113340",
+      "name": "Bill Dickey",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "123203",
+      "name": "Bill Terry",
+      "available": [
+        "1B",
+        "OF"
+      ]
+    },
+    {
+      "id": "118276",
+      "name": "Rabbit Maranville",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "122240",
+      "name": "Al Simmons",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "110850",
+      "name": "Chief Bender",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "113168",
+      "name": "Dizzy Dean",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "114367",
+      "name": "Jimmie Foxx",
+      "available": [
+        "1B",
+        "3B"
+      ]
+    },
+    {
+      "id": "120117",
+      "name": "Mel Ott",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "114682",
+      "name": "Charlie Gehringer",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "111577",
+      "name": "Mordecai Brown",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "120386",
+      "name": "Herb Pennock",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "123446",
+      "name": "Pie Traynor",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "116249",
+      "name": "Carl Hubbell",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "114448",
+      "name": "Frankie Frisch",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "115201",
+      "name": "Lefty Grove",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "112437",
+      "name": "Mickey Cochrane",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "123878",
+      "name": "Ed Walsh",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "120616",
+      "name": "Eddie Plank",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "112183",
+      "name": "Frank Chance",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "118713",
+      "name": "Joe McGinnity",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "123353",
+      "name": "Joe Tinker",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "113949",
+      "name": "Johnny Evers",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "112352",
+      "name": "Fred Clarke",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "112511",
+      "name": "Jimmy Collins",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "111433",
+      "name": "Roger Bresnahan",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "116156",
+      "name": "Rogers Hornsby",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "112506",
+      "name": "Eddie Collins Sr.",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "114680",
+      "name": "Lou Gehrig",
+      "available": [
+        "1B",
+        "OF"
+      ]
+    },
+    {
+      "id": "110127",
+      "name": "Grover Alexander",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "124692",
+      "name": "Cy Young",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "122566",
+      "name": "Tristram Speaker",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "121578",
+      "name": "Babe Ruth",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "118422",
+      "name": "Christy Mathewson",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "123784",
+      "name": "Honus Wagner",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "116635",
+      "name": "Walter Johnson",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "408234",
+      "name": "Miguel Cabrera",
+      "available": [
+        "1B",
+        "3B",
+        "DH",
+        "OF"
+      ]
+    },
+    {
+      "id": "456030",
+      "name": "Dustin Pedroia",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "121347",
+      "name": "Alex Rodriguez",
+      "available": [
+        "3B",
+        "SS"
+      ]
+    },
+    {
+      "id": "111962",
+      "name": "José Canseco",
+      "available": [
+        "DH",
+        "OF"
+      ]
+    },
+    {
+      "id": "112388",
+      "name": "Roger Clemens",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "118443",
+      "name": "Don Mattingly",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "115822",
+      "name": "Willie Hernandez",
+      "available": [
+        "P",
+        "RP"
+      ]
+    },
+    {
+      "id": "110719",
+      "name": "Don Baylor",
+      "available": [
+        "DH",
+        "OF"
+      ]
+    },
+    {
+      "id": "119531",
+      "name": "Thurman Munson",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "111119",
+      "name": "Vida Blue",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "120719",
+      "name": "Boog Powell",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "118787",
+      "name": "Denny McLain",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "116204",
+      "name": "Elston Howard",
+      "available": [
+        "C",
+        "OF"
+      ]
+    },
+    {
+      "id": "118287",
+      "name": "Roger Maris",
+      "available": [
+        "OF",
+        "RF"
+      ]
+    },
+    {
+      "id": "116533",
+      "name": "Jackie Jensen",
+      "available": [
+        "OF",
+        "RF"
+      ]
+    },
+    {
+      "id": "121461",
+      "name": "Al Rosen",
+      "available": [
+        "1B",
+        "3B"
+      ]
+    },
+    {
+      "id": "112187",
+      "name": "Spud Chandler",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "457763",
+      "name": "Buster Posey",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "405395",
+      "name": "Albert Pujols",
+      "available": [
+        "1B",
+        "3B",
+        "DH",
+        "OF"
+      ]
+    },
+    {
+      "id": "276519",
+      "name": "Jimmy Rollins",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "429667",
+      "name": "Ryan Howard",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "119195",
+      "name": "Kevin Mitchell",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "114752",
+      "name": "Kirk Gibson",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "118694",
+      "name": "Willie McGee",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "115826",
+      "name": "Keith Hernandez",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "114333",
+      "name": "George Foster",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "114641",
+      "name": "Steve Garvey",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "121454",
+      "name": "Pete Rose",
+      "available": [
+        "1B",
+        "2B",
+        "3B",
+        "OF"
+      ]
+    },
+    {
+      "id": "111321",
+      "name": "Ken Boyer",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "124371",
+      "name": "Maury Wills",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "115176",
+      "name": "Dick Groat",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "119733",
+      "name": "Don Newcombe",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "118286",
+      "name": "Marty Marion",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "112657",
+      "name": "Mort Cooper",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "118593",
+      "name": "Frank McCormick",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "123898",
+      "name": "Bucky Walters",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "115797",
+      "name": "Pat Hentgen",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "112552",
+      "name": "David Cone",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "124064",
+      "name": "Bob Welch",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "121604",
+      "name": "Bret Saberhagen",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "123732",
+      "name": "Frank Viola",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "114216",
+      "name": "Mike Flanagan",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "115228",
+      "name": "Ron Guidry",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "118026",
+      "name": "Sparky Lyle",
+      "available": [
+        "P",
+        "RP"
+      ]
+    },
+    {
+      "id": "112915",
+      "name": "Mike Cuellar",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "453311",
+      "name": "Tim Lincecum",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "112020",
+      "name": "Chris Carpenter",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "150378",
+      "name": "Eric Gagne",
+      "available": [
+        "P",
+        "RP"
+      ]
+    },
+    {
+      "id": "115861",
+      "name": "Orel Hershiser",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "110786",
+      "name": "Steve Bedrosian",
+      "available": [
+        "P",
+        "RP"
+      ]
+    },
+    {
+      "id": "114947",
+      "name": "Dwight Gooden",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "123619",
+      "name": "Fernando Valenzuela",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "117552",
+      "name": "Vern Law",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "123509",
+      "name": "Bob Turley",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "400134",
+      "name": "Eric Hinske",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "121640",
+      "name": "Tim Salmon",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "117197",
+      "name": "Chuck Knoblauch",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "124054",
+      "name": "Walt Weiss",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "118743",
+      "name": "Mark McGwire",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "115230",
+      "name": "Ozzie Guillen",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "115137",
+      "name": "Alfredo Griffin",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "124154",
+      "name": "Lou Whitaker",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "111687",
+      "name": "Al Bumbry",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "112180",
+      "name": "Chris Chambliss",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "120586",
+      "name": "Lou Piniella",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "110084",
+      "name": "Tommie Agee",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "111096",
+      "name": "Curt Blefary",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "123461",
+      "name": "Tom Tresh",
+      "available": [
+        "OF",
+        "SS"
+      ]
+    },
+    {
+      "id": "117343",
+      "name": "Tony Kubek",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "118655",
+      "name": "Gil McDougald",
+      "available": [
+        "2B",
+        "3B",
+        "OF",
+        "SS"
+      ]
+    },
+    {
+      "id": "425883",
+      "name": "Dontrelle Willis",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "116075",
+      "name": "Todd Hollandsworth",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "116798",
+      "name": "David Justice",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "121606",
+      "name": "Chris Sabo",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "122864",
+      "name": "Darryl Strawberry",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "121732",
+      "name": "Steve Sax",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "116222",
+      "name": "Steve Howe",
+      "available": [
+        "P",
+        "RP"
+      ]
+    },
+    {
+      "id": "124732",
+      "name": "Pat Zachry",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "118521",
+      "name": "Bake McBride",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "117624",
+      "name": "Jim Lefebvre",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "116205",
+      "name": "Frank Howard",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "123734",
+      "name": "Bill Virdon",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "119279",
+      "name": "Wally Moon",
+      "available": [
+        "LF",
+        "OF"
+      ]
+    },
+    {
+      "id": "114810",
+      "name": "Jim Gilliam",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "113052",
+      "name": "Alvin Dark",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "518516",
+      "name": "Madison Bumgarner",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "467055",
+      "name": "Pablo Sandoval",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "121074",
+      "name": "Edgar Renteria",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "425686",
+      "name": "Hideki Matsui",
+      "available": [
+        "DH",
+        "OF"
+      ]
+    },
+    {
+      "id": "430935",
+      "name": "Cole Hamels",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "136780",
+      "name": "Mike Lowell",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "275930",
+      "name": "David Eckstein",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "113679",
+      "name": "Jermaine Dye",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "120903",
+      "name": "Manny Ramirez",
+      "available": [
+        "DH",
+        "OF"
+      ]
+    },
+    {
+      "id": "277417",
+      "name": "Josh Beckett",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "136267",
+      "name": "Troy Glaus",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "121811",
+      "name": "Curt Schilling",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111515",
+      "name": "Scott Brosius",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "115817",
+      "name": "Livan Hernandez",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "124123",
+      "name": "John Wetteland",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111232",
+      "name": "Pat Borders",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "121206",
+      "name": "Jose Rijo",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "122775",
+      "name": "Dave Stewart",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "117191",
+      "name": "Ray Knight",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "113264",
+      "name": "Rick Dempsey",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "120678",
+      "name": "Darrell Porter",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "115222",
+      "name": "Pedro Guerrero",
+      "available": [
+        "1B",
+        "3B",
+        "OF"
+      ]
+    },
+    {
+      "id": "112162",
+      "name": "Ron Cey",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "124656",
+      "name": "Steve Yeager",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "113275",
+      "name": "Bucky Dent",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "123183",
+      "name": "Gene Tenace",
+      "available": [
+        "1B",
+        "C"
+      ]
+    },
+    {
+      "id": "112398",
+      "name": "Donn Clendenon",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "117875",
+      "name": "Mickey Lolich",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "123200",
+      "name": "Ralph Terry",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "121161",
+      "name": "Bobby Richardson",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "122143",
+      "name": "Larry Sherry",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111701",
+      "name": "Lew Burdette",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "117514",
+      "name": "Don Larsen",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "120637",
+      "name": "Johnny Podres",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "117244",
+      "name": "Paul Konerko",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "150456",
+      "name": "Adam Kennedy",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "120485",
+      "name": "Andy Pettitte",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "133340",
+      "name": "Orlando Hernandez",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "124071",
+      "name": "David Wells",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "115174",
+      "name": "Marquis Grissom",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "124288",
+      "name": "Bernie Williams",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "114508",
+      "name": "Gary Gaetti",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "111139",
+      "name": "Mike Boddicker",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "119720",
+      "name": "Graig Nettles",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "124170",
+      "name": "Frank White",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "452657",
+      "name": "Jon Lester",
+      "available": [
+        "P",
+        "SP"
+      ]
+    },
+    {
+      "id": "425496",
+      "name": "Cody Ross",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "122987",
+      "name": "Jeff Suppan",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "112736",
+      "name": "Craig Counsell",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "117919",
+      "name": "Javy Lopez",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "113306",
+      "name": "Mike Devereaux",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "110397",
+      "name": "Steve Avery",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "119626",
+      "name": "Randy Myers",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "113333",
+      "name": "Rob Dibble",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "116131",
+      "name": "Burt Hooton",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "123466",
+      "name": "Manny Trillo",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "110481",
+      "name": "Dusty Baker Jr.",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "429664",
+      "name": "Robinson Canó",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "466320",
+      "name": "Melky Cabrera",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "136770",
+      "name": "J.D. Drew",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "110236",
+      "name": "Garret Anderson",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "112559",
+      "name": "Jeff Conine",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "122722",
+      "name": "Terry Steinbach",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "112549",
+      "name": "Dave Concepcion",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "115136",
+      "name": "Ken Griffey Sr.",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "118127",
+      "name": "Bill Madlock",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "519390",
+      "name": "Stephen Vogt",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "458731",
+      "name": "Brett Gardner",
+      "available": [
+        "LF"
+      ]
+    },
+    {
+      "id": "407893",
+      "name": "Mark Teixeira",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "279824",
+      "name": "Mark Buehrle",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "502085",
+      "name": "David Robertson",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "453056",
+      "name": "Jacoby Ellsbury",
+      "available": [
+        "CF",
+        "OF"
+      ]
+    },
+    {
+      "id": "425903",
+      "name": "Kevin Youkilis",
+      "available": [
+        "1B",
+        "3B"
+      ]
+    },
+    {
+      "id": "430897",
+      "name": "Nick Swisher",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "461833",
+      "name": "Phil Hughes",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "408210",
+      "name": "Chone Figgins",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "449097",
+      "name": "Jonathan Papelbon",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "123801",
+      "name": "Tim Wakefield",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "408061",
+      "name": "Francisco Rodríguez",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "123660",
+      "name": "Jason Varitek",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "150317",
+      "name": "Joe Crede",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "408057",
+      "name": "Bobby Jenks",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "506606",
+      "name": "Hideki Okajima",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "407793",
+      "name": "John Lackey",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "120691",
+      "name": "Jorge Posada",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "150229",
+      "name": "A.J. Pierzynski",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "425747",
+      "name": "Jose Contreras",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "121386",
+      "name": "Kenny Rogers",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "150230",
+      "name": "Mark Redman",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "122111",
+      "name": "Gary Sheffield",
+      "available": [
+        "3B",
+        "OF"
+      ]
+    },
+    {
+      "id": "113028",
+      "name": "Johnny Damon",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "279782",
+      "name": "Jon Garland",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "325392",
+      "name": "Scott Podsednik",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "150071",
+      "name": "Ronnie Belliard",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "407791",
+      "name": "Brendan Donnelly",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "113946",
+      "name": "Carl Everett",
+      "available": [
+        "DH",
+        "OF"
+      ]
+    },
+    {
+      "id": "119469",
+      "name": "Jamie Moyer",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "114342",
+      "name": "Keith Foulke",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "117955",
+      "name": "Derek Lowe",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "150119",
+      "name": "Freddy Garcia",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "123584",
+      "name": "Ugueth Urbina",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "119704",
+      "name": "Jeff Nelson",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "119976",
+      "name": "John Olerud",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "122681",
+      "name": "Mike Stanton",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "120401",
+      "name": "Troy Percival",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "113889",
+      "name": "Darin Erstad",
+      "available": [
+        "1B",
+        "OF"
+      ]
+    },
+    {
+      "id": "114079",
+      "name": "Tony Fernández",
+      "available": [
+        "3B",
+        "SS"
+      ]
+    },
+    {
+      "id": "120028",
+      "name": "Paul O'Neill",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "118362",
+      "name": "Tino Martinez",
+      "available": [
+        "1B",
+        "DH"
+      ]
+    },
+    {
+      "id": "112064",
+      "name": "Joe Carter",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "113744",
+      "name": "Jim Edmonds",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "110293",
+      "name": "Kevin Appier",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "113099",
+      "name": "Chili Davis",
+      "available": [
+        "DH",
+        "OF"
+      ]
+    },
+    {
+      "id": "117032",
+      "name": "Jimmy Key",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "114106",
+      "name": "Cecil Fielder",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "124164",
+      "name": "Devon White",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "123929",
+      "name": "Duane Ward",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "110090",
+      "name": "Rick Aguilera",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "115267",
+      "name": "Juan Guzmán",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111554",
+      "name": "Kevin Brown",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "115744",
+      "name": "Dave Henderson",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "120971",
+      "name": "Jeff Reardon",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "115209",
+      "name": "Kelly Gruber",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "120248",
+      "name": "Lance Parrish",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "123057",
+      "name": "Greg Swindell",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "119313",
+      "name": "Mike Moore",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "117488",
+      "name": "Carney Lansford",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "117537",
+      "name": "Tim Laudner",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "116226",
+      "name": "Jay Howell",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "123072",
+      "name": "Pat Tabler",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "115765",
+      "name": "Tom Henke",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "120927",
+      "name": "Willie Randolph",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "120476",
+      "name": "Dan Petry",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111629",
+      "name": "Tom Brunansky",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "117669",
+      "name": "Chet Lemon",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "120858",
+      "name": "Dan Quisenberry",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "122983",
+      "name": "Jim Sundberg",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "117916",
+      "name": "Aurelio Lopez",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111221",
+      "name": "Bob Boone",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "124707",
+      "name": "Matt Young",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "116118",
+      "name": "Rick Honeycutt",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "118367",
+      "name": "Tippy Martinez",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "124435",
+      "name": "Willie Wilson",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "118872",
+      "name": "Hal McRae",
+      "available": [
+        "DH",
+        "OF"
+      ]
+    },
+    {
+      "id": "116243",
+      "name": "Kent Hrbek",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "119983",
+      "name": "Al Oliver",
+      "available": [
+        "1B",
+        "DH",
+        "OF"
+      ]
+    },
+    {
+      "id": "122272",
+      "name": "Ken Singleton",
+      "available": [
+        "DH",
+        "OF"
+      ]
+    },
+    {
+      "id": "118728",
+      "name": "Scott McGregor",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "120069",
+      "name": "Jorge Orta",
+      "available": [
+        "2B",
+        "OF"
+      ]
+    },
+    {
+      "id": "117454",
+      "name": "Ken Landreaux",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "122337",
+      "name": "Roy Smalley III",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "111916",
+      "name": "Bert Campaneris",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "113984",
+      "name": "Ron Fairly",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "116723",
+      "name": "Ruppert Jones",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "110806",
+      "name": "Mark Belanger",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "121253",
+      "name": "Mickey Rivers",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "114625",
+      "name": "Phil Garner",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "114399",
+      "name": "Bill Freehan",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "123962",
+      "name": "Claudell Washington",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "115754",
+      "name": "George Hendrick",
+      "available": [
+        "1B",
+        "OF"
+      ]
+    },
+    {
+      "id": "121533",
+      "name": "Joe Rudi",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "115951",
+      "name": "John Hiller",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "110526",
+      "name": "Sal Bando",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "122584",
+      "name": "Jim Spencer",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "116115",
+      "name": "Ken Holtzman",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111058",
+      "name": "Paul Blair",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "116164",
+      "name": "Willie Horton",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "118841",
+      "name": "Dave McNally",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "112090",
+      "name": "Norm Cash",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "113410",
+      "name": "Pat Dobson",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "122360",
+      "name": "Reggie Smith",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "113617",
+      "name": "Dave Duncan",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "111674",
+      "name": "Don Buford",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "114326",
+      "name": "Ray Fosse",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "116576",
+      "name": "Davey Johnson",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "124186",
+      "name": "Roy White",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "119935",
+      "name": "Blue Moon Odom",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "117210",
+      "name": "Darold Knowles",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "119166",
+      "name": "Don Mincher",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "121456",
+      "name": "John Roseboro",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "110270",
+      "name": "Mike Andrews",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "115698",
+      "name": "Mike Hegan",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "124098",
+      "name": "Don Wert",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "119246",
+      "name": "Rick Monday",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "113920",
+      "name": "Andy Etchebarren",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "118514",
+      "name": "Dick McAuliffe",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "116151",
+      "name": "Joe Horlen",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "121166",
+      "name": "Pete Richert",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "122303",
+      "name": "Bill Skowron",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "118257",
+      "name": "Felix Mantilla",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "113077",
+      "name": "Vic Davalillo",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "111435",
+      "name": "Eddie Bressoud",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "118001",
+      "name": "Jerry Lumpe",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "120612",
+      "name": "Juan Pizarro",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "122209",
+      "name": "Norm Siebern",
+      "available": [
+        "1B",
+        "LF"
+      ]
+    },
+    {
+      "id": "110341",
+      "name": "Luis Arroyo",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "113653",
+      "name": "Ryne Duren",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "113008",
+      "name": "Bud Daley",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "112427",
+      "name": "Jim Coates",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "117877",
+      "name": "Sherm Lollar",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "124554",
+      "name": "Gene Woodling",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "112161",
+      "name": "Bob Cerv",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "117862",
+      "name": "Billy Loes",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "118330",
+      "name": "Billy Martin",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "117350",
+      "name": "Johnny Kucks",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111220",
+      "name": "Ray Boone",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "121100",
+      "name": "Allie Reynolds",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "110697",
+      "name": "Hank Bauer",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "119834",
+      "name": "Irv Noren",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "123486",
+      "name": "Virgil Trucks",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "121324",
+      "name": "Eddie Robinson",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "121623",
+      "name": "Johnny Sain",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "119197",
+      "name": "Dale Mitchell",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "116744",
+      "name": "Eddie Joost",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "115697",
+      "name": "Jim Hegan",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "120935",
+      "name": "Vic Raschi",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "117909",
+      "name": "Ed Lopat",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "112475",
+      "name": "Jerry Coleman",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "121748",
+      "name": "Ray Scarborough",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111842",
+      "name": "Tommy Byrne",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "115778",
+      "name": "Tommy Henrich",
+      "available": [
+        "1B",
+        "OF"
+      ]
+    },
+    {
+      "id": "121445",
+      "name": "Buddy Rosar",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "118870",
+      "name": "George McQuinn",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "120170",
+      "name": "Joe Page",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "116966",
+      "name": "Ken Keltner",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "121299",
+      "name": "Aaron Robinson",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "116640",
+      "name": "Billy Johnson",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "116919",
+      "name": "Charlie Keller",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "123479",
+      "name": "Dizzy Trout",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "124678",
+      "name": "Rudy York",
+      "available": [
+        "1B",
+        "C"
+      ]
+    },
+    {
+      "id": "122086",
+      "name": "Spec Shea",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "122806",
+      "name": "Snuffy Stirnweiss",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "119514",
+      "name": "Bob Muncrief",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "119749",
+      "name": "Bobo Newsom",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111245",
+      "name": "Hank Borowy",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "114357",
+      "name": "Pete Fox",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "112924",
+      "name": "Roy Cullenbine",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "123497",
+      "name": "Thurman Tucker",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "117780",
+      "name": "Johnny Lindell",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "111195",
+      "name": "Tiny Bonham",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "110881",
+      "name": "Al Benton",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "121575",
+      "name": "Marius Russo",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "112785",
+      "name": "Doc Cramer",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "120339",
+      "name": "Monte Pearson",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "121410",
+      "name": "Red Rolfe",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "111458",
+      "name": "Tommy Bridges",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "112861",
+      "name": "Frankie Crosetti",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "121987",
+      "name": "George Selkirk",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "119560",
+      "name": "Johnny Murphy",
+      "available": [
+        "1B",
+        "P"
+      ]
+    },
+    {
+      "id": "115987",
+      "name": "Myril Hoag",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "110152",
+      "name": "Johnny Allen",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "123823",
+      "name": "Gee Walker",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "112205",
+      "name": "Ben Chapman",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "121507",
+      "name": "Schoolboy Rowe",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111120",
+      "name": "Ossie Bluege",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "113685",
+      "name": "Jimmy Dykes",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "112879",
+      "name": "Alvin Crowder",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "115925",
+      "name": "Oral Hildebrand",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "150359",
+      "name": "A.J. Burnett",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "425794",
+      "name": "Adam Wainwright",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "400284",
+      "name": "Chase Utley",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "489265",
+      "name": "Sergio Romo",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "434563",
+      "name": "Carlos Ruiz",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "430912",
+      "name": "Matt Cain",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "451216",
+      "name": "Brian Wilson",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "425664",
+      "name": "Shane Victorino",
+      "available": [
+        "OF",
+        "RF"
+      ]
+    },
+    {
+      "id": "408108",
+      "name": "Freddy Sanchez",
+      "available": [
+        "2B",
+        "3B"
+      ]
+    },
+    {
+      "id": "150029",
+      "name": "Jayson Werth",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "400058",
+      "name": "Brad Lidge",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "400023",
+      "name": "Aaron Rowand",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "207267",
+      "name": "Brad Penny",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "117601",
+      "name": "Derrek Lee",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "276520",
+      "name": "Bronson Arroyo",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "112116",
+      "name": "Luis Castillo",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "114935",
+      "name": "Luis Gonzalez",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "110189",
+      "name": "Moises Alou",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "134321",
+      "name": "Carl Pavano",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "132961",
+      "name": "Geoff Jenkins",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "133343",
+      "name": "Preston Wilson",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "218294",
+      "name": "Byung-Hyun Kim",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "119064",
+      "name": "Damian Miller",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "119718",
+      "name": "Robb Nen",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "116569",
+      "name": "Charles Johnson",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "114260",
+      "name": "Cliff Floyd",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "117148",
+      "name": "Ryan Klesko",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "117652",
+      "name": "Al Leiter",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "114833",
+      "name": "Joe Girardi",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "114135",
+      "name": "Steve Finley",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "122612",
+      "name": "Ed Sprague Jr.",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "110826",
+      "name": "Jay Bell",
+      "available": [
+        "2B",
+        "SS"
+      ]
+    },
+    {
+      "id": "124326",
+      "name": "Matt Williams",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "136460",
+      "name": "Álex González",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "119673",
+      "name": "Denny Neagle",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "115007",
+      "name": "Mark Grace",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "124523",
+      "name": "Tony Womack",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "124498",
+      "name": "Mark Wohlers",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111199",
+      "name": "Bobby Bonilla",
+      "available": [
+        "1B",
+        "3B",
+        "OF"
+      ]
+    },
+    {
+      "id": "113074",
+      "name": "Darren Daulton",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "113686",
+      "name": "Lenny Dykstra",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "121673",
+      "name": "Reggie Sanders",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "116424",
+      "name": "Danny Jackson",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "113620",
+      "name": "Mariano Duncan",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "112213",
+      "name": "Norm Charlton",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "116593",
+      "name": "Howard Johnson",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "119374",
+      "name": "Mike Morgan",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111611",
+      "name": "Tom Browning",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "110325",
+      "name": "Jack Armstrong",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "121919",
+      "name": "Mike Scioscia",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "113102",
+      "name": "Eric Davis",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "120370",
+      "name": "Tony Peña Sr.",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "123810",
+      "name": "Bob Walk",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "114074",
+      "name": "Sid Fernandez",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "110278",
+      "name": "Joaquin Andujar",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "113054",
+      "name": "Ron Darling",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "115839",
+      "name": "Tom Herr",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "120051",
+      "name": "Jesse Orosco",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "118319",
+      "name": "Mike Marshall",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "113935",
+      "name": "Darrell Evans",
+      "available": [
+        "1B",
+        "3B"
+      ]
+    },
+    {
+      "id": "122430",
+      "name": "Lonnie Smith",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "117912",
+      "name": "Davey Lopes",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "121581",
+      "name": "Dick Ruthven",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "113701",
+      "name": "Mike Easler",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "121574",
+      "name": "Bill Russell",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "121090",
+      "name": "Jerry Reuss",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "110973",
+      "name": "Jim Bibby",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "123175",
+      "name": "Kent Tekulve",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "119785",
+      "name": "Joe Niekro",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111281",
+      "name": "Larry Bowa",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "118499",
+      "name": "Lee Mazzilli",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "118023",
+      "name": "Greg Luzinski",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "111952",
+      "name": "John Candelaria",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "112089",
+      "name": "Dave Cash",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "121686",
+      "name": "Manny Sanguillen",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "115194",
+      "name": "Jerry Grote",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "115205",
+      "name": "Johnny Grubb",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "120095",
+      "name": "Claude Osteen",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "114835",
+      "name": "Dave Giusti",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "110997",
+      "name": "Jack Billingham",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111442",
+      "name": "Jim Brewer",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "113146",
+      "name": "Willie Davis",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "112041",
+      "name": "Clay Carroll",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "119822",
+      "name": "Gary Nolan",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111086",
+      "name": "Steve Blass",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "115502",
+      "name": "Bud Harrelson",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "113815",
+      "name": "Dock Ellis",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "113352",
+      "name": "Larry Dierker",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "116017",
+      "name": "Joe Hoerner",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "116674",
+      "name": "Cleon Jones",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "116428",
+      "name": "Grant Jackson",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "117255",
+      "name": "Jerry Koosman",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "110188",
+      "name": "Matty Alou",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "114248",
+      "name": "Curt Flood",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "110186",
+      "name": "Felipe Alou",
+      "available": [
+        "1B",
+        "OF"
+      ]
+    },
+    {
+      "id": "110166",
+      "name": "Gene Alley",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "116505",
+      "name": "Julian Javier",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "121001",
+      "name": "Ron Reed",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "118563",
+      "name": "Tim McCarver",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "123684",
+      "name": "Bob Veale",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "117293",
+      "name": "Ed Kranepool",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "124191",
+      "name": "Bill White",
+      "available": [
+        "1B",
+        "OF"
+      ]
+    },
+    {
+      "id": "111705",
+      "name": "Smoky Burgess",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "124552",
+      "name": "Hal Woodeshick",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "113112",
+      "name": "Tommy Davis",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "112788",
+      "name": "Del Crandall",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "122897",
+      "name": "Dick Stuart",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "124768",
+      "name": "Don Zimmer",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "113968",
+      "name": "Roy Face",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111675",
+      "name": "Bob Buhl",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "114442",
+      "name": "Bob Friend",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "122299",
+      "name": "Bob Skinner",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "119675",
+      "name": "Charlie Neal",
+      "available": [
+        "2B",
+        "SS"
+      ]
+    },
+    {
+      "id": "110071",
+      "name": "Joe Adcock",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "117499",
+      "name": "Norm Larker",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "124340",
+      "name": "Stan Williams",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "112562",
+      "name": "Gene Conley",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "110287",
+      "name": "Johnny Antonelli",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "117867",
+      "name": "Johnny Logan",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "119208",
+      "name": "Vinegar Bend Mizell",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "118814",
+      "name": "Don McMahon",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "117384",
+      "name": "Clem Labine",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "122241",
+      "name": "Curt Simmons",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "115988",
+      "name": "Don Hoak",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "112293",
+      "name": "Gino Cimoli",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "117897",
+      "name": "Dale Long",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "121079",
+      "name": "Rip Repulski",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "119474",
+      "name": "Don Mueller",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "110471",
+      "name": "Gene Baker",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "115289",
+      "name": "Harvey Haddix",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "113888",
+      "name": "Carl Erskine",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "115175",
+      "name": "Marv Grissom",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "114495",
+      "name": "Carl Furillo",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "124296",
+      "name": "Davey Williams",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "121136",
+      "name": "Del Rice",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "113346",
+      "name": "Murry Dickson",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "124121",
+      "name": "Wes Westrum",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "118140",
+      "name": "Sal Maglie",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "117857",
+      "name": "Whitey Lockman",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "111048",
+      "name": "Ewell Blackwell",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "120167",
+      "name": "Andy Pafko",
+      "available": [
+        "3B",
+        "OF",
+        "P"
+      ]
+    },
+    {
+      "id": "122281",
+      "name": "Dick Sisler",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "112660",
+      "name": "Walker Cooper",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "120653",
+      "name": "Howie Pollet",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "119517",
+      "name": "Red Munger",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "121187",
+      "name": "Elmer Riddle",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "111412",
+      "name": "Harry Brecheen",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "123701",
+      "name": "Emil Verban",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "123825",
+      "name": "Harry Walker",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "117369",
+      "name": "Whitey Kurowski",
+      "available": [
+        "1B",
+        "3B"
+      ]
+    },
+    {
+      "id": "116145",
+      "name": "Johnny Hopp",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "123365",
+      "name": "Jim Tobin",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "117482",
+      "name": "Max Lanier",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "112992",
+      "name": "Babe Dahlgren",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "123638",
+      "name": "Johnny Vander Meer",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "114427",
+      "name": "Lonny Frey",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "117830",
+      "name": "Danny Litwhiler",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "111555",
+      "name": "Jimmy Brown",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "113285",
+      "name": "Paul Derringer",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "119320",
+      "name": "Terry Moore",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "119307",
+      "name": "Jo-Jo Moore",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "114950",
+      "name": "Ival Goodman",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "110335",
+      "name": "Morrie Arnovich",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "123513",
+      "name": "Jim Turner",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "124197",
+      "name": "Burgess Whitehead",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "118225",
+      "name": "Gus Mancuso",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "118342",
+      "name": "Pepper Martin",
+      "available": [
+        "3B",
+        "OF"
+      ]
+    },
+    {
+      "id": "112510",
+      "name": "Ripper Collins",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "121200",
+      "name": "Lew Riggs",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "123846",
+      "name": "Bill Walker",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "121899",
+      "name": "Hal Schumacher",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "124403",
+      "name": "Jimmie Wilson",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "115358",
+      "name": "Bill Hallahan",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "119941",
+      "name": "Lefty O'Doul",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "111851",
+      "name": "Orlando Cabrera",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "134260",
+      "name": "Bengie Molina",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "137006",
+      "name": "Doug Mientkiewicz",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "122672",
+      "name": "Mickey Stanley",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "121009",
+      "name": "Pokey Reese",
+      "available": [
+        "2B"
+      ]
+    },
+    {
+      "id": "118117",
+      "name": "Garry Maddox",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "114723",
+      "name": "Cesar Geronimo",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "120232",
+      "name": "Wes Parker",
+      "available": [
+        "1B"
+      ]
+    },
+    {
+      "id": "111319",
+      "name": "Clete Boyer",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "118465",
+      "name": "Dal Maxvill",
+      "available": [
+        "SS"
+      ]
+    },
+    {
+      "id": "333492",
+      "name": "Aubrey Huff",
+      "available": [
+        "1B",
+        "DH"
+      ]
+    },
+    {
+      "id": "119482",
+      "name": "Bill Mueller",
+      "available": [
+        "3B"
+      ]
+    },
+    {
+      "id": "121308",
+      "name": "Don Robinson",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "117592",
+      "name": "Tim Leary",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "114316",
+      "name": "Bob Forsch",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "408211",
+      "name": "Kevin Cash",
+      "available": [
+        "C"
+      ]
+    },
+    {
+      "id": "425492",
+      "name": "Ryan Madson",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "425657",
+      "name": "Javier López",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "346793",
+      "name": "Jeremy Affeldt",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "433586",
+      "name": "Santiago Casilla",
+      "available": [
+        "P"
+      ]
+    },
+    {
+      "id": "448170",
+      "name": "Travis Ishikawa",
+      "available": [
+        "OF"
+      ]
+    },
+    {
+      "id": "150407",
+      "name": "Guillermo Mota",
+      "available": [
+        "P"
+      ]
+    }
+  ],
+  "overwritten_position_rows": 4907,
+  "hof_year_mismatch": [
+    {
+      "row": [
+        "hof",
+        2023,
+        "",
+        492447,
+        "No team",
+        14
+      ],
+      "name": "Jim Leyland",
+      "vote": {
+        "year": 2024,
+        "method": "VC (COB)",
+        "pct": 93.75,
+        "votes": null,
+        "ballot": null
+      }
+    },
+    {
+      "row": [
+        "hof",
+        2021,
+        "",
+        116008,
+        "LAD",
+        119
+      ],
+      "name": "Gil Hodges",
+      "vote": {
+        "year": 2022,
+        "method": "VC (GD)",
+        "pct": 75.0,
+        "votes": null,
+        "ballot": null
+      }
+    },
+    {
+      "row": [
+        "hof",
+        2021,
+        "",
+        116803,
+        "MIN",
+        142
+      ],
+      "name": "Jim Kaat",
+      "vote": {
+        "year": 2022,
+        "method": "VC (GD)",
+        "pct": 75.0,
+        "votes": null,
+        "ballot": null
+      }
+    },
+    {
+      "row": [
+        "hof",
+        2021,
+        "",
+        119176,
+        "CWS",
+        145
+      ],
+      "name": "Minnie Minoso",
+      "vote": {
+        "year": 2022,
+        "method": "VC (GD)",
+        "pct": 87.5,
+        "votes": null,
+        "ballot": null
+      }
+    },
+    {
+      "row": [
+        "hof",
+        2021,
+        "",
+        119980,
+        "MIN",
+        142
+      ],
+      "name": "Tony Oliva",
+      "vote": {
+        "year": 2022,
+        "method": "VC (GD)",
+        "pct": 75.0,
+        "votes": null,
+        "ballot": null
+      }
+    }
+  ],
+  "hof_without_votes": [],
+  "summary": [
+    {
+      "key": "hof",
+      "label": "명예의 전당",
+      "rows": 346,
+      "years": {
+        "1936": 5,
+        "1937": 8,
+        "1938": 3,
+        "1939": 10,
+        "1942": 1,
+        "1944": 1,
+        "1945": 10,
+        "1946": 11,
+        "1947": 4,
+        "1948": 2,
+        "1949": 3,
+        "1951": 2,
+        "1952": 2,
+        "1953": 8,
+        "1954": 3,
+        "1955": 6,
+        "1956": 2,
+        "1957": 2,
+        "1959": 1,
+        "1961": 2,
+        "1962": 4,
+        "1963": 4,
+        "1964": 7,
+        "1965": 1,
+        "1966": 2,
+        "1967": 3,
+        "1968": 3,
+        "1969": 4,
+        "1970": 4,
+        "1971": 8,
+        "1972": 8,
+        "1973": 6,
+        "1974": 6,
+        "1975": 5,
+        "1976": 6,
+        "1977": 5,
+        "1978": 3,
+        "1979": 3,
+        "1980": 4,
+        "1981": 3,
+        "1982": 4,
+        "1983": 4,
+        "1984": 5,
+        "1985": 4,
+        "1986": 3,
+        "1987": 3,
+        "1988": 1,
+        "1989": 4,
+        "1990": 2,
+        "1991": 5,
+        "1992": 4,
+        "1993": 1,
+        "1994": 3,
+        "1995": 5,
+        "1996": 4,
+        "1997": 4,
+        "1998": 5,
+        "1999": 7,
+        "2000": 5,
+        "2001": 4,
+        "2002": 1,
+        "2003": 2,
+        "2004": 2,
+        "2005": 2,
+        "2006": 18,
+        "2007": 2,
+        "2008": 6,
+        "2009": 3,
+        "2010": 3,
+        "2011": 2,
+        "2012": 2,
+        "2013": 3,
+        "2014": 6,
+        "2015": 4,
+        "2016": 2,
+        "2017": 3,
+        "2018": 5,
+        "2019": 6,
+        "2020": 3,
+        "2021": 4,
+        "2022": 1,
+        "2023": 3,
+        "2024": 3,
+        "2025": 5,
+        "2026": 3
+      },
+      "blank_team": 31,
+      "blank_position": 213
+    },
+    {
+      "key": "mvp",
+      "label": "MVP",
+      "rows": 193,
+      "years": {
+        "1931": 2,
+        "1932": 2,
+        "1933": 2,
+        "1934": 2,
+        "1935": 2,
+        "1936": 2,
+        "1937": 2,
+        "1938": 2,
+        "1939": 2,
+        "1940": 2,
+        "1941": 2,
+        "1942": 2,
+        "1943": 2,
+        "1944": 2,
+        "1945": 2,
+        "1946": 2,
+        "1947": 2,
+        "1948": 2,
+        "1949": 2,
+        "1950": 2,
+        "1951": 2,
+        "1952": 2,
+        "1953": 2,
+        "1954": 2,
+        "1955": 2,
+        "1956": 2,
+        "1957": 2,
+        "1958": 2,
+        "1959": 2,
+        "1960": 2,
+        "1961": 2,
+        "1962": 2,
+        "1963": 2,
+        "1964": 2,
+        "1965": 2,
+        "1966": 2,
+        "1967": 2,
+        "1968": 2,
+        "1969": 2,
+        "1970": 2,
+        "1971": 2,
+        "1972": 2,
+        "1973": 2,
+        "1974": 2,
+        "1975": 2,
+        "1976": 2,
+        "1977": 2,
+        "1978": 2,
+        "1979": 3,
+        "1980": 2,
+        "1981": 2,
+        "1982": 2,
+        "1983": 2,
+        "1984": 2,
+        "1985": 2,
+        "1986": 2,
+        "1987": 2,
+        "1988": 2,
+        "1989": 2,
+        "1990": 2,
+        "1991": 2,
+        "1992": 2,
+        "1993": 2,
+        "1994": 2,
+        "1995": 2,
+        "1996": 2,
+        "1997": 2,
+        "1998": 2,
+        "1999": 2,
+        "2000": 2,
+        "2001": 2,
+        "2002": 2,
+        "2003": 2,
+        "2004": 2,
+        "2005": 2,
+        "2006": 2,
+        "2007": 2,
+        "2008": 2,
+        "2009": 2,
+        "2010": 2,
+        "2011": 2,
+        "2012": 2,
+        "2013": 2,
+        "2014": 2,
+        "2015": 2,
+        "2016": 2,
+        "2017": 2,
+        "2018": 2,
+        "2019": 2,
+        "2020": 2,
+        "2021": 2,
+        "2022": 2,
+        "2023": 2,
+        "2024": 2,
+        "2025": 2,
+        "2026": 2
+      },
+      "blank_team": 0,
+      "blank_position": 108
+    },
+    {
+      "key": "cy",
+      "label": "사이영상",
+      "rows": 132,
+      "years": {
+        "1956": 1,
+        "1957": 1,
+        "1958": 1,
+        "1959": 1,
+        "1960": 1,
+        "1961": 1,
+        "1962": 1,
+        "1963": 1,
+        "1964": 1,
+        "1965": 1,
+        "1966": 1,
+        "1967": 2,
+        "1968": 2,
+        "1969": 3,
+        "1970": 2,
+        "1971": 2,
+        "1972": 2,
+        "1973": 2,
+        "1974": 2,
+        "1975": 2,
+        "1976": 2,
+        "1977": 2,
+        "1978": 2,
+        "1979": 2,
+        "1980": 2,
+        "1981": 2,
+        "1982": 2,
+        "1983": 2,
+        "1984": 2,
+        "1985": 2,
+        "1986": 2,
+        "1987": 2,
+        "1988": 2,
+        "1989": 2,
+        "1990": 2,
+        "1991": 2,
+        "1992": 2,
+        "1993": 2,
+        "1994": 2,
+        "1995": 2,
+        "1996": 2,
+        "1997": 2,
+        "1998": 2,
+        "1999": 2,
+        "2000": 2,
+        "2001": 2,
+        "2002": 2,
+        "2003": 2,
+        "2004": 2,
+        "2005": 2,
+        "2006": 2,
+        "2007": 2,
+        "2008": 2,
+        "2009": 2,
+        "2010": 2,
+        "2011": 2,
+        "2012": 2,
+        "2013": 2,
+        "2014": 2,
+        "2015": 2,
+        "2016": 2,
+        "2017": 2,
+        "2018": 2,
+        "2019": 2,
+        "2020": 2,
+        "2021": 2,
+        "2022": 2,
+        "2023": 2,
+        "2024": 2,
+        "2025": 2,
+        "2026": 2
+      },
+      "blank_team": 0,
+      "blank_position": 70
+    },
+    {
+      "key": "roy",
+      "label": "신인왕",
+      "rows": 160,
+      "years": {
+        "1947": 1,
+        "1948": 1,
+        "1949": 2,
+        "1950": 2,
+        "1951": 2,
+        "1952": 2,
+        "1953": 2,
+        "1954": 2,
+        "1955": 2,
+        "1956": 2,
+        "1957": 2,
+        "1958": 2,
+        "1959": 2,
+        "1960": 2,
+        "1961": 2,
+        "1962": 2,
+        "1963": 2,
+        "1964": 2,
+        "1965": 2,
+        "1966": 2,
+        "1967": 2,
+        "1968": 2,
+        "1969": 2,
+        "1970": 2,
+        "1971": 2,
+        "1972": 2,
+        "1973": 2,
+        "1974": 2,
+        "1975": 2,
+        "1976": 3,
+        "1977": 2,
+        "1978": 2,
+        "1979": 3,
+        "1980": 2,
+        "1981": 2,
+        "1982": 2,
+        "1983": 2,
+        "1984": 2,
+        "1985": 2,
+        "1986": 2,
+        "1987": 2,
+        "1988": 2,
+        "1989": 2,
+        "1990": 2,
+        "1991": 2,
+        "1992": 2,
+        "1993": 2,
+        "1994": 2,
+        "1995": 2,
+        "1996": 2,
+        "1997": 2,
+        "1998": 2,
+        "1999": 2,
+        "2000": 2,
+        "2001": 2,
+        "2002": 2,
+        "2003": 2,
+        "2004": 2,
+        "2005": 2,
+        "2006": 2,
+        "2007": 2,
+        "2008": 2,
+        "2009": 2,
+        "2010": 2,
+        "2011": 2,
+        "2012": 2,
+        "2013": 2,
+        "2014": 2,
+        "2015": 2,
+        "2016": 2,
+        "2017": 2,
+        "2018": 2,
+        "2019": 2,
+        "2020": 2,
+        "2021": 2,
+        "2022": 2,
+        "2023": 2,
+        "2024": 2,
+        "2025": 2,
+        "2026": 2
+      },
+      "blank_team": 0,
+      "blank_position": 52
+    },
+    {
+      "key": "wsmvp",
+      "label": "월드시리즈 MVP",
+      "rows": 74,
+      "years": {
+        "1955": 1,
+        "1956": 1,
+        "1957": 1,
+        "1958": 1,
+        "1959": 1,
+        "1960": 1,
+        "1961": 1,
+        "1962": 1,
+        "1963": 1,
+        "1964": 1,
+        "1965": 1,
+        "1966": 1,
+        "1967": 1,
+        "1968": 1,
+        "1969": 1,
+        "1970": 1,
+        "1971": 1,
+        "1972": 1,
+        "1973": 1,
+        "1974": 1,
+        "1975": 1,
+        "1976": 1,
+        "1977": 1,
+        "1978": 1,
+        "1979": 1,
+        "1980": 1,
+        "1981": 3,
+        "1982": 1,
+        "1983": 1,
+        "1984": 1,
+        "1985": 1,
+        "1986": 1,
+        "1987": 1,
+        "1988": 1,
+        "1989": 1,
+        "1990": 1,
+        "1991": 1,
+        "1992": 1,
+        "1993": 1,
+        "1995": 1,
+        "1996": 1,
+        "1997": 1,
+        "1998": 1,
+        "1999": 1,
+        "2000": 1,
+        "2001": 2,
+        "2002": 1,
+        "2003": 1,
+        "2004": 1,
+        "2005": 1,
+        "2006": 1,
+        "2007": 1,
+        "2008": 1,
+        "2009": 1,
+        "2010": 1,
+        "2011": 1,
+        "2012": 1,
+        "2013": 1,
+        "2014": 1,
+        "2015": 1,
+        "2016": 1,
+        "2017": 1,
+        "2018": 1,
+        "2019": 1,
+        "2020": 1,
+        "2021": 1,
+        "2022": 1,
+        "2023": 1,
+        "2024": 1,
+        "2025": 1,
+        "2026": 1
+      },
+      "blank_team": 0,
+      "blank_position": 61
+    },
+    {
+      "key": "lcsmvp",
+      "label": "챔피언십시리즈 MVP",
+      "rows": 98,
+      "years": {
+        "1977": 1,
+        "1978": 1,
+        "1979": 1,
+        "1980": 2,
+        "1981": 2,
+        "1982": 2,
+        "1983": 2,
+        "1984": 2,
+        "1985": 2,
+        "1986": 2,
+        "1987": 2,
+        "1988": 2,
+        "1989": 2,
+        "1990": 3,
+        "1991": 2,
+        "1992": 2,
+        "1993": 2,
+        "1995": 2,
+        "1996": 2,
+        "1997": 2,
+        "1998": 2,
+        "1999": 2,
+        "2000": 2,
+        "2001": 2,
+        "2002": 2,
+        "2003": 2,
+        "2004": 2,
+        "2005": 2,
+        "2006": 2,
+        "2007": 2,
+        "2008": 2,
+        "2009": 2,
+        "2010": 2,
+        "2011": 2,
+        "2012": 2,
+        "2013": 2,
+        "2014": 2,
+        "2015": 2,
+        "2016": 3,
+        "2017": 3,
+        "2018": 2,
+        "2019": 2,
+        "2020": 2,
+        "2021": 2,
+        "2022": 2,
+        "2023": 2,
+        "2024": 2,
+        "2025": 2,
+        "2026": 2
+      },
+      "blank_team": 0,
+      "blank_position": 51
+    },
+    {
+      "key": "asmvp",
+      "label": "올스타전 MVP",
+      "rows": 65,
+      "years": {
+        "1962": 2,
+        "1963": 1,
+        "1964": 1,
+        "1965": 1,
+        "1966": 1,
+        "1967": 1,
+        "1968": 1,
+        "1969": 1,
+        "1970": 1,
+        "1971": 1,
+        "1972": 1,
+        "1973": 1,
+        "1974": 1,
+        "1975": 2,
+        "1976": 1,
+        "1977": 1,
+        "1978": 1,
+        "1979": 1,
+        "1980": 1,
+        "1981": 1,
+        "1982": 1,
+        "1983": 1,
+        "1984": 1,
+        "1985": 1,
+        "1986": 1,
+        "1987": 1,
+        "1988": 1,
+        "1989": 1,
+        "1990": 1,
+        "1991": 1,
+        "1992": 1,
+        "1993": 1,
+        "1994": 1,
+        "1995": 1,
+        "1996": 1,
+        "1997": 1,
+        "1998": 1,
+        "1999": 1,
+        "2000": 1,
+        "2001": 1,
+        "2003": 1,
+        "2004": 1,
+        "2005": 1,
+        "2006": 1,
+        "2007": 1,
+        "2008": 1,
+        "2009": 1,
+        "2010": 1,
+        "2011": 1,
+        "2012": 1,
+        "2013": 1,
+        "2014": 1,
+        "2015": 1,
+        "2016": 1,
+        "2017": 1,
+        "2018": 1,
+        "2019": 1,
+        "2021": 1,
+        "2022": 1,
+        "2023": 1,
+        "2024": 1,
+        "2025": 1,
+        "2026": 1
+      },
+      "blank_team": 0,
+      "blank_position": 32
+    },
+    {
+      "key": "allstar",
+      "label": "올스타",
+      "rows": 5586,
+      "years": {
+        "1933": 36,
+        "1934": 41,
+        "1935": 41,
+        "1936": 43,
+        "1937": 48,
+        "1938": 48,
+        "1939": 51,
+        "1940": 53,
+        "1941": 52,
+        "1942": 53,
+        "1943": 53,
+        "1944": 54,
+        "1946": 52,
+        "1947": 54,
+        "1948": 53,
+        "1949": 51,
+        "1950": 50,
+        "1951": 50,
+        "1952": 53,
+        "1953": 53,
+        "1954": 55,
+        "1955": 51,
+        "1956": 52,
+        "1957": 50,
+        "1958": 50,
+        "1959": 66,
+        "1960": 61,
+        "1961": 62,
+        "1962": 64,
+        "1963": 53,
+        "1964": 52,
+        "1965": 53,
+        "1966": 53,
+        "1967": 53,
+        "1968": 53,
+        "1969": 59,
+        "1970": 58,
+        "1971": 61,
+        "1972": 62,
+        "1973": 61,
+        "1974": 59,
+        "1975": 57,
+        "1976": 58,
+        "1977": 62,
+        "1978": 61,
+        "1979": 62,
+        "1980": 61,
+        "1981": 61,
+        "1982": 57,
+        "1983": 60,
+        "1984": 58,
+        "1985": 60,
+        "1986": 57,
+        "1987": 58,
+        "1988": 59,
+        "1989": 60,
+        "1990": 58,
+        "1991": 58,
+        "1992": 57,
+        "1993": 58,
+        "1994": 59,
+        "1995": 61,
+        "1996": 59,
+        "1997": 61,
+        "1998": 63,
+        "1999": 64,
+        "2000": 69,
+        "2001": 63,
+        "2002": 64,
+        "2003": 70,
+        "2004": 68,
+        "2005": 68,
+        "2006": 71,
+        "2007": 65,
+        "2008": 66,
+        "2009": 72,
+        "2010": 81,
+        "2011": 84,
+        "2012": 74,
+        "2013": 78,
+        "2014": 81,
+        "2015": 76,
+        "2016": 79,
+        "2017": 71,
+        "2018": 73,
+        "2019": 75,
+        "2021": 81,
+        "2022": 80,
+        "2023": 77,
+        "2024": 76,
+        "2025": 81,
+        "2026": 77
+      },
+      "blank_team": 0,
+      "blank_position": 2296
+    },
+    {
+      "key": "allmlb1",
+      "label": "All-MLB 퍼스트 팀",
+      "rows": 126,
+      "years": {
+        "2019": 16,
+        "2020": 16,
+        "2021": 16,
+        "2022": 16,
+        "2023": 15,
+        "2024": 16,
+        "2025": 16,
+        "2026": 15
+      },
+      "blank_team": 0,
+      "blank_position": 0
+    },
+    {
+      "key": "allmlb2",
+      "label": "All-MLB 세컨드 팀",
+      "rows": 127,
+      "years": {
+        "2019": 16,
+        "2020": 16,
+        "2021": 16,
+        "2022": 16,
+        "2023": 15,
+        "2024": 16,
+        "2025": 16,
+        "2026": 16
+      },
+      "blank_team": 0,
+      "blank_position": 1
+    },
+    {
+      "key": "gg",
+      "label": "골드글러브",
+      "rows": 1265,
+      "years": {
+        "1957": 9,
+        "1958": 18,
+        "1959": 18,
+        "1960": 18,
+        "1961": 18,
+        "1962": 18,
+        "1963": 18,
+        "1964": 18,
+        "1965": 18,
+        "1966": 18,
+        "1967": 18,
+        "1968": 18,
+        "1969": 18,
+        "1970": 18,
+        "1971": 18,
+        "1972": 18,
+        "1973": 18,
+        "1974": 18,
+        "1975": 18,
+        "1976": 18,
+        "1977": 18,
+        "1978": 18,
+        "1979": 18,
+        "1980": 18,
+        "1981": 18,
+        "1982": 18,
+        "1983": 18,
+        "1984": 18,
+        "1985": 19,
+        "1986": 18,
+        "1987": 18,
+        "1988": 18,
+        "1989": 18,
+        "1990": 18,
+        "1991": 18,
+        "1992": 18,
+        "1993": 18,
+        "1994": 18,
+        "1995": 18,
+        "1996": 18,
+        "1997": 18,
+        "1998": 18,
+        "1999": 18,
+        "2000": 18,
+        "2001": 18,
+        "2002": 18,
+        "2003": 18,
+        "2004": 18,
+        "2005": 18,
+        "2006": 18,
+        "2007": 19,
+        "2008": 18,
+        "2009": 18,
+        "2010": 18,
+        "2011": 18,
+        "2012": 19,
+        "2013": 18,
+        "2014": 18,
+        "2015": 18,
+        "2016": 18,
+        "2017": 18,
+        "2018": 19,
+        "2019": 18,
+        "2020": 18,
+        "2021": 18,
+        "2022": 20,
+        "2023": 20,
+        "2024": 20,
+        "2025": 20,
+        "2026": 20
+      },
+      "blank_team": 0,
+      "blank_position": 557
+    },
+    {
+      "key": "pg",
+      "label": "플래티넘 글러브",
+      "rows": 31,
+      "years": {
+        "2011": 2,
+        "2012": 2,
+        "2013": 2,
+        "2014": 2,
+        "2015": 2,
+        "2016": 2,
+        "2017": 2,
+        "2018": 2,
+        "2019": 2,
+        "2020": 2,
+        "2021": 2,
+        "2022": 2,
+        "2023": 1,
+        "2024": 2,
+        "2025": 2,
+        "2026": 2
+      },
+      "blank_team": 0,
+      "blank_position": 0
+    },
+    {
+      "key": "ss",
+      "label": "실버슬러거",
+      "rows": 836,
+      "years": {
+        "1980": 18,
+        "1981": 18,
+        "1982": 18,
+        "1983": 18,
+        "1984": 18,
+        "1985": 18,
+        "1986": 18,
+        "1987": 18,
+        "1988": 18,
+        "1989": 18,
+        "1990": 18,
+        "1991": 18,
+        "1992": 18,
+        "1993": 18,
+        "1994": 18,
+        "1995": 18,
+        "1996": 18,
+        "1997": 18,
+        "1998": 18,
+        "1999": 18,
+        "2000": 18,
+        "2001": 18,
+        "2002": 18,
+        "2003": 18,
+        "2004": 19,
+        "2005": 18,
+        "2006": 18,
+        "2007": 18,
+        "2008": 18,
+        "2009": 18,
+        "2010": 18,
+        "2011": 18,
+        "2012": 18,
+        "2013": 18,
+        "2014": 18,
+        "2015": 18,
+        "2016": 18,
+        "2017": 18,
+        "2018": 17,
+        "2019": 18,
+        "2020": 18,
+        "2021": 18,
+        "2022": 20,
+        "2023": 20,
+        "2024": 20,
+        "2025": 20
+      },
+      "blank_team": 0,
+      "blank_position": 282
+    },
+    {
+      "key": "haa",
+      "label": "행크 애런상",
+      "rows": 54,
+      "years": {
+        "1999": 2,
+        "2000": 2,
+        "2001": 2,
+        "2002": 2,
+        "2003": 2,
+        "2004": 2,
+        "2005": 2,
+        "2006": 2,
+        "2007": 2,
+        "2008": 2,
+        "2009": 2,
+        "2010": 2,
+        "2011": 2,
+        "2012": 2,
+        "2013": 2,
+        "2014": 2,
+        "2015": 2,
+        "2016": 2,
+        "2017": 2,
+        "2018": 2,
+        "2019": 2,
+        "2020": 2,
+        "2021": 2,
+        "2022": 2,
+        "2023": 2,
+        "2024": 2,
+        "2025": 2
+      },
+      "blank_team": 0,
+      "blank_position": 17
+    },
+    {
+      "key": "rel",
+      "label": "올해의 구원투수",
+      "rows": 26,
+      "years": {
+        "2014": 2,
+        "2015": 2,
+        "2016": 2,
+        "2017": 2,
+        "2018": 2,
+        "2019": 2,
+        "2020": 2,
+        "2021": 2,
+        "2022": 2,
+        "2023": 2,
+        "2024": 2,
+        "2025": 2,
+        "2026": 2
+      },
+      "blank_team": 0,
+      "blank_position": 0
+    },
+    {
+      "key": "cpoy",
+      "label": "재기상",
+      "rows": 44,
+      "years": {
+        "2005": 2,
+        "2006": 2,
+        "2007": 2,
+        "2008": 2,
+        "2009": 2,
+        "2010": 2,
+        "2011": 2,
+        "2012": 2,
+        "2013": 2,
+        "2014": 2,
+        "2015": 2,
+        "2016": 2,
+        "2017": 2,
+        "2018": 2,
+        "2019": 2,
+        "2020": 2,
+        "2021": 2,
+        "2022": 2,
+        "2023": 2,
+        "2024": 2,
+        "2025": 2,
+        "2026": 2
+      },
+      "blank_team": 0,
+      "blank_position": 7
+    },
+    {
+      "key": "clemente",
+      "label": "로베르토 클레멘테상",
+      "rows": 57,
+      "years": {
+        "1971": 1,
+        "1972": 1,
+        "1973": 1,
+        "1974": 1,
+        "1975": 1,
+        "1976": 1,
+        "1977": 1,
+        "1978": 1,
+        "1979": 1,
+        "1980": 1,
+        "1981": 1,
+        "1982": 1,
+        "1983": 1,
+        "1984": 1,
+        "1985": 1,
+        "1986": 1,
+        "1987": 1,
+        "1988": 1,
+        "1989": 1,
+        "1990": 1,
+        "1991": 1,
+        "1992": 1,
+        "1993": 1,
+        "1994": 1,
+        "1995": 1,
+        "1996": 1,
+        "1997": 1,
+        "1998": 1,
+        "1999": 1,
+        "2000": 1,
+        "2001": 1,
+        "2002": 1,
+        "2003": 1,
+        "2004": 1,
+        "2005": 1,
+        "2006": 1,
+        "2007": 1,
+        "2008": 1,
+        "2009": 1,
+        "2010": 1,
+        "2011": 1,
+        "2012": 1,
+        "2013": 1,
+        "2014": 2,
+        "2015": 1,
+        "2016": 1,
+        "2017": 1,
+        "2018": 1,
+        "2019": 1,
+        "2020": 1,
+        "2021": 1,
+        "2022": 1,
+        "2023": 1,
+        "2024": 1,
+        "2025": 1,
+        "2026": 1
+      },
+      "blank_team": 0,
+      "blank_position": 31
+    },
+    {
+      "key": "moy",
+      "label": "올해의 감독",
+      "rows": 89,
+      "years": {
+        "1983": 2,
+        "1984": 2,
+        "1985": 2,
+        "1986": 2,
+        "1987": 2,
+        "1988": 2,
+        "1989": 2,
+        "1990": 2,
+        "1991": 2,
+        "1992": 2,
+        "1993": 2,
+        "1994": 2,
+        "1995": 2,
+        "1996": 3,
+        "1997": 2,
+        "1998": 2,
+        "1999": 2,
+        "2000": 2,
+        "2001": 2,
+        "2002": 2,
+        "2003": 2,
+        "2004": 2,
+        "2005": 2,
+        "2006": 2,
+        "2007": 2,
+        "2008": 2,
+        "2009": 2,
+        "2010": 2,
+        "2011": 2,
+        "2012": 2,
+        "2013": 2,
+        "2014": 2,
+        "2015": 2,
+        "2016": 2,
+        "2017": 2,
+        "2018": 2,
+        "2019": 2,
+        "2020": 2,
+        "2021": 2,
+        "2022": 2,
+        "2023": 2,
+        "2024": 2,
+        "2025": 2,
+        "2026": 2
+      },
+      "blank_team": 0,
+      "blank_position": 88
+    },
+    {
+      "key": "wschamp",
+      "label": "월드시리즈 우승",
+      "rows": 2510,
+      "years": {
+        "1903": 13,
+        "1905": 12,
+        "1906": 16,
+        "1907": 15,
+        "1908": 13,
+        "1909": 17,
+        "1910": 12,
+        "1911": 14,
+        "1912": 17,
+        "1913": 12,
+        "1914": 15,
+        "1915": 17,
+        "1916": 20,
+        "1917": 16,
+        "1918": 15,
+        "1919": 17,
+        "1920": 20,
+        "1921": 13,
+        "1922": 16,
+        "1923": 17,
+        "1924": 21,
+        "1925": 18,
+        "1926": 19,
+        "1927": 15,
+        "1928": 16,
+        "1929": 17,
+        "1930": 15,
+        "1931": 21,
+        "1932": 16,
+        "1933": 15,
+        "1934": 20,
+        "1935": 15,
+        "1936": 16,
+        "1937": 16,
+        "1938": 14,
+        "1939": 15,
+        "1940": 23,
+        "1941": 18,
+        "1942": 18,
+        "1943": 16,
+        "1944": 20,
+        "1945": 26,
+        "1946": 19,
+        "1947": 24,
+        "1948": 23,
+        "1949": 20,
+        "1950": 18,
+        "1951": 21,
+        "1952": 19,
+        "1953": 20,
+        "1954": 15,
+        "1955": 22,
+        "1956": 22,
+        "1957": 23,
+        "1958": 22,
+        "1959": 24,
+        "1960": 25,
+        "1961": 18,
+        "1962": 18,
+        "1963": 14,
+        "1964": 21,
+        "1965": 20,
+        "1966": 13,
+        "1967": 23,
+        "1968": 24,
+        "1969": 22,
+        "1970": 21,
+        "1971": 25,
+        "1972": 23,
+        "1973": 24,
+        "1974": 20,
+        "1975": 22,
+        "1976": 16,
+        "1977": 20,
+        "1978": 24,
+        "1979": 24,
+        "1980": 22,
+        "1981": 24,
+        "1982": 22,
+        "1983": 23,
+        "1984": 22,
+        "1985": 22,
+        "1986": 22,
+        "1987": 24,
+        "1988": 22,
+        "1989": 23,
+        "1990": 21,
+        "1991": 25,
+        "1992": 23,
+        "1993": 24,
+        "1995": 23,
+        "1996": 25,
+        "1997": 25,
+        "1998": 21,
+        "1999": 23,
+        "2000": 22,
+        "2001": 25,
+        "2002": 25,
+        "2003": 20,
+        "2004": 21,
+        "2005": 24,
+        "2006": 23,
+        "2007": 23,
+        "2008": 22,
+        "2009": 24,
+        "2010": 24,
+        "2011": 26,
+        "2012": 25,
+        "2013": 25,
+        "2014": 25,
+        "2015": 25,
+        "2016": 25,
+        "2017": 25,
+        "2018": 25,
+        "2019": 25,
+        "2020": 28,
+        "2021": 28,
+        "2022": 27,
+        "2023": 28,
+        "2024": 26,
+        "2025": 26,
+        "2026": 26
+      },
+      "blank_team": 0,
+      "blank_position": 2123
+    }
+  ],
+  "catalog": "C:\\Users\\barya\\AppData\\Local\\Temp\\bbaddanet-awards-audit\\catalog.txt",
+  "hof_official": "C:\\Users\\barya\\AppData\\Local\\Temp\\bbaddanet-awards-audit\\hof_official.txt",
+  "hof_members": "C:\\Users\\barya\\AppData\\Local\\Temp\\bbaddanet-awards-audit\\hof_members.txt",
+  "hof_official_count": 354,
+  "hof_missing_official": [
+    {
+      "name": "Vladimir Guerrero",
+      "year": 2018,
+      "url": "https://baseballhall.org/hall-of-famers/guerrero-vladimir"
+    },
+    {
+      "name": "Bud Fowler",
+      "year": 2022,
+      "url": "https://baseballhall.org/hall-of-famers/fowler-bud"
+    },
+    {
+      "name": "Pat Gillick",
+      "year": 2011,
+      "url": "https://baseballhall.org/hall-of-famers/gillick-pat"
+    },
+    {
+      "name": "Marvin Miller",
+      "year": 2020,
+      "url": "https://baseballhall.org/hall-of-famers/miller-marvin"
+    },
+    {
+      "name": "Buck O'Neil",
+      "year": 2022,
+      "url": "https://baseballhall.org/hall-of-famers/oneil-buck"
+    },
+    {
+      "name": "John Schuerholz",
+      "year": 2017,
+      "url": "https://baseballhall.org/hall-of-famers/schuerholz-john"
+    },
+    {
+      "name": "Bud Selig",
+      "year": 2017,
+      "url": "https://baseballhall.org/hall-of-famers/selig-bud"
+    },
+    {
+      "name": "Martín Dihigo",
+      "year": 1977,
+      "url": "https://baseballhall.org/hall-of-famers/dihigo-martin"
+    }
+  ],
+  "hof_official_year_mismatch": [
+    {
+      "official": {
+        "name": "Gil Hodges",
+        "year": 2022,
+        "url": "https://baseballhall.org/hall-of-famers/hodges-gil"
+      },
+      "local": [
+        [
+          "hof",
+          2021,
+          "",
+          116008,
+          "LAD",
+          119
+        ]
+      ]
+    },
+    {
+      "official": {
+        "name": "Jim Kaat",
+        "year": 2022,
+        "url": "https://baseballhall.org/hall-of-famers/kaat-jim"
+      },
+      "local": [
+        [
+          "hof",
+          2021,
+          "",
+          116803,
+          "MIN",
+          142
+        ]
+      ]
+    },
+    {
+      "official": {
+        "name": "Jim Leyland",
+        "year": 2024,
+        "url": "https://baseballhall.org/hall-of-famers/leyland-jim"
+      },
+      "local": [
+        [
+          "hof",
+          2023,
+          "",
+          492447,
+          "No team",
+          14
+        ]
+      ]
+    },
+    {
+      "official": {
+        "name": "Minnie Miñoso",
+        "year": 2022,
+        "url": "https://baseballhall.org/hall-of-famers/minoso-minnie"
+      },
+      "local": [
+        [
+          "hof",
+          2021,
+          "",
+          119176,
+          "CWS",
+          145
+        ]
+      ]
+    },
+    {
+      "official": {
+        "name": "Tony Oliva",
+        "year": 2022,
+        "url": "https://baseballhall.org/hall-of-famers/oliva-tony"
+      },
+      "local": [
+        [
+          "hof",
+          2021,
+          "",
+          119980,
+          "MIN",
+          142
+        ]
+      ]
+    }
+  ]
+}

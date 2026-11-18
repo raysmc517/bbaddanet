@@ -1,0 +1,1063 @@
+{
+  "official_rows": 3417,
+  "official_unique": 3402,
+  "covered": [
+    "allmlb1",
+    "allmlb2",
+    "asmvp",
+    "clemente",
+    "cpoy",
+    "cy",
+    "gg",
+    "haa",
+    "lcsmvp",
+    "moy",
+    "mvp",
+    "pg",
+    "rel",
+    "roy",
+    "ss",
+    "wsmvp"
+  ],
+  "team_mismatch": [
+    {
+      "official": {
+        "key": "allmlb2",
+        "year": 2026,
+        "name": "James Wood",
+        "cells": [
+          "2026",
+          "OF",
+          "James Wood",
+          "Washington"
+        ],
+        "table": 1,
+        "url": "https://www.mlb.com/awards/all-mlb"
+      },
+      "local": {
+        "key": "allmlb2",
+        "year": 2026,
+        "name": "James Wood",
+        "row": [
+          "allmlb2",
+          2026,
+          "",
+          695578,
+          "CHC",
+          112
+        ]
+      }
+    },
+    {
+      "official": {
+        "key": "gg",
+        "year": 2021,
+        "name": "Joey Gallo",
+        "cells": [
+          "2021",
+          "Joey Gallo",
+          "Texas",
+          "RF"
+        ],
+        "table": 10,
+        "url": "https://www.mlb.com/awards/gold-glove"
+      },
+      "local": {
+        "key": "gg",
+        "year": 2021,
+        "name": "Joey Gallo",
+        "row": [
+          "gg",
+          2021,
+          "AL",
+          608336,
+          "NYY",
+          147
+        ]
+      }
+    },
+    {
+      "official": {
+        "key": "gg",
+        "year": 2016,
+        "name": "Ian Kinsler",
+        "cells": [
+          "2016",
+          "Ian Kinsler",
+          "Detroit",
+          "2B"
+        ],
+        "table": 20,
+        "url": "https://www.mlb.com/awards/gold-glove"
+      },
+      "local": {
+        "key": "gg",
+        "year": 2016,
+        "name": "Ian Kinsler",
+        "row": [
+          "gg",
+          2016,
+          "AL",
+          435079,
+          "TEX",
+          140
+        ]
+      }
+    },
+    {
+      "official": {
+        "key": "gg",
+        "year": 1995,
+        "name": "Wade Boggs",
+        "cells": [
+          "1995",
+          "Wade Boggs",
+          "NY Yankees",
+          "3B"
+        ],
+        "table": 62,
+        "url": "https://www.mlb.com/awards/gold-glove"
+      },
+      "local": {
+        "key": "gg",
+        "year": 1995,
+        "name": "Wade Boggs",
+        "row": [
+          "gg",
+          1995,
+          "AL",
+          111153,
+          "BOS",
+          111
+        ]
+      }
+    },
+    {
+      "official": {
+        "key": "ss",
+        "year": 1995,
+        "name": "Gary Gaetti",
+        "cells": [
+          "1995",
+          "Gary Gaetti",
+          "Minnesota",
+          "3B"
+        ],
+        "table": 62,
+        "url": "https://www.mlb.com/awards/silver-slugger"
+      },
+      "local": {
+        "key": "ss",
+        "year": 1995,
+        "name": "Gary Gaetti",
+        "row": [
+          "ss",
+          1995,
+          "AL",
+          114508,
+          "KC",
+          118
+        ]
+      }
+    },
+    {
+      "official": {
+        "key": "clemente",
+        "year": 2021,
+        "name": "Nelson Cruz",
+        "cells": [
+          "2021",
+          "Nelson Cruz",
+          "Minnesota (AL)",
+          "DH"
+        ],
+        "table": 0,
+        "url": "https://www.mlb.com/awards/roberto-clemente"
+      },
+      "local": {
+        "key": "clemente",
+        "year": 2021,
+        "name": "Nelson Cruz",
+        "row": [
+          "clemente",
+          2021,
+          "",
+          443558,
+          "TB",
+          139
+        ]
+      }
+    }
+  ],
+  "unresolved_team": [],
+  "official_only": [
+    {
+      "key": "allmlb1",
+      "year": 2026,
+      "name": "Chris Sale",
+      "cells": [
+        "2026",
+        "SP",
+        "Chris Sale",
+        "Atlanta"
+      ],
+      "table": 0,
+      "url": "https://www.mlb.com/awards/all-mlb"
+    },
+    {
+      "key": "allmlb2",
+      "year": 2023,
+      "name": "Devin Williams",
+      "cells": [
+        "2023",
+        "RP",
+        "Devin Williams",
+        "Milwaukee"
+      ],
+      "table": 7,
+      "url": "https://www.mlb.com/awards/all-mlb"
+    },
+    {
+      "key": "pg",
+      "year": 2023,
+      "name": "Andrés Giménez",
+      "cells": [
+        "2023",
+        "Andrés Giménez",
+        "Cleveland",
+        "2B"
+      ],
+      "table": 0,
+      "url": "https://www.mlb.com/awards/platinum-glove"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Dillon Dingler",
+      "cells": [
+        "2026",
+        "Dillon Dingler",
+        "Detroit",
+        "C"
+      ],
+      "table": 0,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Pete Alonso",
+      "cells": [
+        "2026",
+        "Pete Alonso",
+        "Baltimore",
+        "1B"
+      ],
+      "table": 0,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Chase Meidroth",
+      "cells": [
+        "2026",
+        "Chase Meidroth",
+        "Chi White Sox",
+        "2B"
+      ],
+      "table": 0,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Junior Caminero",
+      "cells": [
+        "2026",
+        "Junior Caminero",
+        "Tampa Bay",
+        "3B"
+      ],
+      "table": 0,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Bobby Witt Jr.",
+      "cells": [
+        "2026",
+        "Bobby Witt Jr.",
+        "Kansas City",
+        "SS"
+      ],
+      "table": 0,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Randy Arozarena",
+      "cells": [
+        "2026",
+        "Randy Arozarena",
+        "Seattle",
+        "OF"
+      ],
+      "table": 0,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Riley Greene",
+      "cells": [
+        "2026",
+        "Riley Greene",
+        "Detroit",
+        "OF"
+      ],
+      "table": 0,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Chase DeLauter",
+      "cells": [
+        "2026",
+        "Chase DeLauter",
+        "Cleveland",
+        "OF"
+      ],
+      "table": 0,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Yordan Alvarez",
+      "cells": [
+        "2026",
+        "Yordan Alvarez",
+        "Houston",
+        "DH"
+      ],
+      "table": 0,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Kevin McGonigle",
+      "cells": [
+        "2026",
+        "Kevin McGonigle",
+        "Detroit",
+        "UT"
+      ],
+      "table": 0,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Gabriel Moreno",
+      "cells": [
+        "2026",
+        "Gabriel Moreno",
+        "Arizona",
+        "C"
+      ],
+      "table": 1,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Matt Olson",
+      "cells": [
+        "2026",
+        "Matt Olson",
+        "Atlanta",
+        "1B"
+      ],
+      "table": 1,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Brandon Lowe",
+      "cells": [
+        "2026",
+        "Brandon Lowe",
+        "Pittsburgh",
+        "2B"
+      ],
+      "table": 1,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Alex Bregman",
+      "cells": [
+        "2026",
+        "Alex Bregman",
+        "Chi Cubs",
+        "3B"
+      ],
+      "table": 1,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Elly De La Cruz",
+      "cells": [
+        "2026",
+        "Elly De La Cruz",
+        "Cincinnati",
+        "SS"
+      ],
+      "table": 1,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Pete Crow-Armstrong",
+      "cells": [
+        "2026",
+        "Pete Crow-Armstrong",
+        "Chi Cubs",
+        "OF"
+      ],
+      "table": 1,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "James Wood",
+      "cells": [
+        "2026",
+        "James Wood",
+        "Washington",
+        "OF"
+      ],
+      "table": 1,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Jackson Chourio",
+      "cells": [
+        "2026",
+        "Jackson Chourio",
+        "Milwaukee",
+        "OF"
+      ],
+      "table": 1,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Kyle Schwarber",
+      "cells": [
+        "2026",
+        "Kyle Schwarber",
+        "Philadelphia",
+        "DH"
+      ],
+      "table": 1,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "ss",
+      "year": 2026,
+      "name": "Jake Bauers",
+      "cells": [
+        "2026",
+        "Jake Bauers",
+        "Milwaukee",
+        "UT"
+      ],
+      "table": 1,
+      "url": "https://www.mlb.com/awards/silver-slugger"
+    },
+    {
+      "key": "haa",
+      "year": 2026,
+      "name": "Yordan Alvarez",
+      "cells": [
+        "2026",
+        "Yordan Alvarez",
+        "Houston",
+        "DH"
+      ],
+      "table": 0,
+      "url": "https://www.mlb.com/awards/hank-aaron"
+    },
+    {
+      "key": "haa",
+      "year": 2026,
+      "name": "Pete Crow-Armstrong",
+      "cells": [
+        "2026",
+        "Pete Crow-Armstrong",
+        "Chi Cubs",
+        "CF"
+      ],
+      "table": 1,
+      "url": "https://www.mlb.com/awards/hank-aaron"
+    }
+  ],
+  "local_only": [],
+  "official_multiple": [
+    {
+      "key": [
+        "cy",
+        1966,
+        "sandykoufax"
+      ],
+      "count": 2,
+      "rows": [
+        {
+          "key": "cy",
+          "year": 1966,
+          "name": "Sandy Koufax *",
+          "cells": [
+            "1966",
+            "Sandy Koufax *",
+            "Los Angeles",
+            "SP"
+          ],
+          "table": 0,
+          "url": "https://www.mlb.com/awards/cy-young"
+        },
+        {
+          "key": "cy",
+          "year": 1966,
+          "name": "Sandy Koufax *",
+          "cells": [
+            "1966",
+            "Sandy Koufax *",
+            "Los Angeles",
+            "SP"
+          ],
+          "table": 1,
+          "url": "https://www.mlb.com/awards/cy-young"
+        }
+      ]
+    },
+    {
+      "key": [
+        "cy",
+        1965,
+        "sandykoufax"
+      ],
+      "count": 2,
+      "rows": [
+        {
+          "key": "cy",
+          "year": 1965,
+          "name": "Sandy Koufax *",
+          "cells": [
+            "1965",
+            "Sandy Koufax *",
+            "LA Dodgers",
+            "SP"
+          ],
+          "table": 0,
+          "url": "https://www.mlb.com/awards/cy-young"
+        },
+        {
+          "key": "cy",
+          "year": 1965,
+          "name": "Sandy Koufax *",
+          "cells": [
+            "1965",
+            "Sandy Koufax *",
+            "LA Dodgers",
+            "SP"
+          ],
+          "table": 1,
+          "url": "https://www.mlb.com/awards/cy-young"
+        }
+      ]
+    },
+    {
+      "key": [
+        "cy",
+        1964,
+        "deanchance"
+      ],
+      "count": 2,
+      "rows": [
+        {
+          "key": "cy",
+          "year": 1964,
+          "name": "Dean Chance *",
+          "cells": [
+            "1964",
+            "Dean Chance *",
+            "LA Angels",
+            "SP"
+          ],
+          "table": 0,
+          "url": "https://www.mlb.com/awards/cy-young"
+        },
+        {
+          "key": "cy",
+          "year": 1964,
+          "name": "Dean Chance *",
+          "cells": [
+            "1964",
+            "Dean Chance *",
+            "LA Angels",
+            "SP"
+          ],
+          "table": 1,
+          "url": "https://www.mlb.com/awards/cy-young"
+        }
+      ]
+    },
+    {
+      "key": [
+        "cy",
+        1963,
+        "sandykoufax"
+      ],
+      "count": 2,
+      "rows": [
+        {
+          "key": "cy",
+          "year": 1963,
+          "name": "Sandy Koufax *",
+          "cells": [
+            "1963",
+            "Sandy Koufax *",
+            "LA Dodgers",
+            "SP"
+          ],
+          "table": 0,
+          "url": "https://www.mlb.com/awards/cy-young"
+        },
+        {
+          "key": "cy",
+          "year": 1963,
+          "name": "Sandy Koufax *",
+          "cells": [
+            "1963",
+            "Sandy Koufax *",
+            "LA Dodgers",
+            "SP"
+          ],
+          "table": 1,
+          "url": "https://www.mlb.com/awards/cy-young"
+        }
+      ]
+    },
+    {
+      "key": [
+        "cy",
+        1962,
+        "dondrysdale"
+      ],
+      "count": 2,
+      "rows": [
+        {
+          "key": "cy",
+          "year": 1962,
+          "name": "Don Drysdale *",
+          "cells": [
+            "1962",
+            "Don Drysdale *",
+            "LA Dodgers",
+            "SP"
+          ],
+          "table": 0,
+          "url": "https://www.mlb.com/awards/cy-young"
+        },
+        {
+          "key": "cy",
+          "year": 1962,
+          "name": "Don Drysdale *",
+          "cells": [
+            "1962",
+            "Don Drysdale *",
+            "LA Dodgers",
+            "SP"
+          ],
+          "table": 1,
+          "url": "https://www.mlb.com/awards/cy-young"
+        }
+      ]
+    },
+    {
+      "key": [
+        "cy",
+        1961,
+        "whiteyford"
+      ],
+      "count": 2,
+      "rows": [
+        {
+          "key": "cy",
+          "year": 1961,
+          "name": "Whitey Ford *",
+          "cells": [
+            "1961",
+            "Whitey Ford *",
+            "NY Yankees",
+            "SP"
+          ],
+          "table": 0,
+          "url": "https://www.mlb.com/awards/cy-young"
+        },
+        {
+          "key": "cy",
+          "year": 1961,
+          "name": "Whitey Ford *",
+          "cells": [
+            "1961",
+            "Whitey Ford *",
+            "NY Yankees",
+            "SP"
+          ],
+          "table": 1,
+          "url": "https://www.mlb.com/awards/cy-young"
+        }
+      ]
+    },
+    {
+      "key": [
+        "cy",
+        1960,
+        "vernlaw"
+      ],
+      "count": 2,
+      "rows": [
+        {
+          "key": "cy",
+          "year": 1960,
+          "name": "Vern Law *",
+          "cells": [
+            "1960",
+            "Vern Law *",
+            "Pittsburgh",
+            "SP"
+          ],
+          "table": 0,
+          "url": "https://www.mlb.com/awards/cy-young"
+        },
+        {
+          "key": "cy",
+          "year": 1960,
+          "name": "Vern Law *",
+          "cells": [
+            "1960",
+            "Vern Law *",
+            "Pittsburgh",
+            "SP"
+          ],
+          "table": 1,
+          "url": "https://www.mlb.com/awards/cy-young"
+        }
+      ]
+    },
+    {
+      "key": [
+        "cy",
+        1959,
+        "earlywynn"
+      ],
+      "count": 2,
+      "rows": [
+        {
+          "key": "cy",
+          "year": 1959,
+          "name": "Early Wynn *",
+          "cells": [
+            "1959",
+            "Early Wynn *",
+            "Chi White Sox",
+            "SP"
+          ],
+          "table": 0,
+          "url": "https://www.mlb.com/awards/cy-young"
+        },
+        {
+          "key": "cy",
+          "year": 1959,
+          "name": "Early Wynn *",
+          "cells": [
+            "1959",
+            "Early Wynn *",
+            "Chi White Sox",
+            "SP"
+          ],
+          "table": 1,
+          "url": "https://www.mlb.com/awards/cy-young"
+        }
+      ]
+    },
+    {
+      "key": [
+        "cy",
+        1958,
+        "bobturley"
+      ],
+      "count": 2,
+      "rows": [
+        {
+          "key": "cy",
+          "year": 1958,
+          "name": "Bob Turley *",
+          "cells": [
+            "1958",
+            "Bob Turley *",
+            "NY Yankees",
+            "SP"
+          ],
+          "table": 0,
+          "url": "https://www.mlb.com/awards/cy-young"
+        },
+        {
+          "key": "cy",
+          "year": 1958,
+          "name": "Bob Turley *",
+          "cells": [
+            "1958",
+            "Bob Turley *",
+            "NY Yankees",
+            "SP"
+          ],
+          "table": 1,
+          "url": "https://www.mlb.com/awards/cy-young"
+        }
+      ]
+    },
+    {
+      "key": [
+        "cy",
+        1957,
+        "warrenspahn"
+      ],
+      "count": 2,
+      "rows": [
+        {
+          "key": "cy",
+          "year": 1957,
+          "name": "Warren Spahn *",
+          "cells": [
+            "1957",
+            "Warren Spahn *",
+            "Milwaukee",
+            "SP"
+          ],
+          "table": 0,
+          "url": "https://www.mlb.com/awards/cy-young"
+        },
+        {
+          "key": "cy",
+          "year": 1957,
+          "name": "Warren Spahn *",
+          "cells": [
+            "1957",
+            "Warren Spahn *",
+            "Milwaukee",
+            "SP"
+          ],
+          "table": 1,
+          "url": "https://www.mlb.com/awards/cy-young"
+        }
+      ]
+    },
+    {
+      "key": [
+        "cy",
+        1956,
+        "donnewcombe"
+      ],
+      "count": 2,
+      "rows": [
+        {
+          "key": "cy",
+          "year": 1956,
+          "name": "Don Newcombe *",
+          "cells": [
+            "1956",
+            "Don Newcombe *",
+            "Brooklyn",
+            "SP"
+          ],
+          "table": 0,
+          "url": "https://www.mlb.com/awards/cy-young"
+        },
+        {
+          "key": "cy",
+          "year": 1956,
+          "name": "Don Newcombe *",
+          "cells": [
+            "1956",
+            "Don Newcombe *",
+            "Brooklyn",
+            "SP"
+          ],
+          "table": 1,
+          "url": "https://www.mlb.com/awards/cy-young"
+        }
+      ]
+    },
+    {
+      "key": [
+        "roy",
+        1948,
+        "alvindark"
+      ],
+      "count": 2,
+      "rows": [
+        {
+          "key": "roy",
+          "year": 1948,
+          "name": "Alvin Dark *",
+          "cells": [
+            "1948",
+            "Alvin Dark *",
+            "Bsn. Braves",
+            "SS"
+          ],
+          "table": 0,
+          "url": "https://www.mlb.com/awards/rookie-of-the-year"
+        },
+        {
+          "key": "roy",
+          "year": 1948,
+          "name": "Alvin Dark *",
+          "cells": [
+            "1948",
+            "Alvin Dark *",
+            "Bsn. Braves",
+            "SS"
+          ],
+          "table": 1,
+          "url": "https://www.mlb.com/awards/rookie-of-the-year"
+        }
+      ]
+    },
+    {
+      "key": [
+        "roy",
+        1947,
+        "jackierobinson"
+      ],
+      "count": 2,
+      "rows": [
+        {
+          "key": "roy",
+          "year": 1947,
+          "name": "Jackie Robinson *",
+          "cells": [
+            "1947",
+            "Jackie Robinson *",
+            "Brooklyn",
+            "1B"
+          ],
+          "table": 0,
+          "url": "https://www.mlb.com/awards/rookie-of-the-year"
+        },
+        {
+          "key": "roy",
+          "year": 1947,
+          "name": "Jackie Robinson *",
+          "cells": [
+            "1947",
+            "Jackie Robinson *",
+            "Brooklyn",
+            "1B"
+          ],
+          "table": 1,
+          "url": "https://www.mlb.com/awards/rookie-of-the-year"
+        }
+      ]
+    },
+    {
+      "key": [
+        "allmlb1",
+        2023,
+        "shoheiohtani"
+      ],
+      "count": 2,
+      "rows": [
+        {
+          "key": "allmlb1",
+          "year": 2023,
+          "name": "Shohei Ohtani",
+          "cells": [
+            "2023",
+            "DH",
+            "Shohei Ohtani",
+            "LA Angels"
+          ],
+          "table": 6,
+          "url": "https://www.mlb.com/awards/all-mlb"
+        },
+        {
+          "key": "allmlb1",
+          "year": 2023,
+          "name": "Shohei Ohtani",
+          "cells": [
+            "2023",
+            "SP",
+            "Shohei Ohtani",
+            "LA Angels"
+          ],
+          "table": 6,
+          "url": "https://www.mlb.com/awards/all-mlb"
+        }
+      ]
+    },
+    {
+      "key": [
+        "ss",
+        2018,
+        "jdmartinez"
+      ],
+      "count": 2,
+      "rows": [
+        {
+          "key": "ss",
+          "year": 2018,
+          "name": "J.D. Martinez",
+          "cells": [
+            "2018",
+            "J.D. Martinez",
+            "Boston",
+            "OF"
+          ],
+          "table": 16,
+          "url": "https://www.mlb.com/awards/silver-slugger"
+        },
+        {
+          "key": "ss",
+          "year": 2018,
+          "name": "J.D. Martinez",
+          "cells": [
+            "2018",
+            "J.D. Martinez",
+            "Boston",
+            "DH"
+          ],
+          "table": 16,
+          "url": "https://www.mlb.com/awards/silver-slugger"
+        }
+      ]
+    }
+  ]
+}
