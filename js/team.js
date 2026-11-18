@@ -104,7 +104,8 @@
     ]);
 
     const links = [];
-    const board = boardLink(team, season);
+    // MLB 구단의 선수 성적은 선수단 페이지에 있으므로 리더보드 링크는 산하 구단에만 둔다 (2026-11-18 사용자 결정)
+    const board = isMajor ? "" : boardLink(team, season);
     if (board) links.push('<a href="' + board + '">' + season + " 선수 성적</a>");
     if (isMajor) links.push('<a href="roster.html?id=' + team.id + '">선수단</a>');
     if (isMajor) links.push('<a href="prospects.html?list=' + encodeURIComponent(team.abbr) + '">유망주 Top 30</a>');
@@ -157,6 +158,79 @@
     }
     $("historyLists").innerHTML = blocks.join("");
     $("historySection").hidden = false;
+  }
+
+  // ---------- 연도별 성적 (data/franchise/{구단 ID}.json, scripts/franchise.py) ----------
+  const POST_LABEL = {
+    WS: "월드시리즈 우승", W: "월드시리즈 준우승", L: "챔피언십시리즈 탈락", D: "디비전시리즈 탈락", F: "와일드카드 탈락",
+  };
+  const RECENT_SEASONS = 20;
+  const pct = (w, l) => (w + l ? (w / (w + l)).toFixed(3).replace(/^0/, "") : "-");
+
+  function renderSeasons(team, rows) {
+    if (!rows.length) return;
+    const wins = rows.reduce((sum, row) => sum + row.W, 0);
+    const losses = rows.reduce((sum, row) => sum + row.L, 0);
+    const playoffs = rows.filter((row) => row.post).length;
+    // 리그 우승: 월드시리즈 진출. 월드시리즈가 없던 시즌(1903년 이전, 1904년)은 리그 1위를 리그 우승으로 센다.
+    const NO_WORLD_SERIES = (season) => season < 1903 || season === 1904;
+    const pennants = rows.filter((row) =>
+      row.post === "WS" || row.post === "W" || (NO_WORLD_SERIES(row.season) && row.rankType === "lg" && row.rank === 1)).length;
+    const titles = rows.filter((row) => row.post === "WS").length;
+    const divisions = rows.filter((row) => row.rankType === "div" && row.rank === 1).length;
+    const first = rows[rows.length - 1].season;
+    $("seasonFacts").innerHTML = facts([
+      ["통산 승패", wins.toLocaleString("ko-KR") + "승 " + losses.toLocaleString("ko-KR") + "패"],
+      ["통산 승률", pct(wins, losses)],
+      ["포스트시즌 진출", playoffs + "회"],
+      ["리그 우승", pennants + "회"],
+      ["월드시리즈 우승", titles + "회"],
+      ["지구 1위", divisions + "회"],
+    ]);
+
+    const current = team.name;
+    let showAll = false;
+    const draw = () => {
+      const shown = showAll ? rows : rows.slice(0, RECENT_SEASONS);
+      const ties = shown.some((row) => row.T);
+      $("seasonHead").innerHTML =
+        '<tr><th class="col-season">시즌</th><th class="col-name">팀</th><th class="col-team">리그</th>' +
+        "<th>승</th><th>패</th>" + (ties ? "<th>무</th>" : "") +
+        '<th>승률</th><th class="col-team">순위</th><th title="1위와의 승차">게임차</th>' +
+        '<th>득점</th><th>실점</th><th title="득점 - 실점">득실차</th>' +
+        '<th title="득점·실점으로 계산한 피타고리안 기대 승패 (지수 1.83)">기대 승패</th>' +
+        '<th class="col-team">포스트시즌</th></tr>';
+      $("seasonBody").innerHTML = shown.map((row) => {
+        const diff = has(row.RS) && has(row.RA) ? row.RS - row.RA : null;
+        const rank = has(row.rank) ? (row.rankType === "div" ? "지구 " : "리그 ") + row.rank + "위" : "-";
+        const post = row.post
+          ? '<span class="post-result post-' + row.post + '">' + POST_LABEL[row.post] + "</span>"
+          : '<span class="muted">-</span>';
+        return (
+          "<tr" + (row.post === "WS" ? ' class="title-season"' : "") + '><td class="col-season">' + row.season + "</td>" +
+          '<td class="col-name' + (row.name === current ? " muted" : "") + '">' + escapeHtml(row.name || "-") + "</td>" +
+          '<td class="col-team">' + escapeHtml(row.lg || "-") + "</td>" +
+          "<td>" + row.W + "</td><td>" + row.L + "</td>" + (ties ? "<td>" + (row.T || 0) + "</td>" : "") +
+          "<td>" + pct(row.W, row.L) + "</td>" +
+          '<td class="col-team' + (row.rank === 1 ? " rank-first" : "") + '">' + rank + "</td>" +
+          "<td>" + escapeHtml(row.GB || "-") + "</td>" +
+          "<td>" + (has(row.RS) ? row.RS : "-") + "</td><td>" + (has(row.RA) ? row.RA : "-") + "</td>" +
+          "<td>" + (diff === null ? "-" : (diff > 0 ? "+" : "") + diff) + "</td>" +
+          "<td>" + (has(row.xW) ? row.xW + "-" + row.xL : "-") + "</td>" +
+          '<td class="col-team">' + post + "</td></tr>"
+        );
+      }).join("");
+      $("seasonMore").innerHTML = rows.length > RECENT_SEASONS
+        ? '<button type="button" class="link-button">' + (showAll ? "최근 " + RECENT_SEASONS + "시즌만 보기" : "전체 " + rows.length + "시즌 보기 (" + first + "년부터)") + "</button>"
+        : "";
+    };
+    $("seasonMore").addEventListener("click", (event) => {
+      if (!event.target.closest("button")) return;
+      showAll = !showAll;
+      draw();
+    });
+    draw();
+    $("seasonSection").hidden = false;
   }
 
   function renderVenue(team, season) {
@@ -252,6 +326,9 @@
 
     renderProfile(team, parent, data.season);
     renderHistory(team);
+    if (team.level === "MLB") {
+      loadJson("data/franchise/" + team.id + ".json").then((item) => renderSeasons(team, item.seasons)).catch(() => {});
+    }
     renderVenue(team, data.season);
     renderOrg(team, parent, data.season);
     $("status").hidden = true;

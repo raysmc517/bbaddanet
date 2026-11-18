@@ -26,7 +26,7 @@
 - `scripts/build.py`: 데이터 생성 진입점. `scripts/prospects.py`: 유망주 스냅샷과 화면용 데이터. `scripts/validate.py`: MLB 공식 값과 비교.
 - `scripts/teams.py`: MLB 구단·산하 구단·구장 정보와 구단 역사(`data/teams.json`). `scripts/awards.py`: 수상 기록·명예의 전당(`data/awards.json`).
 - `scripts/past_players.py`: 은퇴 선수 등 과거 MLB 선수 추가. `scripts/search_index.py`: 선수 검색 색인(`data/search.json`).
-- `scripts/leaders.py`: 시즌·리그별 기록 1위(`data/leaders.json`). `scripts/standings.py`: 리그·지구별 순위(`data/standings_{시즌}.json`). `scripts/rosters.py`: MLB 구단 선수단(`data/rosters/{시즌}/{구단 ID}.json`).
+- `scripts/franchise.py`: MLB 구단 연도별 성적(`data/franchise/`). `scripts/leaders.py`: 시즌·리그별 기록 1위(`data/leaders.json`). `scripts/standings.py`: 리그·지구별 순위(`data/standings_{시즌}.json`). `scripts/rosters.py`: MLB 구단 선수단(`data/rosters/{시즌}/{구단 ID}.json`).
 - `index.html`, `standings.html`, `roster.html`, `player.html`, `prospects.html`, `teams.html`, `team.html`, `awards.html`, `search.html`: 화면 진입점. `js/common.js`: 공통 표시 형식과 열 정의. `css/style.css`: 스타일.
 - `data/`: 생성된 JSON과 랭킹 기록. 데이터 오류는 수집·계산 원인을 먼저 고친다. 대량 JSON을 손으로 수정하지 않는다.
 - 기존 코드 스타일과 UTF-8 인코딩을 유지한다. JSON 필드 변경 시 생성 코드, 소비하는 화면, 기존 데이터와의 호환성을 함께 확인한다.
@@ -99,6 +99,14 @@
 - 포지션은 선수의 주 포지션이며 수상 당시 포지션이 아니다. 명예의 전당의 팀은 명판 기준이고 원본에 없으면 비운다.
 - 자동 갱신에서는 월요일에만 `awards.py` → `teams.py` 순서로 실행한다.
 - `python -m unittest discover -s scripts -p test_awards.py`: 리그 묶기, 중복 제거, 정렬을 검증한다.
+
+## 구단 연도별 성적 실행
+
+- `python scripts/franchise.py`: MLB 30개 구단의 1876년부터 시즌별 승패·순위·득실점·기대 승패·포스트시즌 결과를 `data/franchise/{구단 ID}.json`으로 만든다. 시즌별 원본은 `data/franchise/seasons.json`(수집 캐시)에 두고 받은 시즌은 다시 받지 않는다. 처음 전체 실행은 요청 약 280회다. `--current-season`은 최근 시즌만(요청 2회) 받으며 자동 갱신이 매일 실행한다. `--refresh`는 전 시즌을 다시 받는다.
+- 현재 구단 목록은 `data/teams.json`에서 읽으므로 `teams.py` 뒤에 실행한다. 팀 ID로 묶어 연고지 이전 전 시즌도 같은 구단이며 그 시즌의 팀 이름을 남긴다. 해체된 옛 구단은 넣지 않는다.
+- 원본에 순위가 없는 옛 시즌(예: 1892)은 건너뛰고 알린다. 최근 시즌이 비거나 요청이 실패하면 받은 시즌까지만 캐시에 저장하고 화면용 파일은 바꾸지 않는다.
+- 포스트시즌은 1903년부터이며 동률 결정전(R)은 넣지 않는다. 결과는 우승(WS), 월드시리즈 준우승(W), 챔피언십시리즈(L)·디비전시리즈(D)·와일드카드(F) 탈락이다.
+- `python -m unittest discover -s scripts -p test_franchise.py`: 지구·리그 순위, 포스트시즌 결과 판정, 진행 중 시리즈, 기대 승패를 검증한다.
 
 ## 리그 1위 실행
 

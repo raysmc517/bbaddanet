@@ -4,7 +4,7 @@
 (function () {
   "use strict";
 
-  const { COLUMNS, escapeHtml, loadJson, cell, visibleColumns } = window.BB;
+  const { COLUMNS, escapeHtml, loadJson, cell, visibleColumns, fmt } = window.BB;
 
   const $ = (id) => document.getElementById(id);
   const HAND = { L: "좌", R: "우", S: "양" };
@@ -144,23 +144,21 @@
     $("awardList").hidden = false;
   }
 
-  // 같은 시즌 안에서는 상위 리그부터 보여준다. 원본에 경기 날짜가 없어 시즌 안의 시간 순서는 알 수 없다.
+  // 레벨 순서. 원본에 경기 날짜가 없어 시즌 안의 시간 순서는 알 수 없으므로 레벨로 정렬한다.
   // 같은 시즌·레벨의 여러 팀은 저장된 순서(팀 약자순)를 유지한다.
   const LEVEL_ORDER = ["MLB", "AAA", "AA", "High-A", "Single-A", "Short-Season A", "Rookie"];
   const levelRank = (level) => {
     const index = LEVEL_ORDER.indexOf(level);
     return index < 0 ? LEVEL_ORDER.length : index;
   };
-  const sortRows = (rows) =>
-    rows.slice().sort((a, b) => b.season - a.season || levelRank(a.level) - levelRank(b.level));
 
   // ---------- 통산 행 ----------
   // 누적 기록은 더하고, 비율 기록은 시즌 값을 평균 내지 않고 합친 누적 기록으로 다시 계산한다.
   // 한 시즌이라도 값이 없는 항목(옛 시즌의 도루 실패 등)은 0으로 채우지 않고 미제공으로 둔다.
   // 시즌별 리그 기준이 필요한 지표(wOBA, wRC+, FIP, ERA-, FIP-, LOB%)와 피BABIP는 계산하지 않는다.
   const SUM_KEYS = {
-    batting: ["G", "PA", "AB", "R", "H", "2B", "3B", "HR", "RBI", "SB", "CS", "BB", "SO", "HBP", "SF", "TB", "sWAR", "WAR"],
-    pitching: ["G", "GS", "W", "L", "SV", "HLD", "outs", "H", "R", "ER", "HR", "BB", "SO", "HBP", "BF", "sWAR", "WAR"],
+    batting: ["G", "PA", "AB", "R", "H", "2B", "3B", "HR", "RBI", "SB", "CS", "BB", "IBB", "SO", "HBP", "SF", "TB", "sWAR", "WAR"],
+    pitching: ["G", "GS", "W", "L", "SV", "HLD", "outs", "H", "R", "ER", "HR", "BB", "IBB", "SO", "HBP", "BF", "sWAR", "WAR"],
   };
   const ok = (v) => v !== null && v !== undefined && Number.isFinite(v);
   const div = (a, b) => (ok(a) && ok(b) && b > 0 ? a / b : null);
@@ -178,7 +176,9 @@
       t.AVG = div(t.H, t.AB);
       t.OBP = ok(t.H) && ok(t.BB) && ok(t.HBP) && ok(t.SF) ? div(t.H + t.BB + t.HBP, t.AB + t.BB + t.HBP + t.SF) : null;
       t.SLG = div(t.TB, t.AB);
-      t.OPS = ok(t.OBP) && ok(t.SLG) ? t.OBP + t.SLG : null;
+      // MLB 공식 표기와 같게 소수 셋째 자리로 반올림한 출루율·장타율을 더한다 (예: .194 + .188 = .382)
+      const r3 = (v) => Math.round(v * 1000) / 1000;
+      t.OPS = ok(t.OBP) && ok(t.SLG) ? r3(t.OBP) + r3(t.SLG) : null;
       t.ISO = ok(t.SLG) && ok(t.AVG) ? t.SLG - t.AVG : null;
       t.BABIP = ok(t.H) && ok(t.HR) && ok(t.SO) && ok(t.SF) ? div(t.H - t.HR, t.AB - t.SO - t.HR + t.SF) : null;
       t.BBp = div(t.BB, t.PA);
@@ -246,10 +246,8 @@
   }
 
   // ---------- 한 시즌 여러 팀 ----------
-  // 같은 시즌·레벨에 팀별 행이 여러 개면(과거 시즌) 합계 행 하나를 보여주고 팀별 행은 접어 둔다.
+  // MLB.com처럼 같은 시즌·레벨에 팀별 행이 여러 개면(과거 시즌) "N팀" 합계 행 바로 아래에 팀별 행을 붙인다.
   // 최근 시즌(리더보드 자료)은 이미 합계 한 줄이며 팀별 기록이 없다. 팀 칸은 마지막 소속 팀이다.
-  const expanded = new Set();
-
   function groupBySeason(rows) {
     const groups = [];
     rows.forEach((row) => {
@@ -260,30 +258,36 @@
     return groups;
   }
 
-  // 연도별 표의 기본 지표는 MLB.com 표준 표 순서를 따른다 (리더보드 열 순서와는 따로 둔다).
-  // 타석(PA)은 세이버 보기에 있다. 원본에 없는 완투·완봉·세이브 기회는 넣지 않는다.
+  // 연도별 표의 기본 지표는 MLB.com 선수 페이지의 Standard 표와 같은 순서다 (2026-11-18 확인).
+  // 원본에 없는 항목(투수의 CG·SHO·SVO·NP·피안타율, GO/AO)은 넣지 않는다. 타석(PA)은 세이버 보기에 있다.
+  const extra = (key, label, desc) => ({ key, label, desc, format: fmt.int, asc: false });
+  const EXTRA_COLUMNS = {
+    batting: { TB: extra("TB", "TB", "루타"), IBB: extra("IBB", "IBB", "고의4구") },
+    pitching: { HBP: extra("HBP", "HB", "몸에 맞는 공 허용"), IBB: extra("IBB", "IBB", "고의4구 허용") },
+  };
   const CAREER_BASIC = {
-    batting: ["G", "AB", "R", "H", "2B", "3B", "HR", "RBI", "BB", "SO", "SB", "CS", "AVG", "OBP", "SLG", "OPS"],
-    pitching: ["W", "L", "ERA", "G", "GS", "HLD", "SV", "outs", "H", "R", "ER", "HR", "BB", "SO", "WHIP"],
+    batting: ["G", "AB", "R", "H", "TB", "2B", "3B", "HR", "RBI", "BB", "IBB", "SO", "SB", "CS", "AVG", "OBP", "SLG", "OPS"],
+    pitching: ["W", "L", "ERA", "G", "GS", "HLD", "SV", "outs", "H", "R", "ER", "HR", "HBP", "BB", "IBB", "SO", "WHIP"],
   };
   const careerColumns = (group) => view === "basic"
-    ? CAREER_BASIC[group].map((key) => COLUMNS[group].basic.find((column) => column.key === key))
+    ? CAREER_BASIC[group].map((key) => EXTRA_COLUMNS[group][key] || COLUMNS[group].basic.find((column) => column.key === key))
     : COLUMNS[group][view];
 
   const levelLabel = (row) => (row.level === "Single-A" && row.season === 2021 ? "Low-A" : row.level);
 
+  // MLB.com처럼 오래된 시즌부터. 같은 시즌에서는 낮은 레벨부터(승격 순서) 놓는다.
+  const chronological = (rows) =>
+    rows.slice().sort((a, b) => a.season - b.season || levelRank(b.level) - levelRank(a.level));
+
   function renderTable(group, filtered, withAwards) {
-    const rows = sortRows(filtered);
+    const rows = chronological(filtered);
     if (!rows.length) return "";
     const groups = groupBySeason(rows).map((item) => {
       const total = item.rows.length > 1
-        ? Object.assign(addRates(group, sumRows(group, item.rows)), {
-          season: item.season, level: item.level, league: item.league, age: item.rows[0].age,
-        })
+        ? Object.assign(addRates(group, sumRows(group, item.rows)), { season: item.season, level: item.level, league: item.league })
         : item.rows[0];
       const isMajor = item.level === "MLB";
       return Object.assign(item, {
-        key: group + "|" + item.season + "|" + item.level,
         total,
         marks: isMajor ? leaderMarks(item.season, group) : {},
         awards: isMajor && withAwards ? awardBadges(item.season) : "",
@@ -291,8 +295,10 @@
     });
     const columns = visibleColumns(careerColumns(group), rows);
     const showAwards = groups.some((item) => item.awards);
+    // 레벨 칸은 MLB와 마이너리그가 섞여 있을 때만 보여준다 (MLB만 보면 MLB.com 표와 같은 모양)
+    const showLevel = new Set(rows.map((row) => row.level)).size > 1;
     const head =
-      '<tr><th class="col-season">시즌</th><th class="col-team">레벨</th><th class="col-team">팀</th><th>나이</th>' +
+      '<tr><th class="col-season">시즌</th>' + (showLevel ? '<th class="col-team">레벨</th>' : "") + '<th class="col-team">팀</th>' +
       columns.map((column) => '<th title="' + escapeHtml(column.desc) + '">' + escapeHtml(column.label) + "</th>").join("") +
       (showAwards ? '<th class="col-awards">수상</th>' : "") +
       "</tr>";
@@ -303,45 +309,40 @@
         ? '<td class="lead" title="' + escapeHtml(row.season + " " + league + " " + column.desc + " 1위") + '">' + cell(column, row) + "</td>"
         : "<td>" + cell(column, row) + "</td>";
     }).join("");
+    const levelCell = (row) => (showLevel
+      ? '<td class="col-team"><span class="level level-' + row.league + '">' + escapeHtml(levelLabel(row)) + "</span></td>"
+      : "");
 
     const body = groups.map((item) => {
       const row = item.total;
       const split = item.rows.length > 1;
-      const open = expanded.has(item.key);
-      let team;
-      if (split) {
-        team = '<button type="button" class="split-toggle" data-key="' + escapeHtml(item.key) + '" aria-expanded="' + open + '">' +
-          item.rows.length + "팀 합계 <span aria-hidden=\"true\">" + (open ? "▴" : "▾") + "</span></button>";
-      } else {
-        team = escapeHtml(row.team || "-") + (row.nt > 1
+      const team = split
+        ? item.rows.length + "팀"
+        : escapeHtml(row.team || "-") + (row.nt > 1
           ? '<span class="team-note" title="시즌 중 ' + row.nt + '팀 기록의 합계입니다. 표시된 팀은 마지막 소속입니다.">' + row.nt + "팀 합계</span>"
           : "");
-      }
       const main =
         "<tr" + (split ? ' class="split-total"' : "") + '><td class="col-season">' + escapeHtml(row.seasonLabel || String(row.season)) + "</td>" +
-        '<td class="col-team"><span class="level level-' + row.league + '">' + escapeHtml(levelLabel(row)) + "</span></td>" +
+        levelCell(row) +
         '<td class="col-team">' + team + "</td>" +
-        "<td>" + (row.age || "-") + "</td>" +
         statCells(row, item.marks) +
         (showAwards ? '<td class="col-awards">' + item.awards + "</td>" : "") +
         "</tr>";
       if (!split) return main;
-      const children = item.rows.map((child) =>
-        '<tr class="split-row"' + (open ? "" : " hidden") + '><td class="col-season muted">' + child.season + "</td>" +
-        '<td class="col-team"></td>' +
+      return main + item.rows.map((child) =>
+        '<tr class="split-row"><td class="col-season">' + child.season + "</td>" +
+        levelCell(child) +
         '<td class="col-team">' + escapeHtml(child.team || "-") + "</td>" +
-        "<td>" + (child.age || "-") + "</td>" +
         statCells(child, null) +
         (showAwards ? "<td></td>" : "") +
         "</tr>"
       ).join("");
-      return main + children;
     }).join("");
 
     const foot = summaryRows(group, rows).map((item) =>
-      '<tr class="summary-row"><td class="col-season">' + item.title + "</td>" +
-      '<td class="col-team"><span class="level level-' + item.league + '">' + item.label + "</span></td>" +
-      '<td class="col-team muted">' + item.note + "</td><td></td>" +
+      '<tr class="summary-row"><td class="col-season">' + item.label + " " + item.title + "</td>" +
+      (showLevel ? "<td></td>" : "") +
+      '<td class="col-team muted">' + item.note + "</td>" +
       columns.map((column) => "<td>" + cell(column, item.row) + "</td>").join("") +
       (showAwards ? "<td></td>" : "") +
       "</tr>"
@@ -459,15 +460,8 @@
     };
     $("careerSeason").addEventListener("change", update);
     $("careerLevel").addEventListener("change", update);
-    // 표 안의 버튼: 여러 팀 시즌 펼치기, 마이너리그 기록 함께 보기
+    // 표 아래 버튼: 마이너리그 기록 함께 보기
     $("career").addEventListener("click", (event) => {
-      const toggle = event.target.closest(".split-toggle");
-      if (toggle) {
-        const key = toggle.dataset.key;
-        expanded.has(key) ? expanded.delete(key) : expanded.add(key);
-        renderCareer();
-        return;
-      }
       if (event.target.closest("[data-show-minors]")) {
         $("careerLevel").value = "all";
         update();

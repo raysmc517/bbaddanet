@@ -485,21 +485,14 @@ table.stats {
   color: var(--text-sub);
   margin: 6px 0 0;
 }
-.split-toggle {
-  font: inherit;
-  font-size: 13px;
-  color: var(--accent);
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 1px 8px;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.split-toggle:hover { background: var(--accent-soft); }
-.stats.career tr.split-row td { background: var(--surface-alt); font-size: 13px; }
-.stats.career tr.split-row .col-season { font-weight: 400; background: var(--surface-alt); }
-.stats.career tr.split-row td.col-team:nth-child(3) { padding-left: 20px; }
+/* 연도별 표: MLB.com처럼 촘촘하게. 여러 팀 시즌의 팀별 행은 옅게 */
+.stats.career td,
+.stats.career th { padding: 6px 10px; }
+.stats.career .level { min-width: 0; padding: 0 6px; font-size: 11px; }
+.stats.career tr.split-total td { border-bottom-style: dashed; }
+.stats.career tr.split-row td { color: var(--text-sub); font-size: 13px; }
+.stats.career tr.split-row .col-season { font-weight: 400; color: var(--text-sub); }
+.stats.career tr.split-row .col-team { padding-left: 18px; }
 .stats.career .col-awards { text-align: left; white-space: nowrap; }
 .award-tag {
   display: inline-block;
@@ -746,3 +739,13 @@ table.stats {
 }
 .stats.moves td.move-detail { white-space: normal; min-width: 260px; }
 .stats.moves .col-name { position: static; border-right: 0; } /* 이름이 세 번째 열이라 고정하지 않는다 */
+
+/* 구단 페이지: 연도별 성적 */
+.season-facts { margin-bottom: 12px; }
+.stats.franchise .col-name { font-weight: 600; white-space: nowrap; }
+.stats.franchise .col-name.muted { font-weight: 400; }
+.stats.franchise .rank-first { font-weight: 700; color: var(--accent); }
+.stats.franchise tr.title-season td { background: var(--accent-soft); }
+.post-result { font-size: 13px; white-space: nowrap; }
+.post-result.post-WS { font-weight: 800; color: var(--accent); }
+.post-result.post-W { font-weight: 700; }
