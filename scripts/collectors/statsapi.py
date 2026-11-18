@@ -82,6 +82,7 @@ def fetch_clubs(sport_id, season):
             {
                 "id": team["id"],
                 "name": team["name"],
+                "teamName": team.get("teamName", ""),  # 연고지를 뺀 이름 (예: White Sox). 공식 홈페이지 주소용
                 "abbr": team.get("abbreviation", ""),
                 "parentId": team.get("parentOrgId"),
                 "league": team.get("league", {}).get("name", ""),

@@ -44,6 +44,17 @@ class AssembleTest(unittest.TestCase):
         self.assertEqual(orphans, 1)
         self.assertEqual(clubs[0]["affiliates"], [])
 
+    def test_official_site_only_for_major_clubs(self):
+        major = dict(club(1, "Chicago White Sox", "CWS"), teamName="White Sox")
+        minor = dict(club(11, "Charlotte Knights", "CLT", parent=1), teamName="Knights")
+        clubs, _ = teams.assemble({"MLB": [major], "AAA": [minor]}, {})
+        self.assertEqual(clubs[0]["site"], "https://www.mlb.com/whitesox")
+        self.assertNotIn("teamName", clubs[0])
+        self.assertNotIn("site", clubs[0]["affiliates"][0])
+        self.assertNotIn("teamName", clubs[0]["affiliates"][0])
+        self.assertEqual(teams.official_site("D-backs"), "https://www.mlb.com/dbacks")
+        self.assertIsNone(teams.official_site(""))
+
     def test_placeholder_dominican_city_removed(self):
         fixed = teams.fix_placeholder_location(club(5, "DSL X", "DX", country="DOM", city="New York"))
         self.assertIsNone(fixed["venue"]["city"])

@@ -54,13 +54,21 @@ def fix_placeholder_location(club):
     return club
 
 
+def official_site(team_name):
+    """MLB 구단 공식 홈페이지 주소. mlb.com/{연고지를 뺀 이름을 소문자로, 공백·하이픈 제거} 규칙을 따른다
+    (예: White Sox → whitesox, D-backs → dbacks). 이름이 없으면 None (주소를 지어내지 않는다)."""
+    slug = re.sub(r"[^a-z0-9]", "", str(team_name or "").lower())
+    return f"https://www.mlb.com/{slug}" if slug else None
+
+
 def assemble(clubs_by_level, factors_by_level):
     """레벨별 구단 목록 → MLB 구단 목록(산하 구단 포함). 순수 함수라 따로 검증할 수 있다."""
     order = [name for _sport, name, _folder in LEVELS]
     majors = {}
     for club in clubs_by_level.get("MLB", []):
-        entry = {key: value for key, value in club.items() if key != "parentId"}
+        entry = {key: value for key, value in club.items() if key not in ("parentId", "teamName")}
         entry["level"] = "MLB"
+        entry["site"] = official_site(club.get("teamName"))
         entry["pf"] = factors_by_level.get("MLB", {}).get(club["abbr"])
         entry["affiliates"] = []
         majors[club["id"]] = entry
@@ -72,7 +80,7 @@ def assemble(clubs_by_level, factors_by_level):
             if parent is None:
                 orphans += 1  # 모구단을 알 수 없는 구단은 임의로 붙이지 않는다
                 continue
-            entry = {key: value for key, value in club.items() if key not in ("parentId", "leagueAbbr", "divisionShort")}
+            entry = {key: value for key, value in club.items() if key not in ("parentId", "teamName", "leagueAbbr", "divisionShort")}
             entry["level"] = level
             entry["pf"] = factors_by_level.get(level, {}).get(club["abbr"])
             parent["affiliates"].append(entry)
