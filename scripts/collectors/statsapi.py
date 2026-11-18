@@ -96,20 +96,22 @@ def fetch_clubs(sport_id, season):
     return clubs
 
 
-def fetch_award_recipients(award_id):
+def fetch_award_recipients(award_id, sport_id=1):
     """상 하나의 역대 수상자 목록 (요청 1회). 팀은 수상 시즌 기준 약칭이다.
 
     선수 정보가 없는 항목은 건너뛴다. 원본에 없는 팀·포지션·비고는 빈 문자열, 팀 ID는 None으로 둔다.
     팀 ID는 연고지를 옮겨도 같은 구단이면 그대로다. 비고(note)는 영구결번의 등번호 등이다.
+    날짜(date)는 원본의 수상·선출일이다 (옛 명예의 전당 행은 11-01로 채워져 있다).
+    sport_id=None이면 레벨 필터를 넣지 않는다. sportId=1은 팀이 없거나 MLB 일반 구단 ID가 아닌 행
+    (명예의 전당 임원·니그로리그 인물, 옛 구단 ID로 남은 Vladimir Guerrero 등)을 빼므로 수상 기록에는 None을 쓴다.
     """
-    data = _get(
-        f"/awards/{award_id}/recipients",
-        {
-            "sportId": 1,
-            "hydrate": "team",
-            "fields": "awards,season,notes,team,abbreviation,player,id,nameFirstLast,primaryPosition",
-        },
-    )
+    params = {
+        "hydrate": "team",
+        "fields": "awards,season,date,notes,team,abbreviation,player,id,nameFirstLast,primaryPosition",
+    }
+    if sport_id is not None:
+        params["sportId"] = sport_id
+    data = _get(f"/awards/{award_id}/recipients", params)
     recipients = []
     for item in data.get("awards", []):
         player = item.get("player") or {}
@@ -126,6 +128,7 @@ def fetch_award_recipients(award_id):
                 "team": (item.get("team") or {}).get("abbreviation", ""),
                 "teamId": (item.get("team") or {}).get("id"),
                 "note": item.get("notes", ""),
+                "date": item.get("date", ""),
             }
         )
     return recipients

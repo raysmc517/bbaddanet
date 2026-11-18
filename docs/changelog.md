@@ -3,6 +3,15 @@
 사이트에서 바뀐 것을 날짜별로 짧게 적는다. 과정과 이유는 [개발 일지](devlog.md), 알려진 한계와 앞으로 고칠 것은 [보완점](improvements.md)에 둔다.
 날짜는 한국 시간 기준이다. 데이터만 바뀐 일일 자동 갱신은 적지 않는다.
 
+## 2026-11-19
+
+### 수정
+- 명예의 전당 누락 8명 추가: Vladimir Guerrero(2018), Bud Selig·John Schuerholz(2017), Pat Gillick(2011), Marvin Miller(2020), Bud Fowler·Buck O'Neil(2022), Martín Dihigo(1977). 선출 방식·득표율도 함께 표시
+- 명예의 전당 헌액 연도 정정: Gil Hodges·Jim Kaat·Minnie Miñoso·Tony Oliva 2021→2022, Jim Leyland 2023→2024 (선수 페이지·구단 역사 포함)
+- 2023 All-MLB 세컨드 팀 Devin Williams, 2023 AL 플래티넘 글러브 Andrés Giménez 추가
+- 2026 실버슬러거 20명, 2026 행크 애런상 2명 반영
+- 수상 기록의 포지션이 빈 칸으로 나오던 인물 약 1,500명(예: Chipper Jones)을 선수 프로필의 주 포지션으로 표시
+
 ## 2026-11-18
 
 ### 추가
