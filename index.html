@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>빠따넷 · 리더보드</title>
   <meta name="description" content="MLB, MiLB, NPB, KBO 선수 성적과 세이버매트릭스">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261120-zones">
 </head>
 <body>
   <header class="site-header">
@@ -13,6 +13,7 @@
       <a class="brand" href="./">빠따넷</a>
       <nav class="league-tabs" id="leagueTabs" aria-label="리그 선택"></nav>
       <nav class="header-nav header-nav-end">
+        <a href="search.html">전체 선수 검색</a>
         <a href="standings.html">순위</a>
         <a href="prospects.html">유망주</a>
         <a href="teams.html">구단</a>
@@ -20,7 +21,6 @@
         <a href="daily.html">경기·뉴스</a>
         <a href="following.html">관심</a>
         <a href="awards.html">수상</a>
-        <a href="search.html">선수 검색</a>
       </nav>
     </div>
   </header>
@@ -61,13 +61,28 @@
           <select id="minSelect"></select>
         </label>
         <label class="field field-search">
-          <span>선수 검색</span>
-          <input type="search" id="searchInput" placeholder="이름" autocomplete="off">
+          <span>현재 시즌 이름 검색</span>
+          <input type="search" id="searchInput" placeholder="영문 이름" autocomplete="off" aria-describedby="searchHelp">
         </label>
       </div>
+      <p class="filter-help" id="searchHelp">선택한 시즌·레벨 안에서 찾습니다. 검색을 시작하면 리그·팀·포지션·출장 조건을 전체로 바꿉니다. 은퇴 선수는 <a href="search.html">전체 선수 검색</a>에서 찾아보세요.</p>
     </section>
 
     <p class="status" id="status" role="status"></p>
+    <p class="filter-help" id="filterSummary" hidden></p>
+    <div class="table-tools">
+      <div class="segmented" id="columnsSwitch" role="group" aria-label="표 열 표시">
+        <button type="button" data-value="core" aria-pressed="false">핵심 기록</button>
+        <button type="button" data-value="full" aria-pressed="true">전체 기록</button>
+      </div>
+      <p class="filter-help" id="columnsHelp"></p>
+      <p class="sort-summary" id="sortSummary"></p>
+      <details class="metric-help">
+        <summary>지표 설명</summary>
+        <dl id="metricDefinitions"></dl>
+        <p>간이 WAR는 수비 기여를 제외한 자체 계산값입니다. wRC+·ERA-·FIP-의 100은 해당 리그 평균이며, 리그 간 절대 실력이 같다는 뜻은 아닙니다.</p>
+      </details>
+    </div>
 
     <div class="table-scroll" id="tableScroll">
       <table class="stats" id="statsTable">
@@ -87,6 +102,6 @@
   </footer>
 
   <script src="js/common.js"></script>
-  <script src="js/leaderboard.js"></script>
+  <script src="js/leaderboard.js?v=20261120-ui-details"></script>
 </body>
 </html>

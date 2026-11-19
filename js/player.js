@@ -510,11 +510,14 @@
       const columns = SUMMARY_KEYS[group].map((key) =>
         key === "WL" ? WIN_LOSS : COLUMNS[group].basic.find((column) => column.key === key));
       const label = league === "mlb" ? "MLB" : "마이너리그";
+      const highlights = (group === "batting" ? ["OPS", "HR", "AVG", "RBI"] : ["ERA", "outs", "SO", "WHIP"])
+        .map((key) => COLUMNS[group].basic.find((column) => column.key === key));
       const line = (title, row, cls) =>
         "<tr" + (cls ? ' class="' + cls + '"' : "") + '><th scope="row" class="col-season">' + title + "</th>" +
         columns.map((column) => "<td>" + cell(column, withWinLoss(row)) + "</td>").join("") + "</tr>";
       return (
-        '<div class="summary-block"><h3>' + (group === "batting" ? "타격" : "투구") + " · " + label + "</h3>" +
+        '<div class="summary-block"><h2>' + latest + " " + (group === "batting" ? "타격" : "투구") + " · " + label + "</h2>" +
+        '<dl class="season-highlights">' + highlights.map((column) => '<div><dt>' + escapeHtml(column.label) + '</dt><dd>' + cell(column, seasonRow) + '</dd></div>').join("") + '</dl>' +
         '<div class="table-scroll"><table class="stats career summary-table"><thead><tr><th class="col-season"></th>' +
         columns.map((column) => '<th title="' + escapeHtml(column.desc) + '">' + escapeHtml(column.label) + "</th>").join("") +
         "</tr></thead><tbody>" +
@@ -524,7 +527,7 @@
       );
     }).join("");
     $("careerSummary").innerHTML = parts;
-    $("careerSummary").hidden = !parts;
+    $("careerSummary").hidden = !parts || document.body.dataset.playerView === "analysis";
   }
 
   const matchesFilter = (row) =>
@@ -616,7 +619,7 @@
     $("status").textContent = "";
     renderProfile();
     const params = new URLSearchParams(location.search);
-    const analysisView = params.get("view") === "analysis" || ["#playerAnalysis", "#statcastReport", "#situationReport"].includes(location.hash);
+    const analysisView = params.get("view") === "analysis" || ["#playerAnalysis", "#statcastReport", "#situationReport", "#zonesReport"].includes(location.hash);
     document.body.dataset.playerView = analysisView ? "analysis" : "overview";
     $("playerOverview").hidden = analysisView;
     $("playerAnalysis").hidden = !analysisView;
@@ -629,6 +632,18 @@
     $("playerAnalysisLink").href = analysisUrl.pathname + analysisUrl.search;
     $(analysisView ? "playerAnalysisLink" : "playerOverviewLink").setAttribute("aria-current", "page");
     $("playerNav").hidden = false;
+    $("careerJump").hidden = analysisView || !player.batting.length && !player.pitching.length;
+    // 프로필 안의 해시 링크(입단 경로 등)는 접힌 상태에서도 목적지를 보여준다.
+    const revealDetails = () => {
+      if (!location.hash) return;
+      const target = document.getElementById(location.hash.slice(1));
+      if (target && $("profileDetails").contains(target)) {
+        $("profileDetails").open = true;
+        target.scrollIntoView({ block: "start" });
+      }
+    };
+    window.addEventListener("hashchange", revealDetails);
+    revealDetails();
     if (analysisView) document.title += " · 상세 기록·분석";
     renderProspect();
     setupFilters();
@@ -659,7 +674,7 @@
       : player.careerUpdated
       ? "MLB·마이너리그의 최초 제공 시즌부터 표시합니다. 해외 리그 및 원본 미제공 기록은 포함되지 않을 수 있습니다. 과거 세이버 지표는 계산 근거가 있는 경우에만 제공합니다."
       : "저장된 시즌 기록입니다. 전체 프로 커리어 데이터는 아직 수집되지 않았습니다.";
-    if (analysisView) $("status").textContent = "상세 기록·분석 · 시즌을 고르면 리그 평균 비교, 상황별 성적, Statcast가 함께 바뀝니다.";
+    if (analysisView) $("status").textContent = "상세 기록·분석 · 분석 시즌을 고르면 이 화면의 모든 기록이 함께 바뀝니다.";
 
     // 리더보드에서 넘어왔으면 보던 조건 그대로 돌아가게 한다
     if (document.referrer && new URL(document.referrer).origin === location.origin && /(\/|index\.html)$/.test(new URL(document.referrer).pathname)) {

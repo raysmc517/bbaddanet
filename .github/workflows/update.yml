@@ -136,6 +136,13 @@ jobs:
           python scripts/statcast.py --current-season
           echo "code=$?" >> "$GITHUB_OUTPUT"
 
+      - name: 투구 위치·핫콜드존
+        id: zones
+        run: |
+          set +e
+          python scripts/zones.py --current-season
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+
       - name: 데이터 커밋
         run: |
           git config user.name "github-actions[bot]"
@@ -150,9 +157,9 @@ jobs:
           git push origin HEAD:main
 
       - name: 수집 실패 알림
-        if: steps.statcast.outputs.code != '0' || steps.daily.outputs.code != '0' || steps.context.outputs.code != '0' || steps.build.outputs.code != '0' || steps.traded.outputs.code != '0' || steps.standings.outputs.code != '0' || steps.rosters.outputs.code != '0' || steps.leaders.outputs.code != '0' || steps.franchise.outputs.code != '0' || steps.weekly.outputs.code != '0'
+        if: steps.zones.outputs.code != '0' || steps.statcast.outputs.code != '0' || steps.daily.outputs.code != '0' || steps.context.outputs.code != '0' || steps.build.outputs.code != '0' || steps.traded.outputs.code != '0' || steps.standings.outputs.code != '0' || steps.rosters.outputs.code != '0' || steps.leaders.outputs.code != '0' || steps.franchise.outputs.code != '0' || steps.weekly.outputs.code != '0'
         run: |
-          echo "::warning::수집 일부 실패 (Statcast 코드 ${{ steps.statcast.outputs.code }}, 경기·뉴스 코드 ${{ steps.daily.outputs.code }}, 시즌 맥락 코드 ${{ steps.context.outputs.code }}, build.py 코드 ${{ steps.build.outputs.code }}, 이적 선수 코드 ${{ steps.traded.outputs.code }}, 순위 코드 ${{ steps.standings.outputs.code }}, 선수단 코드 ${{ steps.rosters.outputs.code }}, 리그 1위 코드 ${{ steps.leaders.outputs.code }}, 구단 성적 코드 ${{ steps.franchise.outputs.code }}, 주간 수집 코드 ${{ steps.weekly.outputs.code }}). 실패한 부분은 직전 데이터를 유지했다. 로그를 확인한다."
+          echo "::warning::수집 일부 실패 (위치 구역 코드 ${{ steps.zones.outputs.code }}, Statcast 코드 ${{ steps.statcast.outputs.code }}, 경기·뉴스 코드 ${{ steps.daily.outputs.code }}, 시즌 맥락 코드 ${{ steps.context.outputs.code }}, build.py 코드 ${{ steps.build.outputs.code }}, 이적 선수 코드 ${{ steps.traded.outputs.code }}, 순위 코드 ${{ steps.standings.outputs.code }}, 선수단 코드 ${{ steps.rosters.outputs.code }}, 리그 1위 코드 ${{ steps.leaders.outputs.code }}, 구단 성적 코드 ${{ steps.franchise.outputs.code }}, 주간 수집 코드 ${{ steps.weekly.outputs.code }}). 실패한 부분은 직전 데이터를 유지했다. 로그를 확인한다."
 
   deploy:
     needs: update
@@ -173,7 +180,7 @@ jobs:
           mkdir _site
           cp ./*.html _site/
           cp -r css js _site/
-          rsync -a --exclude careers/ --exclude drafts/ --exclude contracts_sources/ --exclude contracts_manual.json --exclude arrival_details.json data _site/
+          rsync -a --exclude '**/zones/cache/***' --exclude careers/ --exclude drafts/ --exclude contracts_sources/ --exclude contracts_manual.json --exclude arrival_details.json data _site/
           touch _site/.nojekyll
           echo "파일 $(find _site -type f | wc -l)개, $(du -sh _site | cut -f1)"
 

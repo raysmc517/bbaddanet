@@ -31,6 +31,11 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
+:where(a, button, input, select, summary):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.site-header :focus-visible { outline-color: var(--header-text); }
 
 body {
   margin: 0;
@@ -142,6 +147,49 @@ body {
 }
 .field-search { margin-left: auto; }
 .field-search input { width: 180px; }
+.filter-help {
+  margin: 8px 0;
+  font-size: 13px;
+  color: var(--text-sub);
+  overflow-wrap: anywhere;
+}
+.filter-help a, .leaderboard-empty a { color: var(--accent); }
+.table-tools { margin: 8px 0; }
+.sort-summary { margin: 0 0 6px; font-size: 13px; color: var(--text-sub); }
+.metric-help { font-size: 13px; }
+.metric-help summary { width: fit-content; padding: 5px 0; color: var(--accent); cursor: pointer; }
+.metric-help[open] { padding: 10px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.metric-help dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px 24px; }
+.metric-help dl div { display: grid; grid-template-columns: 64px 1fr; gap: 8px; }
+.metric-help dt { font-weight: 700; }
+.metric-help dd { margin: 0; color: var(--text-sub); }
+.metric-help p { color: var(--text-sub); }
+.stats th:has(.sort-button) { padding: 0; }
+.sort-button {
+  display: block;
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: right;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.sort-button:focus-visible { outline-offset: -3px; }
+.leaderboard-empty { white-space: normal; text-align: left !important; }
+.leaderboard-empty p { margin: 8px 0; }
+.reset-filters {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+}
 
 .status {
   margin: 8px 0;
@@ -251,6 +299,9 @@ table.stats {
   opacity: 0.8;
   text-decoration: none;
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
 }
 .header-nav a:hover,
 .header-nav a[aria-current="page"] { opacity: 1; }
@@ -260,9 +311,8 @@ table.stats {
   /* 메뉴가 많아 좁은 화면에서는 글자를 끊지 않고 가로로 넘긴다 */
   max-width: 100%;
   overflow-x: auto;
-  scrollbar-width: none;
+  scrollbar-width: thin;
 }
-.header-nav::-webkit-scrollbar { display: none; }
 .header-nav a { white-space: nowrap; }
 .header-nav-end { margin-left: auto; }
 
@@ -528,6 +578,21 @@ table.stats {
   color: var(--text-sub);
   margin: 0 0 6px;
 }
+.summary-block h2 { font-size: 16px; margin: 0 0 8px; }
+#profile { gap: 16px; align-items: center; }
+#profile .profile-main { min-width: 0; flex: 1 1 170px; }
+#profile h1 { font-size: clamp(22px, 4vw, 28px); overflow-wrap: anywhere; }
+#profile .career-summary { flex: 1 1 100%; min-width: 0; margin: 0; }
+.season-highlights { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0 0 12px; }
+.season-highlights div { padding: 10px 6px; background: var(--accent-soft); border-radius: 6px; text-align: center; }
+.season-highlights dt { color: var(--text-sub); font-size: 12px; }
+.season-highlights dd { margin: 0; font-size: clamp(18px, 4vw, 24px); font-weight: 700; font-variant-numeric: tabular-nums; }
+.career-jump { color: var(--accent); padding: 6px 0; }
+.profile-details { flex: 1 1 100%; min-width: 0; border-top: 1px solid var(--border); padding-top: 12px; }
+.profile-details summary { color: var(--accent); font-weight: 600; padding: 6px 0; cursor: pointer; }
+.profile-details[open] summary { margin-bottom: 12px; }
+.profile-details .award-list { margin-top: 16px; }
+#careerToolbar, #playerContracts, #playerTransfers { scroll-margin-top: 16px; }
 .summary-table .col-season { font-weight: 600; white-space: nowrap; }
 .summary-table .summary-career td,
 .summary-table .summary-career th {
@@ -717,11 +782,17 @@ table.stats {
   .header-row { gap: 10px; }
   .league-tabs { gap: 0; }
   .league-tabs button { padding: 8px 7px; }
-  .header-nav { gap: 14px; }
+  .header-nav { gap: 14px; flex: 1 1 100%; padding-bottom: 4px; }
   .field-search { margin-left: 0; flex: 1 1 100%; }
   .field-search input { width: 100%; }
   .stats th, .stats td { padding: 7px 8px; }
   .player-photo { width: 64px; height: 96px; }
+  #profile { padding: 16px; }
+  #statsTable.core-columns .col-rank { width: 36px; min-width: 36px; max-width: 36px; }
+  #statsTable.core-columns .col-name { left: 36px; max-width: 120px; }
+  #statsTable.core-columns .col-name a { display: flex; align-items: baseline; max-width: 120px; }
+  #statsTable.core-columns .player-name-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  #statsTable.core-columns .ped-mark { flex: none; }
 }
 
 /* 순위 */
@@ -943,3 +1014,36 @@ table.stats {
 .news-feed { list-style: none; padding: 0; }
 .news-feed li { border-bottom: 1px solid var(--border); padding: 12px 0; }
 .news-feed p { margin: 4px 0; font-size: 12px; }
+
+/* 투구 위치 분포·핫콜드존: 색 이외에도 수치·분모·선택 구역을 표시한다. */
+.zone-section { margin: 20px 0 28px; padding: 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+.zone-section h4 { margin: 0 0 12px; font-size: 17px; }
+.zone-controls { display: flex; flex-wrap: wrap; gap: 12px; }
+.zone-plot { max-width: 430px; margin: 12px auto; }
+.zone-plot svg { width: 100%; height: auto; display: block; }
+.zone-axis { fill: none; stroke: var(--border); stroke-width: 1; }
+.zone-strike { fill: none; stroke: var(--text); stroke-width: 1.5; }
+.zone-dots { fill: var(--accent); }
+.zone-axis-label { fill: var(--text-sub); font-size: 11px; }
+.zone-table-wrap { max-width: 480px; margin: 16px auto 0; }
+.zone-grid { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 2px; }
+.zone-grid caption { font-size: 13px; color: var(--text-sub); padding-bottom: 8px; }
+.zone-grid td { padding: 0; border: 1px solid var(--border); border-radius: 4px; }
+.zone-grid td.in-zone { border-color: var(--text-sub); }
+.zone-grid button { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; min-height: 64px; padding: 6px 0; border: 0; border-radius: 3px; color: var(--text); background: var(--zone-fill); font: inherit; cursor: pointer; font-variant-numeric: tabular-nums; }
+.zone-grid button[aria-pressed="true"] { outline: 3px solid var(--accent); outline-offset: -3px; }
+.zone-grid button:focus-visible { outline: 3px solid var(--text); outline-offset: -3px; }
+.zone-grid strong { font-size: 16px; }
+.zone-grid small { font-size: 11px; }
+.zone-detail { font-size: 13px; padding: 10px; border-left: 3px solid var(--accent); background: var(--surface-alt); }
+@media (max-width: 640px) {
+  .zone-section { padding: 10px; }
+  .zone-grid strong { font-size: 14px; }
+  .zone-grid button { min-height: 56px; }
+}
+.analysis-jumps { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 12px 0; }
+.analysis-jumps a { color: var(--accent); padding: 6px 0; }
+#zonesReport, #statcastReport, #situationReport, #seasonReport { scroll-margin-top: 16px; }
+.zone-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 0; margin: 8px 0; list-style: none; font-size: 12px; }
+.zone-legend li { display: inline-flex; align-items: center; gap: 4px; }
+.zone-legend li span { width: 10px; height: 10px; border-radius: 50%; }

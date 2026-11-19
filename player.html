@@ -4,13 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>빠따넷 · 선수</title>
-  <link rel="stylesheet" href="css/style.css?v=20261120-player-navigation">
+  <link rel="stylesheet" href="css/style.css?v=20261120-zones">
 </head>
 <body>
   <header class="site-header">
     <div class="wrap header-row">
       <a class="brand" href="./">빠따넷</a>
       <nav class="header-nav">
+        <a href="search.html">전체 선수 검색</a>
         <a href="./" id="backLink">리더보드</a>
         <a href="standings.html">순위</a>
         <a href="prospects.html">유망주</a>
@@ -19,7 +20,6 @@
         <a href="daily.html">경기·뉴스</a>
         <a href="following.html">관심</a>
         <a href="awards.html">수상</a>
-        <a href="search.html">선수 검색</a>
       </nav>
     </div>
   </header>
@@ -37,15 +37,18 @@
         <a id="playerOverviewLink">선수 정보·시즌 기록</a>
         <a id="playerAnalysisLink">상세 기록·분석</a>
       </nav>
-      <dl class="profile-facts" id="playerFacts"></dl>
       <div class="prospect-banner" id="prospectBanner" hidden></div>
-      <div class="award-list" id="awardList" hidden></div>
       <div class="ped-list" id="pedList" hidden></div>
+      <section class="career-summary" id="careerSummary" aria-label="최근 시즌과 통산 요약" hidden></section>
+      <a class="career-jump" id="careerJump" href="#careerToolbar" hidden>연도별 기록 바로 보기 ↓</a>
+      <details class="profile-details" id="profileDetails">
+        <summary>프로필·입단 정보·수상 경력</summary>
+        <dl class="profile-facts" id="playerFacts"></dl>
+        <div class="award-list" id="awardList" hidden></div>
+      </details>
     </section>
 
     <div id="playerOverview">
-      <section class="career-summary" id="careerSummary" hidden></section>
-
       <div class="career-toolbar" id="careerToolbar" hidden>
         <div class="segmented" id="viewSwitch" role="group" aria-label="지표 종류">
           <button type="button" data-value="basic" aria-pressed="true">기본</button>
@@ -87,9 +90,10 @@
   <script src="js/common.js"></script>
   <script src="js/favorites.js"></script>
   <script src="js/contracts.js"></script>
-  <script src="js/statcast.js"></script>
-  <script src="js/player-context.js?v=20261120-player-navigation"></script>
+  <script src="js/statcast.js?v=20261120-zones"></script>
+  <script src="js/zones.js?v=20261120-zones"></script>
+  <script src="js/player-context.js?v=20261120-zones"></script>
   <script src="js/arrivals.js"></script>
-  <script src="js/player.js?v=20261120-arrival-fix-2"></script>
+  <script src="js/player.js?v=20261120-zones"></script>
 </body>
 </html>

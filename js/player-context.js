@@ -97,11 +97,13 @@
 
   async function analysis(player, aggregate) {
     const seasons = [...new Set(player.batting.concat(player.pitching).filter((r) => r.league === "mlb").map((r) => r.season))].sort((a, b) => b - a);
-    if (!seasons.length) { $("playerAnalysis").innerHTML = box("시즌 맥락", note("현재 리그 평균 비교·상황별 성적·Statcast는 MLB 정규시즌을 제공합니다.")); return; }
+    if (!seasons.length) { $("playerAnalysis").innerHTML = box("시즌 맥락", note("현재 리그 평균 비교·상황별 성적·Statcast·위치 구역 분석은 MLB 정규시즌을 제공합니다.")); return; }
     let averages = {};
     try { averages = await loadJson("data/mlb_averages.json"); } catch (_) { /* 아래에 미제공 표시 */ }
     $("playerAnalysis").innerHTML = box("리그 평균 비교·선수 리포트", '<label class="field"><span>분석 시즌</span><select id="analysisSeason">' +
-      seasons.map((s) => '<option>' + s + '</option>').join("") + '</select></label><div id="seasonReport"></div><div id="situationReport"></div><div id="statcastReport"></div>');
+      seasons.map((s) => '<option>' + s + '</option>').join("") + '</select></label>' +
+      '<nav class="analysis-jumps" aria-label="분석 구역"><a href="#seasonReport">평균·리포트</a><a href="#situationReport">상황별</a><a href="#statcastReport">타구·구종</a><a href="#zonesReport">탄착군·핫콜드존</a></nav>' +
+      '<div id="seasonReport"></div><div id="situationReport"></div><div id="statcastReport"></div><div id="zonesReport"></div>');
     const requestedSeason = Number(new URLSearchParams(location.search).get("season"));
     if (seasons.includes(requestedSeason)) $("analysisSeason").value = String(requestedSeason);
     let request = 0;
@@ -117,7 +119,8 @@
         link.searchParams.set("season", String(season));
         $(id).href = link.pathname + link.search;
       }
-      window.BB.statcast.render(player, season, $("statcastReport"));
+      const statcastReady = window.BB.statcast.render(player, season, $("statcastReport"));
+      const zonesReady = window.BB.zones && window.BB.zones.render(player, season, $("zonesReport"));
       const groups = player.pos === "P" ? ["pitching", "batting"] : ["batting", "pitching"];
       $("seasonReport").innerHTML = groups.map((group) => {
         const rows = player[group].filter((r) => r.league === "mlb" && r.season === season);
@@ -152,6 +155,8 @@
       } catch (_) {
         if (request === version) $("situationReport").innerHTML = '<h3>상황별 성적</h3>' + note("이 시즌은 상황별 자료가 아직 없거나 불러오지 못했습니다. 현재 2024~2026 시즌을 수집합니다.");
       }
+      await Promise.allSettled([statcastReady, zonesReady]);
+      if (request === version && location.hash === "#zonesReport") $("zonesReport").scrollIntoView({block:"start"});
     };
     $("analysisSeason").addEventListener("change", render);
     render();

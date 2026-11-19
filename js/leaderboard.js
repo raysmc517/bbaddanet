@@ -5,6 +5,11 @@
   "use strict";
 
   const PAGE_SIZE = 50;
+  const mobile = window.matchMedia("(max-width: 640px)");
+  const CORE_KEYS = {
+    batting: { basic: ["OPS", "HR", "AVG", "RBI", "PA"], saber: ["wRCp", "sWAR", "wOBA", "OPS", "PA"] },
+    pitching: { basic: ["ERA", "outs", "SO", "WHIP", "W", "SV"], saber: ["FIP", "ERAm", "KBBp", "WHIP", "sWAR", "outs"] },
+  };
 
   // 화면에 보여줄 리그 순서. meta.json에 없는 리그는 "준비 중"으로 비활성화된다.
   const LEAGUE_ORDER = [
@@ -45,6 +50,7 @@
     season: null,
     group: "batting",
     view: "basic",
+    columns: "auto",
     team: "",
     pos: "",
     min: "q",
@@ -62,6 +68,8 @@
     leagueTabs: $("leagueTabs"),
     groupSwitch: $("groupSwitch"),
     viewSwitch: $("viewSwitch"),
+    columnsSwitch: $("columnsSwitch"),
+    columnsHelp: $("columnsHelp"),
     season: $("seasonSelect"),
     level: $("levelSelect"),
     levelField: $("levelField"),
@@ -74,6 +82,9 @@
     minLabel: $("minLabel"),
     search: $("searchInput"),
     status: $("status"),
+    filters: $("filterSummary"),
+    sort: $("sortSummary"),
+    definitions: $("metricDefinitions"),
     head: $("tableHead"),
     body: $("tableBody"),
     pager: $("pager"),
@@ -92,6 +103,7 @@
     pick("sub");
     pick("group", ["batting", "pitching"]);
     pick("view", ["basic", "saber"]);
+    pick("columns", ["core", "full"]);
     pick("team");
     pick("pos");
     pick("min");
@@ -112,6 +124,7 @@
     params.set("season", state.season);
     params.set("group", state.group);
     if (state.view !== "basic") params.set("view", state.view);
+    if (state.columns !== "auto") params.set("columns", state.columns);
     if (state.sub) params.set("sub", state.sub);
     if (state.team) params.set("team", state.team);
     if (state.pos) params.set("pos", state.pos);
@@ -205,7 +218,15 @@
 
   // ---------- 표 그리기 ----------
   function activeColumns() {
-    return visibleColumns(COLUMNS[state.group][state.view], players);
+    const columns = visibleColumns(COLUMNS[state.group][state.view], players);
+    if (!coreView()) return columns;
+    // 정렬 지표를 맨 앞에 두고 보기를 바꿔도 정렬 기준을 유지한다.
+    return [...new Set([state.sortKey].concat(CORE_KEYS[state.group][state.view]))]
+      .map((key) => columns.find((column) => column.key === key)).filter(Boolean);
+  }
+
+  function coreView() {
+    return state.columns === "core" || state.columns === "auto" && mobile.matches;
   }
 
   // 악센트와 대소문자를 무시한다 (Rodriguez → Rodríguez). 한글은 그대로 둔다.
@@ -245,16 +266,19 @@
     const arrow = state.sortDir === "asc" ? " ▲" : " ▼";
     const cells = activeColumns().map((column) => {
       const sorted = column.key === state.sortKey;
+      const nextDir = sorted ? (state.sortDir === "asc" ? "desc" : "asc") : (column.asc ? "asc" : "desc");
       return (
         '<th class="sortable' + (sorted ? " sorted" : "") + '" data-key="' + column.key + '"' +
         ' title="' + escapeHtml(column.desc) + '"' +
         (sorted ? ' aria-sort="' + (state.sortDir === "asc" ? "ascending" : "descending") + '"' : "") +
-        ">" + escapeHtml(column.label) + (sorted ? arrow : "") + "</th>"
+        '><button type="button" class="sort-button" data-sort="' + column.key +
+        '" aria-label="' + escapeHtml(column.label) + " " + (nextDir === "asc" ? "낮은 순" : "높은 순") + ' 정렬">' +
+        escapeHtml(column.label) + '<span aria-hidden="true">' + (sorted ? arrow : "") + "</span></button></th>"
       );
     });
     el.head.innerHTML =
       '<tr><th class="col-rank">#</th><th class="col-name">선수</th><th class="col-team">팀</th>' +
-      '<th class="col-pos">' + (state.group === "batting" ? "포지션" : "보직") + "</th>" + cells.join("") + "</tr>";
+      (coreView() ? "" : '<th class="col-pos">' + (state.group === "batting" ? "포지션" : "보직") + "</th>") + cells.join("") + "</tr>";
   }
 
   function renderBody(list) {
@@ -262,7 +286,10 @@
     const start = (state.page - 1) * PAGE_SIZE;
     const rows = list.slice(start, start + PAGE_SIZE);
     if (!rows.length) {
-      el.body.innerHTML = '<tr><td class="empty" colspan="' + (columns.length + 4) + '">조건에 맞는 선수가 없습니다.</td></tr>';
+      el.body.innerHTML = '<tr><td class="empty leaderboard-empty" colspan="' + (columns.length + (coreView() ? 3 : 4)) + '">' +
+        '<p>선택한 시즌·레벨과 조건에 맞는 선수가 없습니다.</p>' +
+        '<button type="button" class="reset-filters">조회 조건 초기화</button> · ' +
+        '<a href="search.html' + (state.search.trim() ? '?q=' + encodeURIComponent(state.search.trim()) : "") + '">전체 선수 검색</a></td></tr>';
       return;
     }
     el.body.innerHTML = rows.map((p, index) => {
@@ -275,9 +302,9 @@
       });
       return (
         '<tr><td class="col-rank">' + (start + index + 1) + "</td>" +
-        '<td class="col-name"><a href="player.html?id=' + p.id + '">' + escapeHtml(p.nameKo || p.name) + "</a></td>" +
+        '<td class="col-name"><a href="player.html?id=' + p.id + '" title="' + escapeHtml(p.nameKo || p.name) + '"><span class="player-name-text">' + escapeHtml(p.nameKo || p.name) + "</span></a></td>" +
         '<td class="col-team">' + team + "</td>" +
-        '<td class="col-pos">' + role + "</td>" + cells.join("") + "</tr>"
+        (coreView() ? "" : '<td class="col-pos">' + role + "</td>") + cells.join("") + "</tr>"
       );
     }).join("");
   }
@@ -305,9 +332,23 @@
     renderHead();
     renderBody(list);
     renderPager(list.length);
+    setPressed(el.columnsSwitch, coreView() ? "core" : "full");
+    $("statsTable").classList.toggle("core-columns", coreView());
+    el.columnsHelp.textContent = coreView()
+      ? "핵심 기록 · 정렬한 지표를 먼저 표시합니다. 전체 기록에서 모든 열을 볼 수 있습니다."
+      : "전체 기록 · 표를 가로로 넘기면 나머지 지표를 볼 수 있습니다.";
     el.status.className = "status";
     el.status.textContent =
       levelName() + (state.sub ? " " + state.sub : "") + " " + state.season + " " + (state.group === "batting" ? "타자" : "투수") + " · " + list.length + "명";
+    const selected = (select) => select.options[select.selectedIndex].textContent;
+    el.filters.hidden = false;
+    el.filters.textContent = "적용 조건: " + [state.sub || "전체 리그", state.team || "전체 팀", state.pos ? selected(el.pos) : "전체 " + el.posLabel.textContent, state.min === "0" ? "출장 제한 없음" : selected(el.min)]
+      .concat(state.search.trim() ? ['이름 “' + state.search.trim() + '”'] : []).join(" · ");
+    const sortColumn = activeColumns().find((column) => column.key === state.sortKey);
+    el.sort.textContent = sortColumn
+      ? "정렬: " + sortColumn.label + (state.sortDir === "asc" ? " 낮은 순" : " 높은 순") + " · 열 제목을 눌러 변경"
+      : "";
+    el.definitions.innerHTML = activeColumns().map((column) => '<div><dt>' + escapeHtml(column.label) + '</dt><dd>' + escapeHtml(column.desc) + '</dd></div>').join("");
     writeUrl();
     showOtherGroupMatches();
   }
@@ -341,6 +382,9 @@
   async function loadPlayers() {
     el.status.className = "status";
     el.status.textContent = "불러오는 중...";
+    el.filters.hidden = true;
+    el.sort.textContent = "";
+    el.definitions.innerHTML = "";
     const folder = "data/" + state.league + "/" + (state.level ? state.level + "/" : "");
     const url = folder + state.group + "_" + state.season + ".json";
     try {
@@ -379,6 +423,15 @@
 
   // ---------- 이벤트 ----------
   function bindEvents() {
+    el.columnsSwitch.addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (!button) return;
+      state.columns = button.dataset.value;
+      renderTable();
+    });
+    mobile.addEventListener("change", () => {
+      if (state.columns === "auto" && meta && players.length) renderTable();
+    });
     el.leagueTabs.addEventListener("click", (event) => {
       const button = event.target.closest("button");
       if (!button || button.disabled || button.dataset.value === state.league) return;
@@ -452,6 +505,16 @@
       }
       state.page = 1;
       renderTable();
+      el.head.querySelector('button[data-sort="' + column.key + '"]').focus({ preventScroll: true });
+    });
+
+    el.body.addEventListener("click", (event) => {
+      if (!event.target.closest(".reset-filters")) return;
+      Object.assign(state, { sub: "", team: "", pos: "", min: "q", search: "", page: 1 });
+      el.search.value = "";
+      renderDataFilters();
+      renderTable();
+      el.search.focus();
     });
 
     el.pager.addEventListener("click", (event) => {
