@@ -56,7 +56,7 @@
 
   // 입단 경로: 현재 소속 구단(조직)에 어떻게 왔는지 (2026-11-18 사용자 요구)
   // data/arrivals.json(scripts/moves.py)의 마지막 영입이 현재 구단이면 트레이드·FA 계약·웨이버 클레임을,
-  // 아니면 지명·국제 계약 구단이 현재 구단일 때 그 경로를 보여준다. 둘 다 아니면 수집 범위 이전의 이동이다.
+  // 아니면 지명·국제 계약 구단이 현재 구단일 때 그 경로를 보여준다. 둘 다 아니면 원본 이동 기록(2009년~) 이전의 이동이다.
   const ARRIVAL_LABEL = { trade: "트레이드", sign: "FA 계약", claim: "웨이버 클레임" };
   // 지명 없는 첫 계약의 종류 (scripts/recruitment.py, scripts/signings.py)
   const ENTRY_TYPE = {
@@ -79,7 +79,7 @@
     } else if (recruitment && recruitment.team === club.name) {
       text = recruitment.type === "draft" ? "드래프트 지명 (" + recruitment.year + "년)" : ENTRY_TYPE[recruitment.type] || "지명 없이 계약";
     } else {
-      text = "2024년 이전 이동 (기록 범위 밖)";
+      text = "2009년 이전 이동 (기록 범위 밖)";
     }
     $("playerFacts").insertAdjacentHTML("afterbegin",
       '<div><dt>입단 경로</dt><dd>' + escapeHtml(text) +

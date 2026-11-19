@@ -27,7 +27,7 @@
 - `scripts/build.py`: 데이터 생성 진입점. `scripts/prospects.py`: 유망주 스냅샷과 화면용 데이터. `scripts/validate.py`: MLB 공식 값과 비교.
 - `scripts/teams.py`: MLB 구단·산하 구단·구장 정보와 구단 역사(`data/teams.json`). `scripts/awards.py`: 수상 기록·명예의 전당(`data/awards.json`). `scripts/hof_votes.py`: 명예의 전당 득표율·투표 차수(`data/hof_votes.json`).
 - `scripts/past_players.py`: 은퇴 선수 등 과거 MLB 선수 추가. `scripts/search_index.py`: 선수 검색 색인(`data/search.json`).
-- `scripts/moves.py`: 리그 전체 이동 소식(`data/moves_{시즌}.json`)과 입단 경로(`data/arrivals.json`). `scripts/franchise.py`: MLB 구단 연도별 성적(`data/franchise/`). `scripts/leaders.py`: 시즌·리그별 기록 1위(`data/leaders.json`). `scripts/standings.py`: 리그·지구별 순위(`data/standings_{시즌}.json`). `scripts/rosters.py`: MLB 구단 선수단(`data/rosters/{시즌}/{구단 ID}.json`).
+- `scripts/moves.py`: 리그 전체 이동 소식(`data/moves_{시즌}.json`)과 입단 경로(`data/arrivals.json`). `scripts/past_moves.py`: 2009~2023 시즌 이적 기록. `scripts/franchise.py`: MLB 구단 연도별 성적(`data/franchise/`). `scripts/leaders.py`: 시즌·리그별 기록 1위(`data/leaders.json`). `scripts/standings.py`: 리그·지구별 순위(`data/standings_{시즌}.json`). `scripts/rosters.py`: MLB 구단 선수단(`data/rosters/{시즌}/{구단 ID}.json`).
 - `index.html`, `standings.html`, `roster.html`, `player.html`, `prospects.html`, `teams.html`, `team.html`, `franchise.html`, `moves.html`, `awards.html`, `search.html`: 화면 진입점. `js/common.js`: 공통 표시 형식과 열 정의. `css/style.css`: 스타일.
 - `data/`: 생성된 JSON과 랭킹 기록. 데이터 오류는 수집·계산 원인을 먼저 고친다. 대량 JSON을 손으로 수정하지 않는다.
 - 기존 코드 스타일과 UTF-8 인코딩을 유지한다. JSON 필드 변경 시 생성 코드, 소비하는 화면, 기존 데이터와의 호환성을 함께 확인한다.
@@ -139,8 +139,15 @@
 
 - `python scripts/moves.py`: `rosters.py`가 만든 구단별 이동(`moves`)을 합쳐 시즌마다 `data/moves_{시즌}.json`과 선수별 마지막 영입 색인 `data/arrivals.json`을 만든다. 외부 요청은 없으며 `rosters.py` 뒤에 실행한다. 자동 갱신은 선수단 단계에서 `--season`으로 최근 시즌만 다시 만든다.
 - 넣는 이동은 트레이드·FA 계약·웨이버 클레임·40인 명단 등록·양도지명·아웃라이트·방출·FA 선언이다. 양쪽 구단에 있는 같은 트레이드·클레임은 한 건으로 묶는다. 분류는 `rosters.classify_move`를 따르므로 분류를 바꾸면 `js/moves.js`의 `TYPES`도 함께 고친다.
-- 공식 처리된 이동만 있으며 보도·루머는 넣지 않는다. 입단 경로는 수집 시즌(2024~) 안의 이동만 알며, 그 전 이동은 화면에 범위 밖으로 표시한다.
+- 공식 처리된 이동만 있으며 보도·루머는 넣지 않는다. 입단 경로는 2009년 이후 이동(2024~는 `rosters.py`, 2009~2023은 `past_moves.py`)만 알며, 그 전 이동은 화면에 범위 밖으로 표시한다.
 - `python -m unittest discover -s scripts -p test_moves.py`: 트레이드 묶기와 방향, 클레임 중복 제거, 최신순, 마지막 영입을 검증한다.
+
+## 과거 시즌 이적 기록 실행
+
+- `python scripts/past_moves.py`: 2009~2023 시즌 MLB 30개 구단의 공식 이동 기록(`/transactions`)에서 이적(트레이드·FA 계약·웨이버 클레임·방출·FA 선언)만 골라 `data/moves_{시즌}.json`을 만든다(파일에 `scope: "transfers"`). 시즌당 요청 31회. 콜업·IL·양도지명 등은 넣지 않는다(2026-11-19 사용자 결정). 분류는 `rosters.classify_move`, 묶기는 `moves.assemble`을 그대로 쓴다.
+- 원본 이동 기록은 2009년 무렵부터라(2008년 이전은 구단당 연 10건 안팎) 2009년부터 받는다. 이미 있는 시즌은 건너뛰고 `--refresh`로 다시 받는다. `--from`·`--to`로 범위를 좁힌다. 한 구단이라도 실패하면 그 시즌 파일을 만들지 않는다.
+- 끝에 `moves.save_arrivals()`로 `data/arrivals.json`을 저장된 모든 시즌으로 다시 만든다. 일일 갱신의 `moves.py`도 같은 함수를 쓰므로 과거 시즌이 입단 경로에 유지된다. 과거 시즌은 바뀌지 않으므로 자동 갱신에 넣지 않았다.
+- `js/moves.js`의 시즌 목록(2009~2026)과 맞춘다. `python -m unittest discover -s scripts -p test_past_moves.py`: 이적만 남기기, 모든 시즌으로 입단 경로 만들기를 검증한다.
 
 ## 입단 정보 실행
 

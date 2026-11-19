@@ -8,7 +8,8 @@
   const { escapeHtml, loadJson } = window.BB;
   const $ = (id) => document.getElementById(id);
 
-  const SEASONS = [2026, 2025, 2024]; // scripts/moves.py와 같게 유지 (최신 시즌부터)
+  // 2024~: 모든 이동(scripts/moves.py), 2009~2023: 이적만(scripts/past_moves.py). 최신 시즌부터.
+  const SEASONS = Array.from({ length: 2026 - 2009 + 1 }, (_, i) => 2026 - i);
   const PAGE = 80; // 한 번에 보여줄 소식 수
 
   // 종류: 이름, 배지 색 구분
@@ -26,6 +27,7 @@
   const state = { season: String(SEASONS[0]), type: "", team: "", month: "", search: "", shown: PAGE };
   let clubs = {}; // 구단 ID → {abbr, name}
   let events = [];
+  let scope = ""; // "transfers"면 이적만 받은 과거 시즌
 
   const teamLink = (id) => {
     const club = clubs[id];
@@ -104,7 +106,8 @@
     if (lastDate) html += "</ol>";
     $("feed").innerHTML = html || '<p class="status">조건에 맞는 이동이 없습니다.</p>';
     $("status").textContent = state.season + " 시즌 · " + rows.length.toLocaleString("ko-KR") + "건" +
-      (rows.length > shown.length ? " 중 최근 " + shown.length + "건" : "");
+      (rows.length > shown.length ? " 중 최근 " + shown.length + "건" : "") +
+      (scope === "transfers" ? " · 이 시즌은 트레이드·FA 계약·웨이버 클레임·방출·FA 선언만 있습니다" : "");
     $("more").innerHTML = rows.length > shown.length
       ? '<button type="button" class="link-button" id="moreButton">' + Math.min(PAGE, rows.length - shown.length) + "건 더 보기</button>"
       : "";
@@ -150,6 +153,7 @@
     try {
       const data = await loadJson("data/moves_" + state.season + ".json");
       events = data.events;
+      scope = data.scope || "";
       $("updatedText").textContent = data.updated ? "이동 기록 갱신: " + new Date(data.updated).toLocaleString("ko-KR") : "";
     } catch (error) {
       events = [];

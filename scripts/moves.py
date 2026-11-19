@@ -10,7 +10,8 @@ data/moves_{시즌}.json 하나로 만든다. 외부 요청은 하지 않는다.
 - 공식 처리된 이동만 있다(보도·루머 없음). 원문 설명은 번역하지 않는다.
 - 구단 파일이 30개가 아니면 기존 파일을 그대로 둔다.
 - 선수 페이지의 "입단 경로"용으로 선수별 마지막 영입(트레이드·FA 계약·웨이버 클레임)을 data/arrivals.json에 모은다.
-  {선수 ID: [날짜, 종류, 간 구단 ID, 떠난 구단 ID 또는 None]}. 수집 범위(SEASONS) 이전의 이동은 없다.
+  {선수 ID: [날짜, 종류, 간 구단 ID, 떠난 구단 ID 또는 None]}. 2009~2023 시즌 이적(past_moves.py)도 함께 본다.
+  원본 이동 기록이 2009년 무렵부터라 그 전 이동은 없다.
 """
 
 import argparse
@@ -92,6 +93,14 @@ def latest_arrivals(events_by_season):
     return dict(sorted(result.items(), key=lambda item: int(item[0])))
 
 
+def save_arrivals():
+    """저장된 모든 시즌 파일(최근 시즌 + past_moves.py의 2009~2023)로 입단 경로 색인을 만든다. 저장한 선수 수."""
+    saved = [json.loads(path.read_text(encoding="utf-8"))["events"] for path in sorted(DATA.glob("moves_*.json"))]
+    arrivals = latest_arrivals(saved)
+    write(DATA / "arrivals.json", arrivals)
+    return len(arrivals)
+
+
 def build(season):
     folder = DATA / "rosters" / str(season)
     paths = sorted(folder.glob("*.json"))
@@ -124,11 +133,7 @@ def main():
         write(DATA / f"moves_{season}.json", payload)
         print(f"{season} 이동 소식 {len(payload['events'])}건 저장")
     # 입단 경로 색인은 저장된 시즌 파일 전체로 만든다 (이번에 실패한 시즌은 직전 파일을 쓴다)
-    saved = [json.loads(path.read_text(encoding="utf-8"))["events"]
-             for season in SEASONS if (path := DATA / f"moves_{season}.json").exists()]
-    arrivals = latest_arrivals(saved)
-    write(DATA / "arrivals.json", arrivals)
-    print(f"입단 경로 {len(arrivals)}명 저장")
+    print(f"입단 경로 {save_arrivals()}명 저장")
     return failed
 
 
