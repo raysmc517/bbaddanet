@@ -1,6 +1,7 @@
-"""프로 커리어 수집. python scripts/careers.py [--ids 694973 ...] [--refresh]
+"""프로 커리어 수집. python scripts/careers.py [--ids 694973 ...] [--refresh] [--traded]
 
 레벨별 yearByYear 정규시즌 기록을 캐시한다. 기본 실행은 미수집 선수만 받는다.
+--traded는 최근 시즌에 여러 팀에서 뛰었는데 팀별 행이 시즌 합계와 맞지 않는 선수만 다시 받는다(일일 갱신용).
 해외 리그 기록과 정확한 최초 경기 날짜는 이 API 응답으로 확정하지 않는다.
 """
 import argparse
@@ -52,6 +53,24 @@ def fill_added(recent, cached_rows, group):
                 continue
             values = [r.get(key) for r in same]
             row[key] = sum(values) if all(v is not None for v in values) else None
+
+
+# 팀별 행의 합이 시즌 합계와 같은지 확인하는 항목. 캐시가 이적 전에 받은 것이면 맞지 않는다.
+SPLIT_CHECK = {"batting": ("G", "PA"), "pitching": ("G", "outs")}
+
+
+def team_splits(row, cached_rows, group):
+    """여러 팀에서 뛴 최근 시즌 행(nt > 1)의 팀별 행. 캐시의 같은 시즌·레벨 행이 둘 이상이고
+    합이 시즌 합계와 같을 때만 돌려준다. 마지막 소속 팀(row["team"])을 맨 아래에 둔다."""
+    if (row.get("nt") or 1) < 2:
+        return None
+    same = [r for r in cached_rows if r["season"] == row["season"] and r["level"] == row["level"]]
+    if len(same) < 2:
+        return None
+    for key in SPLIT_CHECK[group]:
+        if row.get(key) is None or sum(r.get(key) or 0 for r in same) != row[key]:
+            return None
+    return sorted(same, key=lambda r: r["team"] == row["team"])
 
 
 def write(path, data):
@@ -162,6 +181,12 @@ def merge_cached(player, data=DATA):
         recent = [r for r in player[group] if not r.get("careerSource") and "teamId" not in r]
         keys = {(r["season"], r["level"]) for r in recent}
         fill_added(recent, cached[group], group)
+        for row in recent:
+            splits = team_splits(row, cached[group], group)
+            if splits:
+                row["splits"] = splits
+            else:
+                row.pop("splits", None)
         # 현재 시즌의 자체 계산 지표를 보존하고, 과거 및 Rookie 기록을 추가한다.
         history = [r for r in cached[group] if (r["season"], r["level"]) not in keys]
         player[group] = sorted(recent + history, key=lambda r: (-r["season"], r["level"], r["team"]))
@@ -186,11 +211,42 @@ def past_minor_eligible(rows):
     return any(r.get("level") == "MLB" and r["season"] >= PAST_MINOR_FROM for r in rows)
 
 
+def stale_traded(data=DATA):
+    """최근 시즌 리더보드에서 여러 팀(nt > 1)으로 나온 선수 중 선수 파일에 팀별 행(splits)이 없는 선수."""
+    files = sorted(data.glob("mlb/*_*.json")) + sorted(data.glob("milb/*/*_*.json"))
+    seasons = [int(f.stem.rsplit("_", 1)[1]) for f in files if f.stem.rsplit("_", 1)[1].isdigit()]
+    if not seasons:
+        return []
+    latest = max(seasons)
+    traded = set()
+    for path in files:
+        if path.stem.endswith(f"_{latest}") and not path.stem.startswith("constants"):
+            board = json.loads(path.read_text(encoding="utf-8"))
+            traded.update(r["id"] for r in board.get("players", []) if (r.get("nt") or 1) > 1)
+    stale = []
+    for pid in sorted(traded):
+        path = data / "players" / f"{pid}.json"
+        if not path.exists():
+            continue
+        player = json.loads(path.read_text(encoding="utf-8"))
+        rows = [r for g in ("batting", "pitching") for r in player.get(g, [])]
+        if any(r["season"] == latest and (r.get("nt") or 1) > 1 and not r.get("splits") for r in rows):
+            stale.append(pid)
+    return stale
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ids", nargs="+", type=int)
     parser.add_argument("--refresh", action="store_true")
+    parser.add_argument("--traded", action="store_true", help="팀별 행이 맞지 않는 최근 시즌 이적 선수만 다시 받는다")
     args = parser.parse_args(argv)
+    if args.traded:
+        args.ids = stale_traded()
+        args.refresh = True
+        print(f"팀별 행이 맞지 않는 이적 선수 {len(args.ids)}명", flush=True)
+        if not args.ids:
+            return 0
     ids = args.ids or sorted(int(p.stem) for p in (DATA / "players").glob("*.json"))
     pending = [i for i in ids if args.refresh or not (DATA / "careers" / f"{i}.json").exists()]
     failed = False

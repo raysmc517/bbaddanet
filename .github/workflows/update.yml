@@ -52,6 +52,15 @@ jobs:
           python scripts/build.py --current-season
           echo "code=$?" >> "$GITHUB_OUTPUT"
 
+      # 최근 시즌에 이적한 선수의 팀별 행 (선수 300명당 요청 7회). 팀별 합이 시즌 합계와 맞지 않는 선수만 다시 받는다.
+      # 실패하면 기존 커리어를 유지하고, 선수 페이지는 팀별 행 없이 "N팀 합계"로 보여준다.
+      - name: 이적 선수 팀별 기록
+        id: traded
+        run: |
+          set +e
+          python scripts/careers.py --traded
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+
       # 최근 시즌 순위 (요청 약 17회). 실패하면 그 시즌 파일을 유지한다.
       - name: 최근 시즌 순위
         id: standings
@@ -116,9 +125,9 @@ jobs:
           git push origin HEAD:main
 
       - name: 수집 실패 알림
-        if: steps.build.outputs.code != '0' || steps.standings.outputs.code != '0' || steps.rosters.outputs.code != '0' || steps.leaders.outputs.code != '0' || steps.franchise.outputs.code != '0' || steps.weekly.outputs.code != '0'
+        if: steps.build.outputs.code != '0' || steps.traded.outputs.code != '0' || steps.standings.outputs.code != '0' || steps.rosters.outputs.code != '0' || steps.leaders.outputs.code != '0' || steps.franchise.outputs.code != '0' || steps.weekly.outputs.code != '0'
         run: |
-          echo "::warning::수집 일부 실패 (build.py 코드 ${{ steps.build.outputs.code }}, 순위 코드 ${{ steps.standings.outputs.code }}, 선수단 코드 ${{ steps.rosters.outputs.code }}, 리그 1위 코드 ${{ steps.leaders.outputs.code }}, 구단 성적 코드 ${{ steps.franchise.outputs.code }}, 주간 수집 코드 ${{ steps.weekly.outputs.code }}). 실패한 부분은 직전 데이터를 유지했다. 로그를 확인한다."
+          echo "::warning::수집 일부 실패 (build.py 코드 ${{ steps.build.outputs.code }}, 이적 선수 코드 ${{ steps.traded.outputs.code }}, 순위 코드 ${{ steps.standings.outputs.code }}, 선수단 코드 ${{ steps.rosters.outputs.code }}, 리그 1위 코드 ${{ steps.leaders.outputs.code }}, 구단 성적 코드 ${{ steps.franchise.outputs.code }}, 주간 수집 코드 ${{ steps.weekly.outputs.code }}). 실패한 부분은 직전 데이터를 유지했다. 로그를 확인한다."
 
   deploy:
     needs: update

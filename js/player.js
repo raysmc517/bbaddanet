@@ -157,11 +157,15 @@
     const info = player.prospect;
     if (!info) return;
     const items = [];
-    if (info.top100) items.push("전체 <strong>" + info.top100 + "위</strong>");
-    if (info.orgRank) items.push(escapeHtml(info.org) + " 팀 내 <strong>" + info.orgRank + "위</strong>");
+    // Top 100 순위는 있을 때만 적는다. 밖이면 표시하지 않는다 (2026-11-19 사용자 결정)
+    if (info.top100) items.push("Top 100 <strong>" + info.top100 + "위</strong>");
+    if (info.orgRank) items.push(escapeHtml(info.org) + " 팀 내 유망주 <strong>" + info.orgRank + "위</strong>");
     if (info.eta) items.push("예상 데뷔 " + escapeHtml(info.eta));
     if (info.level) items.push("현재 " + escapeHtml(info.level) + (info.club ? " (" + escapeHtml(info.club) + ")" : ""));
-    $("prospectBanner").innerHTML = '<span class="prospect-label">MLB Pipeline</span>' + items.join('<span class="dot">·</span>');
+    // MLB Pipeline 표시는 Top 100 선수에게만 붙인다. 팀 내 순위도 Pipeline 자료이므로 출처는 툴팁에 남긴다 (2026-11-19 사용자 결정)
+    $("prospectBanner").innerHTML = (info.top100 ? '<span class="prospect-label">MLB Pipeline</span>' : "") +
+      items.join('<span class="dot">·</span>');
+    $("prospectBanner").title = "출처: MLB Pipeline 유망주 순위 (주 1회 갱신)";
     $("prospectBanner").hidden = false;
 
     if (info.history.length < 2) return;
@@ -343,7 +347,8 @@
 
   // ---------- 한 시즌 여러 팀 ----------
   // MLB.com처럼 같은 시즌·레벨에 팀별 행이 여러 개면(과거 시즌) "N팀" 합계 행 바로 아래에 팀별 행을 붙인다.
-  // 최근 시즌(리더보드 자료)은 이미 합계 한 줄이며 팀별 기록이 없다. 팀 칸은 마지막 소속 팀이다.
+  // 최근 시즌(리더보드 자료)은 합계 한 줄이다. 커리어 캐시의 팀별 행 합이 맞으면 scripts/careers.py가
+  // splits로 붙이며(마지막 소속 팀이 맨 아래), 그 아래에 같은 방식으로 팀별 행을 보여준다.
   function groupBySeason(rows) {
     const groups = [];
     rows.forEach((row) => {
@@ -389,8 +394,12 @@
         ? Object.assign(addRates(group, sumRows(group, item.rows)), { season: item.season, level: item.level, league: item.league })
         : item.rows[0];
       const isMajor = item.level === "MLB";
+      const splits = item.rows.length === 1 && item.rows[0].splits
+        ? item.rows[0].splits.map((child) => derive(group, Object.assign({ league: item.league }, child)))
+        : null;
       return Object.assign(item, {
         total,
+        children: item.rows.length > 1 ? item.rows : splits,
         marks: isMajor ? leaderMarks(item.season, group) : {},
         awards: isMajor && withAwards ? awardBadges(item.season) : "",
       });
@@ -417,9 +426,9 @@
 
     const body = groups.map((item) => {
       const row = item.total;
-      const split = item.rows.length > 1;
+      const split = !!item.children;
       const team = split
-        ? item.rows.length + "팀"
+        ? item.children.length + "팀"
         : escapeHtml(row.team || "-") + (row.nt > 1
           ? '<span class="team-note" title="시즌 중 ' + row.nt + '팀 기록의 합계입니다. 표시된 팀은 마지막 소속입니다.">' + row.nt + "팀 합계</span>"
           : "");
@@ -431,10 +440,10 @@
         (showAwards ? '<td class="col-awards">' + item.awards + "</td>" : "") +
         "</tr>";
       if (!split) return main;
-      return main + item.rows.map((child) =>
+      return main + item.children.map((child) =>
         '<tr class="split-row"><td class="col-season">' + child.season + "</td>" +
         levelCell(child) +
-        '<td class="col-team">' + escapeHtml(child.team || "-") + "</td>" +
+        '<td class="col-team"' + (child.teamName ? ' title="' + escapeHtml(child.teamName) + '"' : "") + ">" + escapeHtml(child.team || "-") + "</td>" +
         statCells(child, null) +
         (showAwards ? "<td></td>" : "") +
         "</tr>"

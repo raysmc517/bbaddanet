@@ -5,7 +5,12 @@
 
 ## 2026-11-19
 
+### 추가
+- 유망주 페이지: 구단 Top 30에 같은 주 MLB Pipeline Top 100 순위 열 (Top 100 밖이면 "-")
+- 선수 페이지 MLB Pipeline 표시를 "Top 100 N위(있을 때만) · 구단 팀 내 유망주 N위"로 정리. MLB Pipeline 표시는 Top 100 선수에게만
+
 ### 수정
+- 최근 시즌(2024~2026)에 여러 팀에서 뛴 선수의 연도별 표에 팀별 행 표시 (예: Luis Arraez 2026 "2팀" 아래 SF 105경기·PHI 46경기). 마지막 소속 팀이 맨 아래
 - 명예의 전당 누락 8명 추가: Vladimir Guerrero(2018), Bud Selig·John Schuerholz(2017), Pat Gillick(2011), Marvin Miller(2020), Bud Fowler·Buck O'Neil(2022), Martín Dihigo(1977). 선출 방식·득표율도 함께 표시
 - 명예의 전당 헌액 연도 정정: Gil Hodges·Jim Kaat·Minnie Miñoso·Tony Oliva 2021→2022, Jim Leyland 2023→2024 (선수 페이지·구단 역사 포함)
 - 2023 All-MLB 세컨드 팀 Devin Williams, 2023 AL 플래티넘 글러브 Andrés Giménez 추가

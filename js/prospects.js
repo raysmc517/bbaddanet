@@ -102,6 +102,10 @@
     return levelBadge(s.level) + ' <span class="stat-line">' + parts.join(" · ") + "</span>";
   }
 
+  function top100Ranks() {
+    return new Map(data.top100.map((p) => [p.id, p.rank]));
+  }
+
   function render() {
     const isTop100 = state.list === "top100";
     const hasPrev = !!data.previousWeek;
@@ -113,22 +117,30 @@
       return true;
     });
 
+    // 구단 Top 30에서 같은 주 Top 100에 든 선수의 Top 100 순위
+    const top100 = isTop100 ? null : top100Ranks();
+    const top100Cell = (p) => (top100
+      ? '<td class="col-top100">' + (top100.has(p.id) ? top100.get(p.id) + "위" : "-") + "</td>"
+      : "");
+
     $("tableHead").innerHTML =
       '<tr><th class="col-rank">순위</th>' +
       (hasPrev ? '<th class="col-move" title="지난주 대비 순위 변동">변동</th>' : "") +
       '<th class="col-name">선수</th>' +
       (isTop100 ? '<th class="col-team">구단</th>' : "") +
+      (isTop100 ? "" : '<th class="col-top100" title="같은 주 MLB Pipeline 전체 Top 100 순위. 없으면 Top 100 밖">Top 100</th>') +
       '<th class="col-team">포지션</th><th>나이</th><th class="col-team">현재 레벨</th>' +
       '<th title="MLB Pipeline이 예상하는 MLB 데뷔 연도">예상 데뷔</th>' +
       '<th class="col-team">' + data.season + " 성적</th></tr>";
 
-    const columnCount = 7 + (hasPrev ? 1 : 0) + (isTop100 ? 1 : 0);
+    const columnCount = 7 + (hasPrev ? 1 : 0) + 1;
     $("tableBody").innerHTML = rows.length
       ? rows.map((p) =>
           '<tr><td class="col-rank">' + p.rank + "</td>" +
           (hasPrev ? '<td class="col-move">' + changeCell(p) + "</td>" : "") +
           '<td class="col-name"><a href="player.html?id=' + p.id + '">' + escapeHtml(p.nameKo || p.name) + "</a></td>" +
           (isTop100 ? '<td class="col-team">' + escapeHtml(p.org || "-") + "</td>" : "") +
+          top100Cell(p) +
           '<td class="col-team">' + escapeHtml(p.pos || "-") + "</td>" +
           "<td>" + (p.age || "-") + "</td>" +
           '<td class="col-team" title="' + escapeHtml(p.club || "") + '">' + levelBadge(p.level) + "</td>" +

@@ -286,6 +286,8 @@ table.stats {
 }
 .prospect-banner .dot { color: var(--text-sub); }
 .stats.prospects .col-rank { font-weight: 700; color: var(--text); }
+/* 구단 Top 30의 Top 100 순위 열. 순위 열(col-rank)과 달리 가로 스크롤 때 고정하지 않는다 */
+.stats.prospects .col-top100 { text-align: center; white-space: nowrap; }
 .stats .col-move { text-align: center; width: 56px; }
 .move { color: var(--text-sub); font-size: 13px; font-weight: 700; }
 .move-up { color: #c0392b; }

@@ -67,7 +67,7 @@
 ## 커리어 및 하위 레벨 확장 실행
 
 - `python scripts/build.py --levels high_a single_a`: 두 레벨의 2024~2026 성적을 수집하고 선수·유망주 데이터를 재생성한다.
-- `python scripts/careers.py`: 미수집 선수의 MLB·마이너리그 과거 정규시즌 기록을 수집한다. `--ids 694973`으로 범위를 좁히고 `--refresh`로 기존 캐시를 갱신한다.
+- `python scripts/careers.py`: 미수집 선수의 MLB·마이너리그 과거 정규시즌 기록을 수집한다. `--ids 694973`으로 범위를 좁히고 `--refresh`로 기존 캐시를 갱신한다. `--traded`는 최근 시즌에 여러 팀에서 뛰었는데 팀별 행 합이 시즌 합계와 맞지 않는 선수만 다시 받는다(일일 갱신에서 실행). 합이 맞으면 `merge_cached`가 최근 시즌 행에 팀별 행(`splits`)을 붙이고 선수 페이지가 "N팀" 아래에 보여준다.
 - 과거 기록의 팀 표기는 최근 시즌과 같은 약자로 바꾼다. 레벨·시즌별 약자는 `data/team_abbr.json`에 저장하고 없는 레벨·시즌만 받는다. 원래 팀 이름은 행의 `teamName`에 남는다.
 - 실행 순서: 성적 빌드 → 커리어 수집. 일반 빌드는 `data/careers/`의 과거 기록을 보존한다. 기존 커리어의 새 시즌·정정 기록까지 갱신하려면 `--refresh`를 사용한다.
 - `python -m unittest discover -s scripts -p test_careers.py`: 중복·합계 행 제거, 과거 기록 갱신과 최근 세이버 지표 보존을 검증한다.

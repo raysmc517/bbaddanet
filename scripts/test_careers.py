@@ -144,5 +144,30 @@ class FillAddedTest(unittest.TestCase):
         self.assertNotIn("GO", recent[0])
 
 
+class TeamSplitsTest(unittest.TestCase):
+    def row(self, team, G, PA, **extra):
+        return dict(season=2026, level="MLB", team=team, G=G, PA=PA, **extra)
+
+    def test_splits_last_team_at_bottom(self):
+        recent = self.row("PHI", 151, 655, nt=2)
+        cached = [self.row("PHI", 46, 191), self.row("SF", 105, 464), self.row("SF", 10, 40) | {"level": "AAA"}]
+        splits = careers.team_splits(recent, cached, "batting")
+        self.assertEqual([r["team"] for r in splits], ["SF", "PHI"])
+
+    def test_no_splits_when_cache_is_stale_or_single_team(self):
+        recent = self.row("PHI", 151, 655, nt=2)
+        # 이적 전에 받은 캐시: 팀별 합이 시즌 합계와 다르다
+        self.assertIsNone(careers.team_splits(recent, [self.row("SF", 105, 464)], "batting"))
+        self.assertIsNone(careers.team_splits(recent, [self.row("SF", 100, 450), self.row("PHI", 46, 191)], "batting"))
+        self.assertIsNone(careers.team_splits(self.row("SF", 105, 464, nt=1), [self.row("SF", 105, 464)], "batting"))
+
+    def test_pitching_checks_outs(self):
+        recent = {"season": 2026, "level": "MLB", "team": "TOR", "nt": 2, "G": 5, "outs": 25}
+        cached = [{"season": 2026, "level": "MLB", "team": t, "G": g, "outs": o} for t, g, o in (("MIN", 3, 13), ("TOR", 2, 12))]
+        self.assertEqual([r["team"] for r in careers.team_splits(recent, cached, "pitching")], ["MIN", "TOR"])
+        cached[0]["outs"] = 12
+        self.assertIsNone(careers.team_splits(recent, cached, "pitching"))
+
+
 if __name__ == "__main__":
     unittest.main()
