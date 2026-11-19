@@ -54,6 +54,8 @@ def validate(payload, data_dir=DATA):
                 if (key == "source" or key in record) and not valid_url(record.get(key)):
                     fail(f"{key} 출처 오류")
             for key in ("totalUSD", "signingBonusUSD", "buyoutUSD"):
+                if key == "totalUSD" and record.get("amountUnknown") is True and record.get("listedTeam") is True and record.get(key) is None:
+                    continue
                 if (key == "totalUSD" or key in record) and not money(record.get(key)):
                     fail(f"{key} 금액 오류")
             years = {}

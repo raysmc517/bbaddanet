@@ -50,9 +50,9 @@
         const current = window.BB.contracts.salaryRows(r).find((s) => s.season === season);
         return (
         '<h3>' + esc(r.team) + ' · ' + r.from + '–' + r.to + '</h3>' +
-        '<p class="muted">계약 당시 구단 · 발표된 보장 기간</p>' +
-        '<dl class="profile-facts"><div><dt>보장 계약</dt><dd>' + (r.to - r.from + 1) + '년 · ' + money(r.totalUSD) + '</dd></div>' +
-        '<div><dt>단순 연평균</dt><dd>' + money(Math.round(r.totalUSD / (r.to - r.from + 1))) + '</dd></div>' +
+        '<p class="muted">' + (r.listedTeam ? '자료 분류 구단 · 공개 계약 표제의 기간' : '계약 당시 구단 · 발표된 보장 기간') + '</p>' +
+        '<dl class="profile-facts"><div><dt>' + (r.listedTeam ? '공개 계약 표제' : '보장 계약') + '</dt><dd>' + (r.to - r.from + 1) + '년 · ' + money(r.totalUSD) + '</dd></div>' +
+        '<div><dt>단순 연평균</dt><dd>' + money(numeric(r.totalUSD) ? Math.round(r.totalUSD / (r.to - r.from + 1)) : null) + '</dd></div>' +
         '<div><dt>' + season + ' 기본 연봉</dt><dd>' + money(current && current.baseUSD) + '</dd></div>' +
         (numeric(r.signingBonusUSD) ? '<div><dt>계약금</dt><dd>' + money(r.signingBonusUSD) + ' (보장 총액에 포함)</dd></div>' : "") +
         (numeric(r.buyoutUSD) ? '<div><dt>옵션 바이아웃</dt><dd>' + money(r.buyoutUSD) + ' (보장 총액에 포함)</dd></div>' : "") + '</dl>' +
@@ -97,15 +97,27 @@
 
   async function analysis(player, aggregate) {
     const seasons = [...new Set(player.batting.concat(player.pitching).filter((r) => r.league === "mlb").map((r) => r.season))].sort((a, b) => b - a);
-    if (!seasons.length) { $("playerAnalysis").innerHTML = box("시즌 맥락", note("현재 리그 평균 비교와 상황별 성적은 MLB 정규시즌을 제공합니다.")); return; }
+    if (!seasons.length) { $("playerAnalysis").innerHTML = box("시즌 맥락", note("현재 리그 평균 비교·상황별 성적·Statcast는 MLB 정규시즌을 제공합니다.")); return; }
     let averages = {};
     try { averages = await loadJson("data/mlb_averages.json"); } catch (_) { /* 아래에 미제공 표시 */ }
     $("playerAnalysis").innerHTML = box("리그 평균 비교·선수 리포트", '<label class="field"><span>분석 시즌</span><select id="analysisSeason">' +
-      seasons.map((s) => '<option>' + s + '</option>').join("") + '</select></label><div id="seasonReport"></div><div id="situationReport"></div>');
+      seasons.map((s) => '<option>' + s + '</option>').join("") + '</select></label><div id="seasonReport"></div><div id="situationReport"></div><div id="statcastReport"></div>');
+    const requestedSeason = Number(new URLSearchParams(location.search).get("season"));
+    if (seasons.includes(requestedSeason)) $("analysisSeason").value = String(requestedSeason);
     let request = 0;
     const render = async () => {
       const version = ++request;
       const season = Number($("analysisSeason").value);
+      const url = new URL(location.href);
+      url.searchParams.set("view", "analysis");
+      url.searchParams.set("season", String(season));
+      history.replaceState(null, "", url);
+      for (const id of ["playerOverviewLink", "playerAnalysisLink"]) {
+        const link = new URL($(id).href);
+        link.searchParams.set("season", String(season));
+        $(id).href = link.pathname + link.search;
+      }
+      window.BB.statcast.render(player, season, $("statcastReport"));
       const groups = player.pos === "P" ? ["pitching", "batting"] : ["batting", "pitching"];
       $("seasonReport").innerHTML = groups.map((group) => {
         const rows = player[group].filter((r) => r.league === "mlb" && r.season === season);
@@ -146,8 +158,11 @@
   }
   window.BB.renderPlayerContext = (player, aggregate) => {
     window.BB.favorites.mount("players", player.id, player.name, $("playerSub").parentElement);
-    transfers(player);
-    contracts(player);
-    analysis(player, aggregate);
+    if (document.body.dataset.playerView === "analysis") {
+      analysis(player, aggregate);
+    } else {
+      transfers(player);
+      contracts(player);
+    }
   };
 })();

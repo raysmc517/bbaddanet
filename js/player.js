@@ -48,7 +48,13 @@
       if (found) {
         renderSub(found.id);
         // 산하 마이너리그 구단 소속이면 모구단 기준으로 입단 경로를 찾는다
-        if (!player.past) loadJson("data/arrivals.json").then((arrivals) => renderArrival(club, data, arrivals)).catch(() => {});
+        // 입단 색인은 기존 파일의 브라우저 캐시가 새 보완 기록을 가리지 않도록 재검증한다.
+        if (!player.past) fetch("data/arrivals.json", {cache:"no-cache"}).then((response) => {
+          if (!response.ok) throw new Error("입단 경로 색인 로드 실패");
+          return response.json();
+        }).then((arrivals) => renderArrival(club, data, arrivals)).catch(() => {
+          renderArrival(club, data, {});
+        });
         return;
       }
     }
@@ -56,8 +62,7 @@
 
   // 입단 경로: 현재 소속 구단(조직)에 어떻게 왔는지 (2026-11-18 사용자 요구)
   // data/arrivals.json(scripts/moves.py)의 마지막 영입이 현재 구단이면 트레이드·FA 계약·웨이버 클레임을,
-  // 아니면 지명·국제 계약 구단이 현재 구단일 때 그 경로를 보여준다. 둘 다 아니면 원본 이동 기록(2009년~) 이전의 이동이다.
-  const ARRIVAL_LABEL = { trade: "트레이드", sign: "FA 계약", claim: "웨이버 클레임" };
+  // 확인되지 않은 입단 경로의 연도를 추정하지 않는다.
   // 지명 없는 첫 계약의 종류 (scripts/recruitment.py, scripts/signings.py)
   const ENTRY_TYPE = {
     international: "국제 아마추어 계약",
@@ -72,18 +77,11 @@
   function renderArrival(club, teams, arrivals) {
     const abbr = (id) => (teams.clubs.find((item) => item.id === id) || {}).abbr || "";
     const last = arrivals[String(player.id)];
-    let text = "";
-    if (last && last[2] === club.id) {
-      const from = last[3] ? ", " + abbr(last[3]) + "에서" : "";
-      text = ARRIVAL_LABEL[last[1]] + " (" + last[0] + from + ")";
-    } else if (recruitment && recruitment.team === club.name) {
-      text = recruitment.type === "draft" ? "드래프트 지명 (" + recruitment.year + "년)" : ENTRY_TYPE[recruitment.type] || "지명 없이 계약";
-    } else {
-      text = "2009년 이전 이동 (기록 범위 밖)";
-    }
+    const info = window.BB.arrivalInfo(club, last, recruitment, abbr, ENTRY_TYPE);
     $("playerFacts").insertAdjacentHTML("afterbegin",
-      '<div><dt>입단 경로</dt><dd>' + escapeHtml(text) +
-      (last && last[2] === club.id ? ' <a class="muted" href="#playerTransfers">이적 내역</a>' : "") + "</dd></div>");
+      '<div><dt>입단 경로</dt><dd>' + escapeHtml(info.text) +
+      (info.source ? ' <a class="muted" target="_blank" rel="noopener" href="' + escapeHtml(info.source) + '">공식 기록</a>' : "") +
+      (info.history ? ' <a class="muted" href="' + escapeHtml((document.body.dataset.playerView === "analysis" ? $("playerOverviewLink").getAttribute("href") : "") + '#playerTransfers') + '">이적 내역</a>' : "") + "</dd></div>");
   }
 
   // MLB 공식 얼굴 사진. 파일을 저장하지 않고 MLB 이미지 서버 주소로만 표시한다.
@@ -617,6 +615,21 @@
     }
     $("status").textContent = "";
     renderProfile();
+    const params = new URLSearchParams(location.search);
+    const analysisView = params.get("view") === "analysis" || ["#playerAnalysis", "#statcastReport", "#situationReport"].includes(location.hash);
+    document.body.dataset.playerView = analysisView ? "analysis" : "overview";
+    $("playerOverview").hidden = analysisView;
+    $("playerAnalysis").hidden = !analysisView;
+    const overviewUrl = new URL("player.html", location.href);
+    overviewUrl.searchParams.set("id", id);
+    if (/^\d{4}$/.test(params.get("season") || "")) overviewUrl.searchParams.set("season", params.get("season"));
+    const analysisUrl = new URL(overviewUrl);
+    analysisUrl.searchParams.set("view", "analysis");
+    $("playerOverviewLink").href = overviewUrl.pathname + overviewUrl.search;
+    $("playerAnalysisLink").href = analysisUrl.pathname + analysisUrl.search;
+    $(analysisView ? "playerAnalysisLink" : "playerOverviewLink").setAttribute("aria-current", "page");
+    $("playerNav").hidden = false;
+    if (analysisView) document.title += " · 상세 기록·분석";
     renderProspect();
     setupFilters();
     renderSummary();
@@ -646,6 +659,7 @@
       : player.careerUpdated
       ? "MLB·마이너리그의 최초 제공 시즌부터 표시합니다. 해외 리그 및 원본 미제공 기록은 포함되지 않을 수 있습니다. 과거 세이버 지표는 계산 근거가 있는 경우에만 제공합니다."
       : "저장된 시즌 기록입니다. 전체 프로 커리어 데이터는 아직 수집되지 않았습니다.";
+    if (analysisView) $("status").textContent = "상세 기록·분석 · 시즌을 고르면 리그 평균 비교, 상황별 성적, Statcast가 함께 바뀝니다.";
 
     // 리더보드에서 넘어왔으면 보던 조건 그대로 돌아가게 한다
     if (document.referrer && new URL(document.referrer).origin === location.origin && /(\/|index\.html)$/.test(new URL(document.referrer).pathname)) {

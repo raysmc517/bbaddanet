@@ -139,7 +139,7 @@
 
 - `python scripts/moves.py`: `rosters.py`가 만든 구단별 이동(`moves`)을 합쳐 시즌마다 `data/moves_{시즌}.json`과 선수별 마지막 영입 색인 `data/arrivals.json`을 만든다. 외부 요청은 없으며 `rosters.py` 뒤에 실행한다. 자동 갱신은 선수단 단계에서 `--season`으로 최근 시즌만 다시 만든다.
 - 넣는 이동은 트레이드·FA 계약·웨이버 클레임·40인 명단 등록·양도지명·아웃라이트·방출·FA 선언이다. 양쪽 구단에 있는 같은 트레이드·클레임은 한 건으로 묶는다. 분류는 `rosters.classify_move`를 따르므로 분류를 바꾸면 `js/moves.js`의 `TYPES`도 함께 고친다.
-- 공식 처리된 이동만 있으며 보도·루머는 넣지 않는다. 입단 경로는 2009년 이후 이동(2024~는 `rosters.py`, 2009~2023은 `past_moves.py`)만 알며, 그 전 이동은 화면에 범위 밖으로 표시한다.
+- 공식 처리된 이동만 있으며 보도·루머는 넣지 않는다. 입단 경로는 2009년 이후 이동(2024~는 `rosters.py`, 2009~2023은 `past_moves.py`)만 알며, 확인되지 않은 입단 경로는 연도를 추정하지 않고 미확인으로 표시한다.
 - `python -m unittest discover -s scripts -p test_moves.py`: 트레이드 묶기와 방향, 클레임 중복 제거, 최신순, 마지막 영입을 검증한다.
 
 ## 과거 시즌 이적 기록 실행
@@ -171,7 +171,28 @@
 - `python scripts/player_context.py`: 현재 시즌 MLB 평균과 득점권·좌우 상대·홈/원정 성적. `--from 1876 --to 2026 --averages-only`는 과거 평균만 받는다. 완료 시즌 평균은 재사용하고 `--refresh`로 갱신한다. 0분모·누락값과 아웃 수를 존중하고 실패 시 기존 시즌 파일을 유지한다.
 - `python scripts/daily.py`: 최근 MLB 공식 경기일 3일과 MLB.com 공식 RSS 제목·출처·시각·링크. `--date 2025-09-28`로 날짜를 좁힌다. 본문·사진은 저장하지 않는다. 경기 일정의 정상 빈 응답은 비시즌이며 실패와 구분한다.
 - `moves.save_arrivals()`는 입단 경로와 선수 전체 이적 색인(`data/player_moves.json`)을 함께 만든다. 선수 이적 내역은 연도 필터 없이 최신순이다.
-- `data/contracts.json`은 출처가 있는 수동 관리 자료다. `salaries`는 시즌 범위별 기본 연봉이며 계약금·보장 바이아웃은 별개 필드다. 단순 연평균을 연봉·실수령액·사치세 AAV로 설명하지 않는다. 미확인 연봉·이연액은 만들지 않는다. `salaryComplete`는 모든 보장 시즌 연봉+계약금+보장 바이아웃이 총액과 맞을 때만 켠다. 옵션 행사 결과는 출처를 붙여 조건에 남기고 최초 계약 총액에 임의로 더하지 않는다.
+- `data/contracts_manual.json`은 출처가 있는 수동 관리 자료이며 `contract_sources.py`가 Cot's 구단별 공개 사실 캐시와 합쳐 `data/contracts.json`을 만든다. 수동 자료를 우선하며 생성 파일을 직접 수정하지 않는다. `salaries`는 시즌 범위별 기본 연봉이며 계약금·보장 바이아웃은 별개 필드다. 단순 연평균을 연봉·실수령액·사치세 AAV로 설명하지 않는다. 미확인 연봉·이연액은 만들지 않는다. `salaryComplete`는 모든 보장 시즌 연봉+계약금+보장 바이아웃이 총액과 맞을 때만 켠다. 옵션 행사 결과는 출처를 붙여 조건에 남기고 최초 계약 총액에 임의로 더하지 않는다.
 - 계약 변경 뒤 `python scripts/contracts.py`와 `node --test scripts/test_contracts.cjs`를 실행한다. 연도별 표는 `js/contracts.js`가 최신순으로 펼친다.
 - 관심 선수·팀은 `js/favorites.js`가 이 브라우저의 localStorage에 ID·이름만 저장한다. 계정 동기화는 없다.
 - 상세 요구·제공 범위는 PRD 16절. `test_player_context.py`, `test_daily.py`, `test_past_moves.py`로 계산·실패 처리·색인을 검증한다.
+
+
+## Statcast 타구·구종 집계 실행
+
+- `python scripts/statcast.py`: 2015~2026 MLB 정규시즌 공식 타구·구종 집계를 `data/statcast/`에 생성한다. `--season 2025`로 한 시즌, `--current-season`으로 최근 시즌만 받는다(시즌당 2회, 0.5초 간격). HTML·본문·영상·투구별 원본은 저장하지 않는다.
+- 원본 구종 `n_ff` 등은 %지만 `n_fo`·`n_sc`는 0~1 비율이다. 개별 구종 모두 `n_{구종}_formatted` 백분율로 읽는다. 넓은 구종 묶음은 중복되므로 넣지 않고 사용률에서 개별 구수를 역산하지 않는다.
+- `js/statcast.js`가 분석 시즌에 맞춰 타구 표·구종 표·수평/IVB 그림을 표시한다. 수직 값은 중력을 제외한 IVB이며 실제 궤적·낙폭과 구별한다. 속도는 km/h(mph), 움직임은 cm(in), 회전수는 rpm이다.
+- 타구·구종 양쪽을 검증한 시즌만 교체한다. 빈 응답·시즌/리그 불일치·선수 수 급감 등은 기존 파일을 유지한다. 개별 누락 측정값은 0이 아닌 null이다.
+- `python -m unittest discover -s scripts -p test_statcast.py`, `node --test scripts/test_statcast.cjs`로 변환·누락·비율 단위·실패 보존·시즌 전환 경쟁을 검증한다. 세부 범위는 PRD 17절.
+
+- Statcast 완료 시즌은 캐시를 재사용한다. `--from 2015 --to 2023 --refresh`로 범위를 갱신하고 `--averages-only`로 외부 요청 없이 근사 평균을 계산한다. 타구는 BBE 가중, 투구는 구종·투구 손별 전체 구수×반올림 사용률 가중이다. 공식 공별 평균·정확한 구종 수로 설명하지 않는다. 양손 투수는 손별 표본을 보존한다.
+- `python scripts/contract_sources.py`: Cot's 30개 구단 공개 계약 사실(요청 31회, 2초 간격). `--team PHI`로 좁히고 `--cached`로 외부 요청 없이 합성한다. 이름만으로 연결하지 않고 포지션·MLB ID 기반 구단 기록도 확인한다. 실패·급감 시 기존 구단 캐시 유지. 본문은 저장하지 않는다. 표제 구단·금액과 최초 계약 구단·확정 보장액을 구분하며 미확인 금액은 null이다. `test_contract_sources.py`로 파서·미확인·조건부 연봉 제외를 검증한다.
+
+- 계약 수집은 월요일 첫 예약 실행에 포함한다. `contracts_sources/`와 `contracts_manual.json`은 합성용으로 브라우저가 읽지 않아 배포에서 제외한다. 생성된 `contracts.json`만 화면에서 읽는다.
+
+
+## 입단 경로 보완
+
+- `python scripts/arrivals.py`: MLB 및 산하 구단에 연결된 비과거 선수 전체 프로필을 점검하고 누락된 공식 영입(마이너 FA 포함)을 50명씩 조회한다. `--ids 571970`으로 좁히고 `--refresh`로 재검증한다. 일반 실행은 정상 캐시 재사용, 미확인 캐시 7일 뒤 재조회. 월요일 자동 갱신에 포함한다.
+- `data/arrival_details.json`의 보완 사실을 `moves.save_arrivals()`가 색인에 유지한다. 기존보다 오래된 기록으로 최신 영입을 덮지 않는다. `arrivals.json`의 5번째 선택 필드는 공식 출처다. 마이너 FA는 입단 경로에만 추가하고 리그 전체 이동 범위는 유지한다. 확인되지 않은 경로를 ‘2009년 이전’으로 추정하지 않는다.
+- `test_arrivals.py`와 `test_arrivals.cjs`로 먼시 마이너 계약, 현재 구단 불일치, 근거 없는 연도 추정 방지, 원본 실패와 일일 재생성 때 보존을 검증한다.

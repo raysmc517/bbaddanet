@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>빠따넷 · 선수</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261120-player-navigation">
 </head>
 <body>
   <header class="site-header">
@@ -33,43 +33,49 @@
         <h1 id="playerName"></h1>
         <p class="profile-sub" id="playerSub"></p>
       </div>
+      <nav class="player-nav" id="playerNav" aria-label="선수 페이지 메뉴" hidden>
+        <a id="playerOverviewLink">선수 정보·시즌 기록</a>
+        <a id="playerAnalysisLink">상세 기록·분석</a>
+      </nav>
       <dl class="profile-facts" id="playerFacts"></dl>
       <div class="prospect-banner" id="prospectBanner" hidden></div>
       <div class="award-list" id="awardList" hidden></div>
       <div class="ped-list" id="pedList" hidden></div>
     </section>
 
-    <section class="career-summary" id="careerSummary" hidden></section>
+    <div id="playerOverview">
+      <section class="career-summary" id="careerSummary" hidden></section>
 
-    <div class="career-toolbar" id="careerToolbar" hidden>
-      <div class="segmented" id="viewSwitch" role="group" aria-label="지표 종류">
-        <button type="button" data-value="basic" aria-pressed="true">기본</button>
-        <button type="button" data-value="saber" aria-pressed="false">세이버</button>
+      <div class="career-toolbar" id="careerToolbar" hidden>
+        <div class="segmented" id="viewSwitch" role="group" aria-label="지표 종류">
+          <button type="button" data-value="basic" aria-pressed="true">기본</button>
+          <button type="button" data-value="saber" aria-pressed="false">세이버</button>
+        </div>
+        <label class="field">
+          <span>시작 시즌</span>
+          <select id="careerFrom"></select>
+        </label>
+        <label class="field">
+          <span>끝 시즌</span>
+          <select id="careerTo"></select>
+        </label>
+        <label class="field">
+          <span>레벨</span>
+          <select id="careerLevel">
+            <option value="mlb">MLB만</option>
+            <option value="all">전체 레벨</option>
+            <option value="milb">마이너리그만</option>
+          </select>
+        </label>
+        <span class="career-note">MLB.com 표준 표 순서입니다. 한 시즌 여러 팀 기록은 합계 행 아래에 팀별 행을 붙입니다.</span>
       </div>
-      <label class="field">
-        <span>시작 시즌</span>
-        <select id="careerFrom"></select>
-      </label>
-      <label class="field">
-        <span>끝 시즌</span>
-        <select id="careerTo"></select>
-      </label>
-      <label class="field">
-        <span>레벨</span>
-        <select id="careerLevel">
-          <option value="mlb">MLB만</option>
-          <option value="all">전체 레벨</option>
-          <option value="milb">마이너리그만</option>
-        </select>
-      </label>
-      <span class="career-note">MLB.com 표준 표 순서입니다. 한 시즌 여러 팀 기록은 합계 행 아래에 팀별 행을 붙입니다.</span>
-    </div>
 
-    <div id="career"></div>
-    <div id="playerAnalysis"></div>
-    <div id="playerContracts"></div>
-    <div id="playerTransfers"></div>
-    <div id="prospectHistory"></div>
+      <div id="career"></div>
+      <div id="playerContracts"></div>
+      <div id="playerTransfers"></div>
+      <div id="prospectHistory"></div>
+    </div>
+    <div id="playerAnalysis" hidden></div>
   </main>
 
   <footer class="site-footer">
@@ -81,7 +87,9 @@
   <script src="js/common.js"></script>
   <script src="js/favorites.js"></script>
   <script src="js/contracts.js"></script>
-  <script src="js/player-context.js"></script>
-  <script src="js/player.js"></script>
+  <script src="js/statcast.js"></script>
+  <script src="js/player-context.js?v=20261120-player-navigation"></script>
+  <script src="js/arrivals.js"></script>
+  <script src="js/player.js?v=20261120-arrival-fix-2"></script>
 </body>
 </html>

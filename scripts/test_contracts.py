@@ -51,6 +51,14 @@ class ContractsTest(unittest.TestCase):
         record["salaries"] = [{"from": 2024, "to": 2024, "baseUSD": 0}]
         self.assertEqual(contracts.validate(data, self.data), [])
 
+    def test_unknown_imported_header_amount_is_explicit_and_not_complete(self):
+        data = copy.deepcopy(self.payload)
+        row = data["players"]["1"][0]
+        row.update({"totalUSD": None, "amountUnknown": True, "listedTeam": True, "salaryComplete": False, "salaries": []})
+        self.assertEqual(contracts.validate(data, self.data), [])
+        row["amountUnknown"] = False
+        self.assertTrue(any("totalUSD" in error for error in contracts.validate(data, self.data)))
+
     def test_curated_contracts(self):
         data = json.loads((contracts.DATA / "contracts.json").read_text(encoding="utf-8"))
         self.assertEqual(contracts.validate(data), [])

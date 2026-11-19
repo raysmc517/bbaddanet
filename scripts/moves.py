@@ -97,6 +97,14 @@ def save_arrivals():
     """저장된 모든 시즌 파일(최근 시즌 + past_moves.py의 2009~2023)로 입단 경로 색인을 만든다. 저장한 선수 수."""
     saved = [json.loads(path.read_text(encoding="utf-8"))["events"] for path in sorted(DATA.glob("moves_*.json"))]
     arrivals = latest_arrivals(saved)
+    details_path = DATA / "arrival_details.json"
+    if details_path.exists():
+        details = json.loads(details_path.read_text(encoding="utf-8"))
+        for pid, record in details["players"].items():
+            arrival = record.get("arrival")
+            if arrival and (pid not in arrivals or arrival[0] > arrivals[pid][0]):
+                arrivals[pid] = arrival
+        arrivals = dict(sorted(arrivals.items(), key=lambda item: int(item[0])))
     write(DATA / "arrivals.json", arrivals)
     # 선수 페이지에서는 연도 선택 없이 커리어 전체의 이적만 읽는다.
     histories = {}
