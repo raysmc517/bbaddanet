@@ -1,0 +1,732 @@
+{
+  "checked": "2026-11-19",
+  "players": {
+    "518692": [
+      {
+        "name": "Freddie Freeman",
+        "team": "LAD",
+        "from": 2022,
+        "to": 2027,
+        "totalUSD": 162000000,
+        "source": "https://www.mlb.com/news/freddie-freeman-dodgers-deal",
+        "checked": "2026-11-19",
+        "note": "계약 당시 발표 기준. 이연 지급 등 연도별 상세는 미등록.",
+        "termsSource": "https://www.mlb.com/press-release/press-release-dodgers-sign-2020-national-league-mvp-freddie-freeman"
+      }
+    ],
+    "543037": [
+      {
+        "name": "Gerrit Cole",
+        "team": "NYY",
+        "from": 2020,
+        "to": 2028,
+        "totalUSD": 324000000,
+        "source": "https://www.mlb.com/press-release/press-release-yankees-sign-gerrit-cole-to-nine-year-contract",
+        "checked": "2026-11-19",
+        "note": "2024 옵트아웃 뒤 원래 계약 유지에 합의.",
+        "termsSource": "https://www.mlb.com/news/mlb-players-with-2025-options-opt-outs",
+        "salaries": [
+          {
+            "from": 2020,
+            "to": 2028,
+            "baseUSD": 36000000
+          }
+        ],
+        "salaryComplete": true,
+        "salarySource": "https://www.foxsports.com/stories/mlb/cole-mine-gerrit-yankees-strike-record-324m-9-year-deal",
+        "salarySourceLabel": "AP (FOX Sports)"
+      }
+    ],
+    "545361": [
+      {
+        "name": "Mike Trout",
+        "team": "LAA",
+        "from": 2019,
+        "to": 2030,
+        "totalUSD": 426500000,
+        "source": "https://www.mlb.com/news/billy-eppler-discusses-record-mike-trout-contract",
+        "checked": "2026-11-19",
+        "note": "기존 2019~2020 계약을 포함한 재작성 계약. 옵트아웃 없음.",
+        "salaries": [
+          {
+            "from": 2021,
+            "to": 2030,
+            "baseUSD": 35450000
+          }
+        ],
+        "salaryComplete": false
+      }
+    ],
+    "547180": [
+      {
+        "name": "Bryce Harper",
+        "team": "PHI",
+        "from": 2019,
+        "to": 2031,
+        "totalUSD": 330000000,
+        "source": "https://www.mlb.com/phillies/news/bryce-harper-deal-with-phillies",
+        "checked": "2026-11-19",
+        "note": "옵트아웃 없음.",
+        "salaries": [
+          {
+            "from": 2019,
+            "to": 2019,
+            "baseUSD": 10000000
+          },
+          {
+            "from": 2020,
+            "to": 2028,
+            "baseUSD": 26000000
+          },
+          {
+            "from": 2029,
+            "to": 2031,
+            "baseUSD": 22000000
+          }
+        ],
+        "salaryComplete": true,
+        "signingBonusUSD": 20000000
+      }
+    ],
+    "554430": [
+      {
+        "name": "Zack Wheeler",
+        "team": "PHI",
+        "from": 2025,
+        "to": 2027,
+        "totalUSD": 126000000,
+        "source": "https://www.mlb.com/news/zack-wheeler-phillies-extension",
+        "checked": "2026-11-19",
+        "note": "기존 2024 계약과 별개인 연장계약. 연도별 기본 연봉 미확인."
+      }
+    ],
+    "592450": [
+      {
+        "team": "NYY",
+        "from": 2023,
+        "to": 2031,
+        "totalUSD": 360000000,
+        "note": "발표된 계약 조건. 연봉 외 지급·실수령액은 별도.",
+        "source": "https://www.mlb.com/news/aaron-judge-signs-nine-year-contract-with-yankees",
+        "name": "Aaron Judge",
+        "checked": "2026-11-19",
+        "salaries": [
+          {
+            "from": 2023,
+            "to": 2031,
+            "baseUSD": 40000000
+          }
+        ],
+        "salaryComplete": true,
+        "salarySource": "https://www.mlb.com/yankees/news/aaron-judge-lobbies-yankees-to-re-sign-juan-soto"
+      }
+    ],
+    "592518": [
+      {
+        "name": "Manny Machado",
+        "team": "SD",
+        "from": 2023,
+        "to": 2033,
+        "totalUSD": 350000000,
+        "source": "https://www.mlb.com/news/manny-machado-padres-contract-extension",
+        "checked": "2026-11-19",
+        "note": "기존 계약 잔여 기간을 대체. 옵트아웃 없음."
+      }
+    ],
+    "594798": [
+      {
+        "name": "Jacob deGrom",
+        "team": "TEX",
+        "from": 2023,
+        "to": 2027,
+        "totalUSD": 185000000,
+        "source": "https://www.mlb.com/rangers/news/jacob-degrom-signs-with-rangers",
+        "checked": "2026-11-19",
+        "note": "6번째 시즌 조건부 옵션은 보장 기간에서 제외."
+      }
+    ],
+    "596019": [
+      {
+        "name": "Francisco Lindor",
+        "team": "NYM",
+        "from": 2022,
+        "to": 2031,
+        "totalUSD": 341000000,
+        "source": "https://www.mlb.com/news/francisco-lindor-discusses-future-with-mets",
+        "checked": "2026-11-19",
+        "note": "2021 기존 연봉과 별개인 연장계약. 2031까지 잔류 의사 확인.",
+        "termsSource": "https://www.mlb.com/news/largest-contract-extensions-in-mlb-history"
+      }
+    ],
+    "605141": [
+      {
+        "team": "LAD",
+        "from": 2021,
+        "to": 2032,
+        "totalUSD": 365000000,
+        "note": "2020 기존 계약과 별개. 계약금 분할 지급, 연봉 일부는 2033~2044 이연 지급. 이적 시 이연 조건 변경.",
+        "source": "https://www.mlb.com/news/mookie-betts-extension-with-dodgers",
+        "name": "Mookie Betts",
+        "checked": "2026-11-19",
+        "salaries": [
+          {
+            "from": 2021,
+            "to": 2022,
+            "baseUSD": 17500000,
+            "deferredUSD": 8000000
+          },
+          {
+            "from": 2023,
+            "to": 2023,
+            "baseUSD": 20000000,
+            "deferredUSD": 8000000
+          },
+          {
+            "from": 2024,
+            "to": 2025,
+            "baseUSD": 25000000,
+            "deferredUSD": 8000000
+          },
+          {
+            "from": 2026,
+            "to": 2027,
+            "baseUSD": 25000000,
+            "deferredUSD": 10000000
+          },
+          {
+            "from": 2028,
+            "to": 2030,
+            "baseUSD": 30000000,
+            "deferredUSD": 11000000
+          },
+          {
+            "from": 2031,
+            "to": 2032,
+            "baseUSD": 27500000,
+            "deferredUSD": 11000000
+          }
+        ],
+        "salaryComplete": true,
+        "salarySource": "https://www.latimes.com/sports/dodgers/story/2020-07-28/breaking-down-mookie-betts-contract-extension-with-dodgers",
+        "salarySourceLabel": "Los Angeles Times",
+        "signingBonusUSD": 65000000
+      }
+    ],
+    "605400": [
+      {
+        "name": "Aaron Nola",
+        "team": "PHI",
+        "from": 2024,
+        "to": 2030,
+        "totalUSD": 172000000,
+        "source": "https://www.mlb.com/news/aaron-nola-phillies-free-agent-deal",
+        "checked": "2026-11-19",
+        "note": "계약 당시 발표 기준."
+      }
+    ],
+    "605483": [
+      {
+        "name": "Blake Snell",
+        "team": "LAD",
+        "from": 2025,
+        "to": 2029,
+        "totalUSD": 182000000,
+        "source": "https://www.mlb.com/news/blake-snell-dodgers-deal",
+        "checked": "2026-11-19",
+        "note": "이연 지급 포함. 연도별 연봉 상세는 미등록.",
+        "signingBonusUSD": 52000000
+      }
+    ],
+    "607208": [
+      {
+        "name": "Trea Turner",
+        "team": "PHI",
+        "from": 2023,
+        "to": 2033,
+        "totalUSD": 300000000,
+        "source": "https://www.mlb.com/news/phillies-trea-turner-agree-to-deal",
+        "checked": "2026-11-19",
+        "note": "트레이드 거부권 포함."
+      }
+    ],
+    "608331": [
+      {
+        "name": "Max Fried",
+        "team": "NYY",
+        "from": 2025,
+        "to": 2032,
+        "totalUSD": 218000000,
+        "source": "https://www.mlb.com/news/max-fried-yankees-contract",
+        "checked": "2026-11-19",
+        "note": "계약 당시 발표 기준."
+      }
+    ],
+    "608369": [
+      {
+        "name": "Corey Seager",
+        "team": "TEX",
+        "from": 2022,
+        "to": 2031,
+        "totalUSD": 325000000,
+        "source": "https://www.mlb.com/rangers/news/corey-seager-rangers-deal",
+        "checked": "2026-11-19",
+        "note": "일부 구단에 대한 트레이드 거부권."
+      }
+    ],
+    "621566": [
+      {
+        "name": "Matt Olson",
+        "team": "ATL",
+        "from": 2022,
+        "to": 2029,
+        "totalUSD": 168000000,
+        "source": "https://www.mlb.com/press-release/press-release-braves-sign-inf-matt-olson",
+        "checked": "2026-11-19",
+        "note": "2030 구단 옵션 $20M 별도.",
+        "salaries": [
+          {
+            "from": 2022,
+            "to": 2022,
+            "baseUSD": 15000000
+          },
+          {
+            "from": 2023,
+            "to": 2023,
+            "baseUSD": 21000000
+          },
+          {
+            "from": 2024,
+            "to": 2029,
+            "baseUSD": 22000000
+          }
+        ],
+        "salaryComplete": true
+      }
+    ],
+    "646240": [
+      {
+        "name": "Rafael Devers",
+        "team": "BOS",
+        "from": 2024,
+        "to": 2033,
+        "totalUSD": 313500000,
+        "source": "https://www.mlb.com/redsox/news/how-rafael-devers-contract-extension-came-together",
+        "checked": "2026-11-19",
+        "note": "계약 당시 구단은 BOS. 현재 소속과 비용 부담 주체를 뜻하지 않음."
+      }
+    ],
+    "660271": [
+      {
+        "team": "LAD",
+        "from": 2024,
+        "to": 2033,
+        "totalUSD": 700000000,
+        "salaryNote": "기본 연봉 중 이연액은 2034~2043에 지급하는 조건이며, 현재 시즌 현금 수령액과 구분합니다.",
+        "note": "이연액은 2034~2043에 지급하는 조건. 계약 당시 발표 기준.",
+        "source": "https://www.mlb.com/news/shohei-ohtani-dodgers-deal-deferrals-explained",
+        "name": "Shohei Ohtani",
+        "checked": "2026-11-19",
+        "salaries": [
+          {
+            "from": 2024,
+            "to": 2033,
+            "baseUSD": 70000000,
+            "deferredUSD": 68000000
+          }
+        ],
+        "salaryComplete": true
+      }
+    ],
+    "660670": [
+      {
+        "name": "Ronald Acuña Jr.",
+        "team": "ATL",
+        "from": 2019,
+        "to": 2026,
+        "totalUSD": 100000000,
+        "source": "https://www.mlb.com/braves/press-release/braves-agree-to-8-year-contract-extension-with-ronald-acuna-jr",
+        "checked": "2026-11-19",
+        "note": "최초 보장 기간은 2019~2026. 2027 구단 옵션 $17M 행사 확인; 2028 구단 옵션 $17M 별도.",
+        "termsSource": "https://www.mlb.com/news/ronald-acuna-jr-ozzie-albies-club-options-exercised-by-braves"
+      }
+    ],
+    "663586": [
+      {
+        "name": "Austin Riley",
+        "team": "ATL",
+        "from": 2023,
+        "to": 2032,
+        "totalUSD": 212000000,
+        "source": "https://www.mlb.com/press-release/press-release-braves-sign-3b-austin-riley",
+        "checked": "2026-11-19",
+        "note": "2033 구단 옵션 $20M 별도.",
+        "salaries": [
+          {
+            "from": 2023,
+            "to": 2023,
+            "baseUSD": 15000000
+          },
+          {
+            "from": 2024,
+            "to": 2024,
+            "baseUSD": 21000000
+          },
+          {
+            "from": 2025,
+            "to": 2032,
+            "baseUSD": 22000000
+          }
+        ],
+        "salaryComplete": true
+      }
+    ],
+    "663656": [
+      {
+        "name": "Kyle Tucker",
+        "team": "LAD",
+        "from": 2026,
+        "to": 2029,
+        "totalUSD": 240000000,
+        "source": "https://www.mlb.com/dodgers/news/kyle-tucker-dodgers-contract",
+        "checked": "2026-11-19",
+        "note": "2027·2028 시즌 뒤 옵트아웃. 총 $30M 이연 지급, 연도별 연봉은 미등록.",
+        "signingBonusUSD": 64000000
+      }
+    ],
+    "664285": [
+      {
+        "name": "Framber Valdez",
+        "team": "DET",
+        "from": 2026,
+        "to": 2028,
+        "totalUSD": 115000000,
+        "source": "https://www.mlb.com/tigers/news/framber-valdez-tigers-contract",
+        "checked": "2026-11-19",
+        "note": "2027 뒤 옵트아웃. 2029 상호 옵션 $40M 별도; 표의 기본 연봉에 수상 조건 인상액 미반영.",
+        "salaries": [
+          {
+            "from": 2026,
+            "to": 2026,
+            "baseUSD": 17500000
+          },
+          {
+            "from": 2027,
+            "to": 2027,
+            "baseUSD": 37500000
+          },
+          {
+            "from": 2028,
+            "to": 2028,
+            "baseUSD": 35000000
+          }
+        ],
+        "salaryComplete": true,
+        "signingBonusUSD": 20000000,
+        "buyoutUSD": 5000000,
+        "salaryNote": "계약금 $20M은 전액 이연되어 2030부터 지급하는 조건."
+      }
+    ],
+    "665487": [
+      {
+        "name": "Fernando Tatis Jr.",
+        "team": "SD",
+        "from": 2021,
+        "to": 2034,
+        "totalUSD": 340000000,
+        "source": "https://www.mlb.com/padres/news/fernando-tatis-jr-deal-official-with-padres",
+        "checked": "2026-11-19",
+        "note": "계약서상 연봉. 출전 정지에 따른 감액 등 실제 지급액은 반영하지 않음.",
+        "salaries": [
+          {
+            "from": 2025,
+            "to": 2026,
+            "baseUSD": 20000000
+          },
+          {
+            "from": 2027,
+            "to": 2028,
+            "baseUSD": 25000000
+          },
+          {
+            "from": 2029,
+            "to": 2034,
+            "baseUSD": 36000000
+          }
+        ],
+        "salaryComplete": false
+      }
+    ],
+    "665489": [
+      {
+        "name": "Vladimir Guerrero Jr.",
+        "team": "TOR",
+        "from": 2026,
+        "to": 2039,
+        "totalUSD": 500000000,
+        "source": "https://www.mlb.com/press-release/press-release-blue-jays-sign-vladimir-guerrero-jr-to-14-year-contract-extension",
+        "checked": "2026-11-19",
+        "note": "2025 기존 계약과 별개인 연장계약."
+      }
+    ],
+    "665742": [
+      {
+        "team": "NYM",
+        "from": 2025,
+        "to": 2039,
+        "totalUSD": 765000000,
+        "note": "2029년 뒤 옵트아웃을 구단이 무효화하면 2030~2039 기본 연봉이 연 $4M 증가. 표는 최초 보장 조건.",
+        "source": "https://www.mlb.com/news/juan-soto-agrees-to-contract-with-mets",
+        "name": "Juan Soto",
+        "checked": "2026-11-19",
+        "salaries": [
+          {
+            "from": 2025,
+            "to": 2026,
+            "baseUSD": 46875000,
+            "deferredUSD": 0
+          },
+          {
+            "from": 2027,
+            "to": 2027,
+            "baseUSD": 42500000,
+            "deferredUSD": 0
+          },
+          {
+            "from": 2028,
+            "to": 2029,
+            "baseUSD": 46875000,
+            "deferredUSD": 0
+          },
+          {
+            "from": 2030,
+            "to": 2039,
+            "baseUSD": 46000000,
+            "deferredUSD": 0
+          }
+        ],
+        "salaryComplete": true,
+        "salarySource": "https://apnews.com/article/9160d4eda264b72c75cb0b5a805387e8",
+        "salarySourceLabel": "AP",
+        "signingBonusUSD": 75000000
+      }
+    ],
+    "666182": [
+      {
+        "name": "Bo Bichette",
+        "team": "NYM",
+        "from": 2026,
+        "to": 2028,
+        "totalUSD": 126000000,
+        "source": "https://www.mlb.com/news/bo-bichette-deal-with-mets",
+        "checked": "2026-11-19",
+        "note": "2027 선수 옵션 행사 확인. 2027 시즌 뒤에도 옵트아웃 가능.",
+        "termsSource": "https://www.mlb.com/news/bo-bichette-player-option-mets",
+        "salaries": [
+          {
+            "from": 2027,
+            "to": 2027,
+            "baseUSD": 42000000
+          }
+        ],
+        "salaryComplete": false,
+        "salarySource": "https://www.mlb.com/news/bo-bichette-player-option-mets"
+      }
+    ],
+    "669203": [
+      {
+        "name": "Corbin Burnes",
+        "team": "AZ",
+        "from": 2025,
+        "to": 2030,
+        "totalUSD": 210000000,
+        "source": "https://www.mlb.com/news/corbin-burnes-contract-with-d-backs",
+        "checked": "2026-11-19",
+        "note": "2026 시즌 뒤 옵트아웃하지 않고 잔류 확인. 최초 보장 기간·총액 유지.",
+        "termsSource": "https://www.mlb.com/news/mlb-players-with-2027-options-and-opt-outs"
+      }
+    ],
+    "670541": [
+      {
+        "name": "Yordan Alvarez",
+        "team": "HOU",
+        "from": 2023,
+        "to": 2028,
+        "totalUSD": 115000000,
+        "source": "https://www.mlb.com/news/yordan-alvarez-contract-extension-with-astros",
+        "checked": "2026-11-19",
+        "note": "2022 시즌 뒤부터 적용되는 연장계약.",
+        "salaries": [
+          {
+            "from": 2023,
+            "to": 2023,
+            "baseUSD": 7000000
+          },
+          {
+            "from": 2024,
+            "to": 2024,
+            "baseUSD": 10000000
+          },
+          {
+            "from": 2025,
+            "to": 2025,
+            "baseUSD": 15000000
+          },
+          {
+            "from": 2026,
+            "to": 2028,
+            "baseUSD": 26000000
+          }
+        ],
+        "salaryComplete": true,
+        "signingBonusUSD": 5000000
+      }
+    ],
+    "673490": [
+      {
+        "name": "Ha-Seong Kim",
+        "team": "ATL",
+        "from": 2026,
+        "to": 2026,
+        "totalUSD": 20000000,
+        "source": "https://www.mlb.com/braves/news/ha-seong-kim-contract-braves",
+        "checked": "2026-11-19",
+        "note": "2026 단년 계약. 보장 총액을 기본 연봉으로 간주하지 않으며 상세 지급 항목은 미등록."
+      }
+    ],
+    "677951": [
+      {
+        "name": "Bobby Witt Jr.",
+        "team": "KC",
+        "from": 2024,
+        "to": 2034,
+        "totalUSD": 288700000,
+        "source": "https://www.mlb.com/news/royals-sign-bobby-witt-jr-to-extension",
+        "checked": "2026-11-19",
+        "note": "2030~2033 시즌 뒤 옵트아웃. 2035~2037 구단 옵션은 보장 기간에서 제외."
+      }
+    ],
+    "808967": [
+      {
+        "team": "LAD",
+        "from": 2024,
+        "to": 2035,
+        "totalUSD": 325000000,
+        "note": "포스팅 비용은 별도. 팔꿈치 건강 조건에 따라 옵트아웃 시점과 2036 구단 옵션이 달라짐.",
+        "source": "https://www.mlb.com/news/yoshinobu-yamamoto-dodgers-free-agent-deal",
+        "name": "Yoshinobu Yamamoto",
+        "checked": "2026-11-19",
+        "salaries": [
+          {
+            "from": 2024,
+            "to": 2024,
+            "baseUSD": 5000000,
+            "deferredUSD": 0
+          },
+          {
+            "from": 2025,
+            "to": 2025,
+            "baseUSD": 10000000,
+            "deferredUSD": 0
+          },
+          {
+            "from": 2026,
+            "to": 2026,
+            "baseUSD": 12000000,
+            "deferredUSD": 0
+          },
+          {
+            "from": 2027,
+            "to": 2029,
+            "baseUSD": 26000000,
+            "deferredUSD": 0
+          },
+          {
+            "from": 2030,
+            "to": 2031,
+            "baseUSD": 29000000,
+            "deferredUSD": 0
+          },
+          {
+            "from": 2032,
+            "to": 2035,
+            "baseUSD": 28000000,
+            "deferredUSD": 0
+          }
+        ],
+        "salaryComplete": true,
+        "salarySource": "https://www.sportsnet.ca/mlb/article/yamamotos-dodgers-contract-includes-two-opt-outs-timing-based-on-elbow-health/",
+        "salarySourceLabel": "AP (Sportsnet)",
+        "signingBonusUSD": 50000000,
+        "termsSource": "https://www.sportsnet.ca/mlb/article/yamamotos-dodgers-contract-includes-two-opt-outs-timing-based-on-elbow-health/",
+        "termsSourceLabel": "AP (Sportsnet)"
+      }
+    ],
+    "808975": [
+      {
+        "name": "Hyeseong Kim",
+        "team": "LAD",
+        "from": 2025,
+        "to": 2027,
+        "totalUSD": 12500000,
+        "source": "https://www.mlb.com/press-release/press-release-dodgers-sign-hyeseong-kim",
+        "checked": "2026-11-19",
+        "note": "2028·2029 구단 옵션은 함께 행사. 두 시즌 합계 $10M, 거절 시 바이아웃 $1.5M. 성과급 별도.",
+        "salaries": [
+          {
+            "from": 2025,
+            "to": 2025,
+            "baseUSD": 2500000
+          },
+          {
+            "from": 2026,
+            "to": 2027,
+            "baseUSD": 3750000
+          }
+        ],
+        "salaryComplete": true,
+        "salarySource": "https://apnews.com/article/dodgers-hyeseong-kim-3472e91ccd82125adf8ad90ec466bebf",
+        "salarySourceLabel": "AP",
+        "signingBonusUSD": 1000000,
+        "buyoutUSD": 1500000
+      }
+    ],
+    "808982": [
+      {
+        "name": "Jung Hoo Lee",
+        "team": "SF",
+        "from": 2024,
+        "to": 2029,
+        "totalUSD": 113000000,
+        "source": "https://www.mlb.com/press-release/sf-2024-lee-signing",
+        "checked": "2026-11-19",
+        "note": "2027 시즌 뒤 옵트아웃. 포스팅 비용 별도.",
+        "salaries": [
+          {
+            "from": 2024,
+            "to": 2024,
+            "baseUSD": 7000000
+          },
+          {
+            "from": 2025,
+            "to": 2025,
+            "baseUSD": 16000000
+          },
+          {
+            "from": 2026,
+            "to": 2027,
+            "baseUSD": 22000000
+          },
+          {
+            "from": 2028,
+            "to": 2029,
+            "baseUSD": 20500000
+          }
+        ],
+        "salaryComplete": true,
+        "signingBonusUSD": 5000000
+      }
+    ]
+  },
+  "schemaVersion": 2,
+  "scope": "공개 출처로 확인한 계약 발표 조건. 현재 소속·실제 지급액·옵션 행사 결과의 전체 현황이 아님."
+}

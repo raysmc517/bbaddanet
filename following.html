@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>빠따넷 · 관심 목록</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="./">빠따넷</a>
+      <nav class="header-nav">
+        <a href="./" id="backLink">리더보드</a>
+        <a href="standings.html">순위</a>
+        <a href="prospects.html">유망주</a>
+        <a href="teams.html">구단</a>
+        <a href="moves.html">이동</a>
+        <a href="daily.html">경기·뉴스</a>
+        <a href="following.html" aria-current="page">관심</a>
+        <a href="awards.html">수상</a>
+        <a href="search.html">선수 검색</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <h1>관심 선수·팀</h1>
+    <p class="page-note">이 브라우저에 저장됩니다. 다른 기기와 동기화되지 않으며 브라우저 데이터를 지우면 사라집니다.</p>
+    <div id="favorites"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>MLB·MiLB 기록 출처: MLB Stats API. Copyright MLB Advanced Media, L.P. 비상업적 개인 프로젝트입니다.</p>
+    </div>
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script src="js/favorites.js"></script>
+
+</body>
+</html>

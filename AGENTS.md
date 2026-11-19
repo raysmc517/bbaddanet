@@ -18,7 +18,7 @@
 - Python으로 수집·계산하고 HTML/CSS/JavaScript로 JSON을 읽는 정적 사이트 구조를 유지한다. 프레임워크, 서버, DB, 의존성은 작업에 필요한 경우에만 도입하고 이유를 설명한다.
 - 2026-11-17 확인 기준: MLB, MiLB AAA·AA의 2024~2026 데이터, 리더보드, 선수 페이지, Pipeline 유망주 연계 코드가 있다. 코드가 있다는 사실을 기능 검증 완료로 간주하지 않는다.
 - KBO·NPB 수집기, 용어 설명 페이지 등 PRD의 계획을 이미 구현된 기능으로 설명하지 않는다. 실제 파일과 실행 결과를 확인한다.
-- 자동 갱신·배포는 `.github/workflows/update.yml`(매일 한국 시간 16:00, GitHub Pages)에 있다. 동작 여부는 GitHub Actions 실행 기록으로 확인한다.
+- 자동 갱신·배포는 `.github/workflows/update.yml`(매일 한국 시간 09:00·14:00, GitHub Pages)에 있다. 동작 여부는 GitHub Actions 실행 기록으로 확인한다.
 - 현재 생성된 시즌 범위는 2024~2026이다. 추가 요구사항은 `PRD.md` 13절을 따른다: High-A·Single-A 확대, 마이너리그를 포함한 프로 첫 출전부터의 선수 커리어. 요구사항과 구현 완료 상태를 구분한다. MLB 데뷔일을 프로 데뷔일로 사용하지 않는다.
 
 ## 코드 위치와 변경 원칙
@@ -164,3 +164,14 @@
 - 선수 연결: 이름(가운데 머리글자·Mike/Michael 차이 무시)이 한 명에게만 맞고 징계 연도가 그 선수의 프로 경력 기간 안일 때만. 동명이인은 투수·야수로 거르고, 그래도 여럿이면 넣지 않고 출력한다. 연결 수가 100명 미만이면 기존 파일을 유지한다.
 - 화면: `js/common.js`가 모든 페이지의 선수 링크(`player.html?id=`) 뒤에 `*`를 붙이고, 선수 페이지는 이름 뒤 `*`와 징계 목록(날짜·구단·징계·검출 약물, 출처)을 보여준다. 자동 갱신에는 넣지 않았으므로 새 징계 발표 뒤 직접 실행한다.
 - `python -m unittest discover -s scripts -p test_ped.py`: 합친 칸(rowspan), 서식·각주 정리, 독립리그 표 제외, 동명이인·경력 기간 밖 이름 제외를 검증한다.
+
+
+## 선수 맥락·경기·뉴스·관심 목록 실행
+
+- `python scripts/player_context.py`: 현재 시즌 MLB 평균과 득점권·좌우 상대·홈/원정 성적. `--from 1876 --to 2026 --averages-only`는 과거 평균만 받는다. 완료 시즌 평균은 재사용하고 `--refresh`로 갱신한다. 0분모·누락값과 아웃 수를 존중하고 실패 시 기존 시즌 파일을 유지한다.
+- `python scripts/daily.py`: 최근 MLB 공식 경기일 3일과 MLB.com 공식 RSS 제목·출처·시각·링크. `--date 2025-09-28`로 날짜를 좁힌다. 본문·사진은 저장하지 않는다. 경기 일정의 정상 빈 응답은 비시즌이며 실패와 구분한다.
+- `moves.save_arrivals()`는 입단 경로와 선수 전체 이적 색인(`data/player_moves.json`)을 함께 만든다. 선수 이적 내역은 연도 필터 없이 최신순이다.
+- `data/contracts.json`은 출처가 있는 수동 관리 자료다. `salaries`는 시즌 범위별 기본 연봉이며 계약금·보장 바이아웃은 별개 필드다. 단순 연평균을 연봉·실수령액·사치세 AAV로 설명하지 않는다. 미확인 연봉·이연액은 만들지 않는다. `salaryComplete`는 모든 보장 시즌 연봉+계약금+보장 바이아웃이 총액과 맞을 때만 켠다. 옵션 행사 결과는 출처를 붙여 조건에 남기고 최초 계약 총액에 임의로 더하지 않는다.
+- 계약 변경 뒤 `python scripts/contracts.py`와 `node --test scripts/test_contracts.cjs`를 실행한다. 연도별 표는 `js/contracts.js`가 최신순으로 펼친다.
+- 관심 선수·팀은 `js/favorites.js`가 이 브라우저의 localStorage에 ID·이름만 저장한다. 계정 동기화는 없다.
+- 상세 요구·제공 범위는 PRD 16절. `test_player_context.py`, `test_daily.py`, `test_past_moves.py`로 계산·실패 처리·색인을 검증한다.

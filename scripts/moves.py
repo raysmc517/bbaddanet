@@ -98,6 +98,20 @@ def save_arrivals():
     saved = [json.loads(path.read_text(encoding="utf-8"))["events"] for path in sorted(DATA.glob("moves_*.json"))]
     arrivals = latest_arrivals(saved)
     write(DATA / "arrivals.json", arrivals)
+    # 선수 페이지에서는 연도 선택 없이 커리어 전체의 이적만 읽는다.
+    histories = {}
+    for events in saved:
+        for event in events:
+            if event["type"] not in ("trade", "sign", "claim", "release", "fa"):
+                continue
+            for player in event["players"]:
+                histories.setdefault(str(player["id"]), []).append({
+                    "date": event["date"], "type": event["type"],
+                    "from": player.get("from"), "to": player.get("to"),
+                })
+    for rows in histories.values():
+        rows.sort(key=lambda row: (row["date"], row["type"]), reverse=True)
+    write(DATA / "player_moves.json", histories)
     return len(arrivals)
 
 

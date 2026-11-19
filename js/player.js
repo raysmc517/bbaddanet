@@ -83,8 +83,7 @@
     }
     $("playerFacts").insertAdjacentHTML("afterbegin",
       '<div><dt>입단 경로</dt><dd>' + escapeHtml(text) +
-      (last && last[2] === club.id ? ' <a class="muted" href="moves.html?season=' + last[0].slice(0, 4) + "&q=" +
-        encodeURIComponent(player.name) + '">기록</a>' : "") + "</dd></div>");
+      (last && last[2] === club.id ? ' <a class="muted" href="#playerTransfers">이적 내역</a>' : "") + "</dd></div>");
   }
 
   // MLB 공식 얼굴 사진. 파일을 저장하지 않고 MLB 이미지 서버 주소로만 표시한다.
@@ -622,6 +621,7 @@
     setupFilters();
     renderSummary();
     renderCareer();
+    window.BB.renderPlayerContext(player, (group, rows) => addRates(group, sumRows(group, rows)));
     // 수상·리그 1위 기록은 없어도 나머지 화면에 영향이 없으므로 따로 불러오고, 오면 표를 다시 그린다
     loadJson("data/awards.json").then(async (data) => {
       awardData = data;

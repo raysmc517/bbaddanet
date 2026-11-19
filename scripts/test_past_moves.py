@@ -43,6 +43,8 @@ class ArrivalsTest(unittest.TestCase):
                 self.assertEqual(moves.save_arrivals(), 2)
             arrivals = json.loads((data / "arrivals.json").read_text(encoding="utf-8"))
             self.assertEqual(arrivals["9"], ["2020-02-10", "trade", 119, 111])
+            histories = json.loads((data / "player_moves.json").read_text(encoding="utf-8"))
+            self.assertEqual(histories["9"], [{"date": "2020-02-10", "type": "trade", "from": 111, "to": 119}])
 
 
 if __name__ == "__main__":

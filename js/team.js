@@ -277,6 +277,7 @@
     }
 
     renderProfile(team, parent, data.season);
+    window.BB.favorites.mount("teams", team.id, team.name, $("teamName").parentElement);
     renderHistory(team);
     renderVenue(team, data.season);
     renderOrg(team, parent, data.season);
