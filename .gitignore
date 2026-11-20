@@ -1,3 +1,8 @@
 __pycache__/
 *.pyc
 .claude/
+
+# 과거 위치 집계 캐시는 로컬 재개용이다. 2026 일일 갱신 캐시는 유지한다.
+data/zones/cache/200[89]/
+data/zones/cache/201[0-9]/
+data/zones/cache/202[0-5]/

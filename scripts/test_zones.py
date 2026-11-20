@@ -2,6 +2,7 @@ import csv
 import io
 import json
 import tempfile
+import sys
 import unittest
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -32,9 +33,51 @@ def aggregate(rows, games=(10,)):
 
 
 class ZoneTest(unittest.TestCase):
+    def test_range_runs_latest_first_and_continues_after_one_season_fails(self):
+        with mock.patch.object(sys, "argv", ["zones.py", "--from", "2024", "--to", "2026"]), \
+             mock.patch.object(zones, "published", return_value=False), \
+             mock.patch.object(zones, "collect", side_effect=[None, ValueError("missing game"), None]) as collect, \
+             mock.patch("builtins.print"):
+            self.assertEqual(zones.main(), 1)
+        self.assertEqual(collect.call_args_list, [mock.call(2026, False, 1), mock.call(2025, False, 1), mock.call(2024, False, 1)])
+
+    def test_completed_past_season_skips_network_but_refresh_and_missing_bucket_do_not(self):
+        with tempfile.TemporaryDirectory() as directory, mock.patch.object(zones, "DATA", Path(directory)):
+            zones.publish({"season": 2025, "gameType": "R", "pitches": 100, "checked": "2026-11-20T00:00:00Z",
+                           "players": {"1": {"pitching": []}}})
+            self.assertTrue(zones.published(2025))
+            with mock.patch.object(sys, "argv", ["zones.py", "--season", "2025"]), \
+                 mock.patch.object(zones, "collect") as collect, mock.patch("builtins.print"):
+                self.assertEqual(zones.main(), 0)
+                collect.assert_not_called()
+            with mock.patch.object(sys, "argv", ["zones.py", "--season", "2025", "--refresh"]), \
+                 mock.patch.object(zones, "collect") as collect:
+                self.assertEqual(zones.main(), 0)
+                collect.assert_called_once_with(2025, True, 1)
+            index = json.loads((Path(directory) / "2025" / "index.json").read_text())
+            (Path(directory) / "2025" / index["buckets"]["01"]).unlink()
+            self.assertFalse(zones.published(2025))
+
+    def test_in_season_publication_is_not_treated_as_completed_history(self):
+        with tempfile.TemporaryDirectory() as directory, mock.patch.object(zones, "DATA", Path(directory)):
+            zones.publish({"season": 2025, "gameType": "R", "pitches": 100, "checked": "2025-07-01T00:00:00Z",
+                           "players": {"1": {"pitching": []}}})
+            self.assertFalse(zones.published(2025))
+
+    def test_range_rejects_reversed_years_and_to_without_from(self):
+        for args in (["--from", "2025", "--to", "2024"], ["--to", "2025"]):
+            with mock.patch.object(sys, "argv", ["zones.py", *args]), \
+                 mock.patch.object(zones, "collect") as collect, mock.patch("sys.stderr", io.StringIO()):
+                with self.assertRaises(SystemExit):
+                    zones.main()
+                collect.assert_not_called()
+
     def test_cancelled_rain_game_is_not_a_completed_game_even_when_abstract_final(self):
         self.assertFalse(zones.completed({"status": {"abstractGameState": "Final", "codedGameState": "C", "detailedState": "Cancelled: Rain"}}))
         self.assertTrue(zones.completed({"status": {"abstractGameState": "Final", "codedGameState": "F", "detailedState": "Final"}}))
+        for code, state in (("D", "Postponed"), ("U", "Suspended")):
+            self.assertFalse(zones.completed({"status": {"abstractGameState": "Final", "codedGameState": code,
+                                                        "detailedState": state}}))
 
     def test_coordinate_boundaries_catcher_view_and_zone_height(self):
         self.assertEqual(zones.zone(0, .5), 12)
@@ -59,6 +102,18 @@ class ZoneTest(unittest.TestCase):
         self.assertEqual((item["seen"], item["missing"], item["outside"]), (3, 1, 2))
         self.assertEqual(sum(c[0] for c in item["zones"].values()), 2)
         self.assertEqual(item["density"], [])
+
+    def test_early_tracking_unmeasured_games_preserve_missing_counts_only_when_explicit(self):
+        text = csv_text([row(plate_x="", plate_z="")])
+        with self.assertRaises(ValueError):
+            zones.aggregate(text, date(2026, 4, 1), date(2026, 4, 3), {10})
+        data = zones.aggregate(text, date(2026, 4, 1), date(2026, 4, 3), {10}, allow_sparse=True)
+        item = data["players"]["1"]["pitching"][0]
+        self.assertEqual((data["pitches"], item["seen"], item["missing"]), (1, 1, 1))
+        self.assertEqual(item["zones"], {})
+        self.assertEqual(item["density"], [])
+        with self.assertRaises(ValueError):
+            zones.aggregate(text, date(2026, 4, 1), date(2026, 4, 3), {10, 11}, allow_sparse=True)
 
     def test_exact_duplicates_removed_conflicts_and_incomplete_games_rejected(self):
         self.assertEqual(aggregate([row(), row()])["pitches"], 1)
@@ -143,13 +198,65 @@ class ZoneTest(unittest.TestCase):
             fetch.return_value.json.return_value = schedule
             zones.write(Path(directory) / "cache" / "2026" / "2026-04-01.json", chunk)
             with mock.patch("builtins.print"):
-                zones.collect(2026)
+                zones.collect(2026, workers=2)
                 clock.now.return_value = datetime(2026, 11, 21, tzinfo=timezone.utc)
                 zones.collect(2026)
             index = json.loads((Path(directory) / "2026" / "index.json").read_text(encoding="utf-8"))
             self.assertEqual(index["updated"], chunk["updated"])
             self.assertTrue(index["checked"].startswith("2026-11-21"))
             self.assertEqual(fetch.call_count, 2)  # 매번 일정만 확인하고 CSV를 다시 받지 않는다.
+
+    def test_old_postponement_cannot_resurrect_a_cancelled_game(self):
+        chunk = zones.aggregate(csv_text([row(game_date="2020-08-13", pitcher=str(i+1), batter=str(i+11),
+                                             at_bat_number=str(i+1)) for i in range(5)]),
+                                date(2020, 8, 13), date(2020, 8, 15), {10})
+        chunk["updated"] = "2020-08-16T00:00:00+00:00"
+        schedule = {"dates": [
+            {"date": "2020-08-04", "games": [{"gamePk": 631472, "gameType": "R", "officialDate": "2020-08-13",
+                "status": {"abstractGameState": "Final", "codedGameState": "D", "detailedState": "Postponed"}}]},
+            {"date": "2020-08-13", "games": [
+                {"gamePk": 631472, "gameType": "R", "officialDate": "2020-08-13",
+                 "status": {"abstractGameState": "Final", "codedGameState": "C", "detailedState": "Cancelled"}},
+                {"gamePk": 10, "gameType": "R", "officialDate": "2020-08-13",
+                 "status": {"abstractGameState": "Final", "codedGameState": "F", "detailedState": "Final"}}]}]}
+        with tempfile.TemporaryDirectory() as directory, mock.patch.object(zones, "DATA", Path(directory)), \
+             mock.patch.object(zones, "fetch") as fetch, mock.patch("builtins.print"):
+            fetch.return_value.json.return_value = schedule
+            zones.write(Path(directory) / "cache" / "2020" / "2020-08-13.json", chunk)
+            zones.collect(2020)
+            index = json.loads((Path(directory) / "2020" / "index.json").read_text())
+            self.assertEqual(index["games"], 1)
+            self.assertEqual(fetch.call_count, 1)  # 유효 캐시를 버리거나 취소 경기 CSV를 요구하지 않는다.
+
+    def test_sparse_early_season_cannot_publish_when_majority_is_unmeasured(self):
+        chunk = zones.aggregate(csv_text([row(game_date="2008-04-01", plate_x="")]),
+                                date(2008, 4, 1), date(2008, 4, 3), {10}, allow_sparse=True)
+        chunk["updated"] = "2008-04-04T00:00:00+00:00"
+        schedule = {"dates": [{"date": "2008-04-01", "games": [{"gamePk": 10, "gameType": "R",
+                    "officialDate": "2008-04-01", "status": {"abstractGameState": "Final"}}]}]}
+        with tempfile.TemporaryDirectory() as directory, mock.patch.object(zones, "DATA", Path(directory)), \
+             mock.patch.object(zones, "fetch") as fetch:
+            fetch.return_value.json.return_value = schedule
+            zones.write(Path(directory) / "cache" / "2008" / "2008-04-01.json", chunk)
+            with self.assertRaisesRegex(ValueError, "시즌 위치"):
+                zones.collect(2008, workers=2)
+            self.assertFalse((Path(directory) / "2008" / "index.json").exists())
+
+    def test_refresh_cannot_replace_known_locations_with_missing_measurements(self):
+        old = zones.aggregate(csv_text([row(game_date="2020-04-01")]), date(2020, 4, 1), date(2020, 4, 3), {10})
+        old["updated"] = "2020-04-04T00:00:00+00:00"
+        schedule = {"dates": [{"date": "2020-04-01", "games": [{"gamePk": 10, "gameType": "R",
+                    "officialDate": "2020-04-01", "status": {"abstractGameState": "Final"}}]}]}
+        with tempfile.TemporaryDirectory() as directory, mock.patch.object(zones, "DATA", Path(directory)), \
+             mock.patch.object(zones, "fetch") as fetch, mock.patch("builtins.print"):
+            path = Path(directory) / "cache" / "2020" / "2020-04-01.json"
+            zones.write(path, old)
+            before = path.read_bytes()
+            fetch.side_effect = [mock.Mock(json=lambda: schedule),
+                                 mock.Mock(text=csv_text([row(game_date="2020-04-01", plate_x="")]))]
+            with self.assertRaisesRegex(ValueError, "구간 위치"):
+                zones.collect(2020, refresh=True)
+            self.assertEqual(path.read_bytes(), before)
 
 
 def re_bucket(name):

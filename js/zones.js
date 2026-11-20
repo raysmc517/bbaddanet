@@ -3,7 +3,9 @@
   "use strict";
   const { loadJson, escapeHtml: esc } = window.BB;
   const PITCH = {FF:"포심", SI:"싱커", FC:"커터", SL:"슬라이더", ST:"스위퍼", CU:"커브", KC:"너클커브", CS:"슬로 커브",
-    CH:"체인지업", FS:"스플리터", SV:"슬러브", FO:"포크볼", KN:"너클볼", SC:"스크루볼", EP:"이퍼스", UN:"미분류"};
+    CH:"체인지업", FS:"스플리터", SV:"슬러브", FO:"포크볼", KN:"너클볼", SC:"스크루볼", EP:"이퍼스", UN:"미분류",
+    FA:"패스트볼 (세부 미분류)", FT:"투심", GY:"자이로볼", PO:"피치아웃", IN:"고의볼",
+    AB:"자동볼", AS:"자동 스트라이크", NP:"투구 없음"};
   const ROWS = ["높은 바깥", "상단", "중단", "하단", "낮은 바깥"];
   const COLS = ["왼쪽 바깥", "왼쪽", "가운데", "오른쪽", "오른쪽 바깥"];
   const ratio = (n, d) => d > 0 ? n / d : null;
@@ -69,8 +71,13 @@
       detail(data.zones[selected], selected, role);
   }
   function detail(cell, selected, role) {
-    return '<p class="zone-detail" role="status"><strong>' + name(selected) + '</strong> · ' + cell[0] + '구 · ' + cell[1] + '스윙 / 헛스윙 ' + cell[2] + '회 · ' +
-      (role === 'pitching' ? '상대 ' : '') + cell[3] + '타수 / ' + cell[4] + (role === 'pitching' ? '피안타 / ' : '안타 / ') + cell[5] + (role === 'pitching' ? '허용 루타' : '루타') + '</p>';
+    const pitching = role === 'pitching';
+    return '<div class="zone-detail" role="status"><strong>' + name(selected) + '</strong>' +
+      '<p>' + (pitching ? '상대 ' : '') + cell[3] + '타수 / ' + cell[4] + (pitching ? '피안타' : '안타') +
+      ' · ' + (pitching ? '피안타율 ' : '타율 ') + fixed(measure(cell, 'avg'), 'avg') +
+      ' · ' + (pitching ? '피장타율 ' : '장타율 ') + fixed(measure(cell, 'slg'), 'slg') + '</p>' +
+      '<p>' + cell[0] + '구 · ' + cell[1] + '스윙 / 헛스윙 ' + cell[2] + '회 · ' +
+      cell[5] + (pitching ? '허용 루타' : '루타') + ' · 헛스윙률 ' + fixed(measure(cell, 'whiff'), 'whiff') + '</p></div>';
   }
   function options(rows, key, value, labels) {
     return '<option value="">전체</option>' + [...new Set(rows.map((r) => r[key]))].sort().map((v) => '<option value="' + esc(v) + '"' + (v === value ? ' selected' : '') + '>' + esc(labels[v] || v) + '</option>').join("");
@@ -81,13 +88,13 @@
     const title = '<h3>투구 위치 분포·핫콜드존</h3>';
     root.innerHTML = title + note('위치 집계를 불러오는 중...');
     try {
-      const available = await loadJson('data/zones/index.json');
+      const available = await loadJson('data/zones/index.json', {cache:'no-cache'});
       if (version !== request) return;
       if (!available.seasons.includes(season)) {
         root.innerHTML = title + note('이 시즌의 위치 집계는 아직 제공하지 않습니다. 제공 시즌: ' + available.seasons.join(', '));
         return;
       }
-      const index = await loadJson('data/zones/' + season + '/index.json');
+      const index = await loadJson('data/zones/' + season + '/index.json', {cache:'no-cache'});
       if (version !== request) return;
       if (index.season !== season || index.gameType !== 'R') throw new Error('시즌 불일치');
       const key = String(Number(player.id) % 100).padStart(2, '0');
@@ -103,15 +110,19 @@
         root.innerHTML = title + note(season + ' 정규시즌 · ' + esc(index.through) + ' 경기일까지의 위치 집계') + (groups.map((role) => {
           const s = state[role], rows = mine[role], data = combine(rows, s.pitch, s.hand), pitching = role === 'pitching';
           const hands = pitching ? {L:'좌타자',R:'우타자',U:'타석 미확인'} : {L:'좌투수',R:'우투수',U:'투구 손 미확인'};
+          const report = !data.seen ? note('선택한 조건의 투구 기록이 없습니다.') : data.seen === data.missing ?
+            note('이 조건에는 위치·존 높이가 확인된 공이 없어 위치 분포·구역별 성적을 제공하지 않습니다.') :
+            (pitching ? plot(data, rows, s.pitch, s.hand) : '') + heatmap(data, s.metric, role, s.cell);
           return '<section class="zone-section"><h4>' + (pitching ? '투수 · 투구 위치 분포' : '타자 · 핫콜드존') + '</h4><div class="zone-controls">' +
             '<label class="field"><span>구종</span><select data-zone-role="' + role + '" data-zone-filter="pitch">' + options(rows, 'pitch', s.pitch, PITCH) + '</select></label>' +
             '<label class="field"><span>' + (pitching ? '상대 타석' : '상대 투구 손') + '</span><select data-zone-role="' + role + '" data-zone-filter="hand">' + options(rows, 'hand', s.hand, hands) + '</select></label>' +
-            (pitching ? '' : '<label class="field"><span>구역 지표</span><select data-zone-role="batting" data-zone-filter="metric">' + [['avg','타율'],['slg','장타율'],['whiff','헛스윙률']].map(([v,l]) => '<option value="' + v + '"' + (s.metric === v ? ' selected' : '') + '>' + l + '</option>').join('') + '</select></label>') + '</div>' +
+            '</div>' + (pitching ? '' : note('구역의 숫자와 색상은 타율입니다. 구역을 선택하면 아래에서 타수·안타수·장타율·헛스윙률을 확인할 수 있습니다.')) +
             note('전체 ' + data.seen + '구 · 위치 확인 ' + (data.seen - data.missing) + '구 · 위치·존 높이 미제공 ' + data.missing + '구 제외') +
-            (pitching ? plot(data, rows, s.pitch, s.hand) : '') + heatmap(data, s.metric, role, s.cell) + '</section>';
+            report + '</section>';
         }).join('') || note('이 선수의 해당 시즌 투구 위치 집계가 없습니다.')) +
           note('타율·장타율은 타석을 끝낸 공의 위치로 분류합니다(타수·안타·루타 기준). 헛스윙률은 헛스윙/스윙입니다. 바깥 테두리 칸은 그 방향의 먼 공도 포함하며 실제 존 판정과 같지 않습니다. 서로 다른 타자의 존 높이를 하단 0·상단 1로 맞췄습니다.') +
           note((season >= 2026 ? '2026년부터 좌표는 홈플레이트 중앙·ABS 존 기준입니다.' : '2025년까지 좌표는 홈플레이트 앞면·원본 존 높이 기준입니다.') + ' 다른 기준의 시즌을 합쳐 비교하지 않습니다.') +
+          (season < 2015 ? note('이 시즌은 Statcast 도입 전 PITCHf/x 자료입니다. 초기 측정 누락이 있으며 위치가 확인된 공만 구역별 기록에 포함합니다.') : '') +
           note('MLB 정규시즌 · ' + esc(index.through) + ' 경기일까지 · 갱신: ' + new Date(index.updated).toLocaleString('ko-KR', {timeZone:'Asia/Seoul'}) +
             ' (한국 시간) · <a href="https://baseballsavant.mlb.com/csv-docs" target="_blank" rel="noopener">Baseball Savant 위치·구역 정의</a>');
       };

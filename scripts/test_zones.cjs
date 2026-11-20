@@ -32,14 +32,19 @@ test('pitch and opponent hand filters never add overlapping totals', () => {
 });
 test('two-way data renders plot, heatmap and accessible per-cell sample counts', async () => {
   const v = client(async (url) => url === 'data/zones/index.json' ? {seasons:[2026]} : url.endsWith('index.json') ? {season:2026,gameType:'R',buckets:{'01':'01.0123456789ab.json'},through:'2026-09-30',updated:'2026-11-20T00:00:00Z'} :
-    {season:2026,players:{1:{pitching:[sample()],batting:[sample()]}}});
+    {season:2026,players:{1:{pitching:[sample(),sample('FA'),sample('PO')],batting:[sample()]}}});
   const root = {};
   await v.render({id:1},2026,root);
   assert.match(root.innerHTML,/20×20/);
   assert.match(root.innerHTML,/타자 · 핫콜드존/);
   assert.match(root.innerHTML,/투수 · 투구 위치 분포/);
+  assert.match(root.innerHTML,/패스트볼 \(세부 미분류\)/);
+  assert.match(root.innerHTML,/피치아웃/);
   assert.match(root.innerHTML,/0\.000|\.000/);
   assert.match(root.innerHTML,/5타수/);
+  assert.match(root.innerHTML,/구역의 숫자와 색상은 타율/);
+  assert.doesNotMatch(root.innerHTML,/data-zone-filter="metric"/);
+  assert.match(root.innerHTML,/헛스윙률 20.0%/);
   assert.match(root.innerHTML,/위치·존 높이 미제공 2구/);
 });
 test('unsupported season uses availability index without fetching nonexistent data', async () => {
@@ -50,6 +55,35 @@ test('unsupported season uses availability index without fetching nonexistent da
   assert.deepEqual(calls,['data/zones/index.json']);
   assert.match(root.innerHTML,/제공 시즌: 2026/);
   assert.doesNotMatch(root.innerHTML,/<table/);
+});
+
+test('mutable manifests revalidate HTTP cache while hashed bucket uses its content version', async () => {
+  const calls = [];
+  const v = client(async (url, options) => {
+    calls.push([url,options && options.cache]);
+    return url === 'data/zones/index.json' ? {seasons:[2026]} : url.endsWith('index.json') ?
+      {season:2026,gameType:'R',buckets:{'01':'01.0123456789ab.json'},through:'2026-09-27',updated:'2026-11-20T00:00:00Z'} :
+      {season:2026,players:{}};
+  });
+  await v.render({id:1},2026,{});
+  assert.deepEqual(calls,[['data/zones/index.json','no-cache'],['data/zones/2026/index.json','no-cache'],
+    ['data/zones/2026/01.0123456789ab.json',undefined]]);
+});
+
+test('selected zone preserves counts and shows AVG and SLG for each role, including zero AB', async () => {
+  const row = sample();
+  row.zones[12] = [40,25,4,13,6,10];
+  const v = client(async (url) => url === 'data/zones/index.json' ? {seasons:[2026]} : url.endsWith('index.json') ?
+    {season:2026,gameType:'R',buckets:['01'],through:'2026-09-27',updated:'2026-11-20T00:00:00Z'} :
+    {season:2026,players:{1:{pitching:[row],batting:[row]}}});
+  const root = {querySelector:() => ({focus:() => {}})};
+  await v.render({id:1},2026,root);
+  assert.match(root.innerHTML,/13타수 \/ 6안타 · 타율 .462 · 장타율 .769/);
+  assert.match(root.innerHTML,/상대 13타수 \/ 6피안타 · 피안타율 .462 · 피장타율 .769/);
+  assert.match(root.innerHTML,/10허용 루타/);
+  root.onclick({target:{closest:() => ({dataset:{zoneRole:'batting',zoneCell:'0'}})}});
+  assert.match(root.innerHTML,/0타수 \/ 0안타 · 타율 - · 장타율 -/);
+  assert.doesNotMatch(root.innerHTML,/NaN|Infinity/);
 });
 test('late season response cannot replace the new season or turn unavailable into zeros', async () => {
   let release;
@@ -64,4 +98,16 @@ test('late season response cannot replace the new season or turn unavailable int
   assert.equal(root.innerHTML,current);
   assert.match(root.innerHTML,/불러오지 못/);
   assert.doesNotMatch(root.innerHTML,/<table/);
+});
+
+test('entirely unmeasured player records do not appear as zero-hit zone statistics', async () => {
+  const row = {...sample(),missing:22,zones:{},density:[]};
+  const v = client(async (url) => url === 'data/zones/index.json' ? {seasons:[2008]} : url.endsWith('index.json') ?
+    {season:2008,gameType:'R',buckets:['01'],through:'2008-09-30',updated:'2026-11-20T00:00:00Z'} :
+    {season:2008,players:{1:{batting:[row],pitching:[row]}}});
+  const root = {};
+  await v.render({id:1},2008,root);
+  assert.match(root.innerHTML,/위치·존 높이가 확인된 공이 없어/);
+  assert.match(root.innerHTML,/PITCHf\/x/);
+  assert.doesNotMatch(root.innerHTML,/class="zone-grid"|class="zone-plot"|0타수 \/ 0안타/);
 });

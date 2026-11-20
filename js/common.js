@@ -89,9 +89,9 @@ window.BB = (function () {
     String(text).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
 
   const cache = new Map();
-  async function loadJson(url) {
+  async function loadJson(url, options) {
     if (!cache.has(url)) {
-      const res = await fetch(url);
+      const res = await fetch(url, options);
       if (!res.ok) throw new Error(url + " (" + res.status + ")");
       cache.set(url, await res.json());
     }

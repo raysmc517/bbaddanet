@@ -1036,6 +1036,7 @@ table.stats {
 .zone-grid strong { font-size: 16px; }
 .zone-grid small { font-size: 11px; }
 .zone-detail { font-size: 13px; padding: 10px; border-left: 3px solid var(--accent); background: var(--surface-alt); }
+.zone-detail p { margin: 6px 0 0; }
 @media (max-width: 640px) {
   .zone-section { padding: 10px; }
   .zone-grid strong { font-size: 14px; }
