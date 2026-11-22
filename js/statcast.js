@@ -148,5 +148,5 @@
       if (version === request) root.innerHTML = title + note("Statcast 자료를 불러오지 못했습니다.");
     }
   }
-  window.BB.statcast = { render, pitchColor: color };
+  window.BB.statcast = { render, pitchColor: color, pitchName };
 })();

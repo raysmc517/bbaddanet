@@ -166,6 +166,11 @@
 - `python -m unittest discover -s scripts -p test_ped.py`: 합친 칸(rowspan), 서식·각주 정리, 독립리그 표 제외, 동명이인·경력 기간 밖 이름 제외를 검증한다.
 
 
+## 지난 시즌과 비교 팝업
+
+- 선수 상세 분석의 "지난 시즌과 비교" 팝업은 `js/season-compare.js`가 선수 파일과 `data/statcast/{시즌}.json`으로 그리고, 지표 목록·변화 계산은 `js/compare.js`를 쓴다(`player.html`이 함께 읽음). 외부 요청·수집 스크립트가 없다. 지표 키를 바꾸면 `js/common.js` 열 키와 맞춘다. 상세는 PRD 21절.
+- `node --test scripts/test_compare.cjs`(낮을수록 좋은 지표의 방향, 누락값, 변화 표기), `node --test scripts/test_season_compare.cjs`(비교 시즌 선택, 여러 팀 합산 행).
+
 ## 선수 맥락·경기·뉴스·관심 목록 실행
 
 - `python scripts/player_context.py`: 현재 시즌 MLB 평균과 득점권·좌우 상대·홈/원정 성적. `--from 1876 --to 2026 --averages-only`는 과거 평균만 받는다. 완료 시즌 평균은 재사용하고 `--refresh`로 갱신한다. 0분모·누락값과 아웃 수를 존중하고 실패 시 기존 시즌 파일을 유지한다.

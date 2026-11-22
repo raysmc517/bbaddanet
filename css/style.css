@@ -1064,3 +1064,29 @@ table.stats {
 .zone-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 0; margin: 8px 0; list-style: none; font-size: 12px; }
 .zone-legend li { display: inline-flex; align-items: center; gap: 4px; }
 .zone-legend li span { width: 10px; height: 10px; border-radius: 50%; }
+
+/* 선수 상세: 지난 시즌과 비교 팝업 */
+.season-compare-open { margin: 8px 0 0 8px; padding: 7px 12px; border: 1px solid var(--accent); border-radius: var(--radius); background: var(--accent-soft); color: var(--accent); font: inherit; font-weight: 600; cursor: pointer; vertical-align: bottom; }
+.season-compare-open:hover { background: var(--surface); }
+.season-compare-open:disabled { border-color: var(--border); background: var(--surface-alt); color: var(--text-sub); cursor: not-allowed; }
+.season-compare-dialog { width: min(720px, calc(100vw - 24px)); max-height: calc(100vh - 32px); padding: 16px 20px 20px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); }
+.season-compare-dialog::backdrop { background: rgba(0, 0, 0, .45); }
+.season-compare-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.season-compare-head h2 { margin: 0; font-size: 18px; }
+.season-compare-close { width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--surface-alt); color: var(--text); font-size: 22px; line-height: 1; cursor: pointer; }
+.season-compare-group { margin-top: 16px; }
+.season-compare-group h3 { margin: 0 0 6px; font-size: 16px; }
+.season-compare-group h4 { margin: 14px 0 6px; font-size: 14px; }
+.season-compare-headline { margin: 4px 0 8px; font-size: 15px; }
+.season-compare-table th[scope="row"] { text-align: left; font-weight: 600; }
+.season-compare-volume th, .season-compare-volume td { color: var(--text-sub); }
+.season-compare-table td.delta-worse, .season-compare-headline .delta-worse { color: #b8322d; }
+.season-compare-table td.delta-better, .season-compare-headline .delta-better { color: #2b5fa8; }
+@media (prefers-color-scheme: dark) {
+  .season-compare-table td.delta-worse, .season-compare-headline .delta-worse { color: #f08a84; }
+  .season-compare-table td.delta-better, .season-compare-headline .delta-better { color: #8bb4f0; }
+}
+@media (max-width: 640px) {
+  .season-compare-dialog { padding: 12px; }
+  .season-compare-open { margin-left: 0; }
+}

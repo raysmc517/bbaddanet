@@ -102,6 +102,7 @@
     try { averages = await loadJson("data/mlb_averages.json"); } catch (_) { /* 아래에 미제공 표시 */ }
     $("playerAnalysis").innerHTML = box("리그 평균 비교·선수 리포트", '<label class="field"><span>분석 시즌</span><select id="analysisSeason">' +
       seasons.map((s) => '<option>' + s + '</option>').join("") + '</select></label>' +
+      '<button type="button" class="season-compare-open" id="seasonCompareOpen" aria-haspopup="dialog"><span aria-hidden="true">⇄</span> 지난 시즌과 비교</button>' +
       '<nav class="analysis-jumps" aria-label="분석 구역"><a href="#seasonReport">평균·리포트</a><a href="#situationReport">상황별</a><a href="#statcastReport">타구·구종</a><a href="#zonesReport">탄착군·핫콜드존</a></nav>' +
       '<div id="seasonReport"></div><div id="situationReport"></div><div id="statcastReport"></div><div id="zonesReport"></div>');
     const requestedSeason = Number(new URLSearchParams(location.search).get("season"));
@@ -119,6 +120,10 @@
         link.searchParams.set("season", String(season));
         $(id).href = link.pathname + link.search;
       }
+      const compareButton = $("seasonCompareOpen");
+      const earlier = window.BB.seasonCompare ? window.BB.seasonCompare.earlierSeasons(player, season) : [];
+      compareButton.disabled = !earlier.length;
+      compareButton.title = earlier.length ? season + " 시즌을 " + earlier[0] + " 시즌과 비교" : "이전 MLB 시즌 기록이 없습니다";
       const statcastReady = window.BB.statcast.render(player, season, $("statcastReport"));
       const zonesReady = window.BB.zones && window.BB.zones.render(player, season, $("zonesReport"));
       const groups = player.pos === "P" ? ["pitching", "batting"] : ["batting", "pitching"];
@@ -166,6 +171,8 @@
       if (request === version && location.hash === "#zonesReport") $("zonesReport").scrollIntoView({block:"start"});
     };
     $("analysisSeason").addEventListener("change", render);
+    $("seasonCompareOpen").addEventListener("click", (e) =>
+      window.BB.seasonCompare.open(player, aggregate, Number($("analysisSeason").value), e.currentTarget));
     render();
   }
   window.BB.renderPlayerContext = (player, aggregate) => {
