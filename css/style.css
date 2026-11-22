@@ -1074,6 +1074,9 @@ table.stats {
 .season-compare-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .season-compare-head h2 { margin: 0; font-size: 18px; }
 .season-compare-close { width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--surface-alt); color: var(--text); font-size: 22px; line-height: 1; cursor: pointer; }
+.season-compare-pickers { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 8px; }
+.season-compare-mlb { display: inline-flex; align-items: center; gap: 6px; align-self: flex-end; padding: 8px 0; font-weight: 600; cursor: pointer; }
+.season-compare-mlb input { width: 18px; height: 18px; accent-color: var(--accent); }
 .season-compare-group { margin-top: 16px; }
 .season-compare-group h3 { margin: 0 0 6px; font-size: 16px; }
 .season-compare-group h4 { margin: 14px 0 6px; font-size: 14px; }

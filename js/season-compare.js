@@ -10,16 +10,49 @@
   // 속도 차이: km/h 기준, 괄호 안 mph
   const speedDiff = (d) => sign(d) + Math.abs(d * 1.609344).toFixed(1) + ' km/h <span class="muted">(' + sign(d) + Math.abs(d).toFixed(1) + " mph)</span>";
 
-  // 한 시즌의 MLB 합계 행. 팀이 여러 개면 화면과 같은 합산 함수를 쓴다(합산 행에는 세이버 지표가 없을 수 있음).
-  function seasonRow(player, group, season, aggregate) {
-    const rows = (player[group] || []).filter((r) => r.league === "mlb" && r.season === season);
+  // 비교 단위는 "시즌 · 레벨"이다(MLB, AAA, AA, High-A, Single-A, Rookie …). 레벨이 다르면 리그 수준이 다르므로 합치지 않는다.
+  const LEVEL_ORDER = ["MLB", "AAA", "AA", "High-A", "Single-A", "Rookie"];
+  const levelOf = (r) => r.league === "mlb" ? "MLB" : r.league === "milb" ? r.level || "MiLB" : null;
+  const rank = (level) => { const i = LEVEL_ORDER.indexOf(level); return i < 0 ? LEVEL_ORDER.length : i; };
+  const label = (e) => e.season + " · " + e.level;
+  // 표 머리글: 좁은 화면에서도 변화 열이 보이도록 레벨을 시즌 아래 줄에 둔다.
+  const headLabel = (e) => e.season + '<br><span class="muted">' + esc(e.level) + "</span>";
+  const sameEntry = (a, b) => a && b && a.season === b.season && a.level === b.level;
+
+  // 한 시즌·레벨의 합계 행. 팀이 여러 개면 화면과 같은 합산 함수를 쓴다(합산 행에는 세이버 지표가 없을 수 있음).
+  function entryRow(player, group, entry, aggregate) {
+    const rows = (player[group] || []).filter((r) => r.season === entry.season && levelOf(r) === entry.level);
     if (!rows.length) return null;
     return rows.length === 1 ? rows[0] : aggregate(group, rows);
   }
-  // 기준 시즌보다 앞선 MLB 시즌(최신순). 타격·투구 중 하나라도 있으면 포함한다.
-  function earlierSeasons(player, season) {
-    return [...new Set(player.batting.concat(player.pitching).filter((r) => r.league === "mlb" && r.season < season).map((r) => r.season))]
-      .sort((a, b) => b - a);
+  // 선수의 MLB·마이너 기록 단위 목록: 최신 시즌 먼저, 같은 시즌은 높은 레벨 먼저. volume은 타석+상대 타자 수.
+  function entries(player) {
+    const map = new Map();
+    for (const r of (player.batting || []).concat(player.pitching || [])) {
+      const level = levelOf(r);
+      if (!level || !known(r.season)) continue;
+      const key = r.season + "|" + level;
+      const e = map.get(key) || { season: r.season, level, volume: 0 };
+      e.volume += (known(r.PA) ? r.PA : 0) + (known(r.BF) ? r.BF : 0);
+      map.set(key, e);
+    }
+    return [...map.values()].sort((a, b) => b.season - a.season || rank(a.level) - rank(b.level));
+  }
+  const biggest = (list) => list.reduce((best, e) => (!best || e.volume > best.volume ? e : best), null);
+  // 기본 기준: 분석 중인 MLB 시즌이 있으면 그것, 없으면 가장 최근 시즌에서 가장 많이 뛴 레벨.
+  function defaultAfter(list, season) {
+    const mlb = list.find((e) => e.season === season && e.level === "MLB");
+    if (mlb) return mlb;
+    return list.length ? biggest(list.filter((e) => e.season === list[0].season)) : null;
+  }
+  // 기본 비교: 기준보다 앞선 가장 최근 시즌에서 같은 레벨, 없으면 가장 가까운 레벨(같으면 더 많이 뛴 쪽).
+  function defaultBefore(list, after) {
+    const earlier = list.filter((e) => e.season < after.season);
+    if (!earlier.length) return list.find((e) => !sameEntry(e, after)) || null; // 같은 시즌 다른 레벨(승격 전후)
+    const season = earlier[0].season;
+    const gap = (e) => Math.abs(rank(e.level) - rank(after.level));
+    return earlier.filter((e) => e.season === season)
+      .reduce((best, e) => (!best || gap(e) < gap(best) || (gap(e) === gap(best) && e.volume > best.volume) ? e : best), null);
   }
 
   function statTable(group, before, after, beforeSeason, afterSeason) {
@@ -29,7 +62,7 @@
       ["타석", String(before.PA ?? "-"), String(after.PA ?? "-")] :
       ["이닝", known(before.outs) ? fmt.ip(before.outs) : "-", known(after.outs) ? fmt.ip(after.outs) : "-"];
     const tone = (c) => { const g = gain(pair, c); return g === null || Math.abs(g) < 1e-9 ? "" : g < 0 ? "delta-worse" : "delta-better"; };
-    const rows = METRICS[group].map((c) => '<tr><th scope="row" title="' + esc(c.desc) + '">' + esc(c.label) + '</th><td>' +
+    const rows = METRICS[group].filter((c) => known(before[c.key]) || known(after[c.key])).map((c) => '<tr><th scope="row" title="' + esc(c.desc) + '">' + esc(c.label) + '</th><td>' +
       (known(before[c.key]) ? c.format(before[c.key]) : "-") + '</td><td>' + (known(after[c.key]) ? c.format(after[c.key]) : "-") +
       '</td><td class="' + tone(c) + '">' + signed(c, delta(pair, c.key)) + '</td></tr>').join("");
     return '<div class="table-scroll"><table class="stats season-compare-table"><thead><tr><th>지표</th><th>' + beforeSeason + '</th><th>' + afterSeason +
@@ -115,42 +148,86 @@
     return dialog;
   }
 
-  async function draw(player, aggregate, afterSeason, beforeSeason) {
+  const select = (cls, list, chosen, skip) => '<select class="' + cls + '">' + list.filter((e) => !sameEntry(e, skip)).map((e) =>
+    '<option value="' + e.season + "|" + esc(e.level) + '"' + (sameEntry(e, chosen) ? " selected" : "") + '>' + esc(label(e)) + '</option>').join("") + '</select>';
+  const parse = (value) => { const [season, level] = value.split("|"); return { season: Number(season), level }; };
+
+  // "MLB 기록만": MLB 기록이 두 시즌 이상이고 마이너 기록도 있을 때만 보인다.
+  const mlbList = (list) => list.filter((e) => e.level === "MLB");
+  const canMlbOnly = (list) => mlbList(list).length >= 2;
+  const hasMinor = (list) => list.some((e) => e.level !== "MLB");
+  // 기본은 MLB 기록이 두 시즌 이상이면 MLB만 본다.
+  const defaultMlbOnly = (player) => canMlbOnly(entries(player));
+  // 목록 범위가 바뀌어 고른 기록이 빠지면 기본 선택으로 되돌린다.
+  function pick(list, after, before, season) {
+    const inList = (e) => e && list.some((x) => sameEntry(x, e));
+    const a = inList(after) ? after : defaultAfter(list, season);
+    const b = inList(before) && !sameEntry(before, a) ? before : a && defaultBefore(list, a);
+    return [a, b];
+  }
+
+  async function draw(player, aggregate, after, before, mlbOnly) {
     const version = ++request;
-    const options = earlierSeasons(player, afterSeason);
+    const all = entries(player);
+    const list = mlbOnly ? mlbList(all) : all;
     const groups = (player.pos === "P" ? ["pitching", "batting"] : ["batting", "pitching"])
-      .filter((g) => seasonRow(player, g, afterSeason, aggregate) && seasonRow(player, g, beforeSeason, aggregate));
-    const head = '<div class="season-compare-head"><h2 id="seasonCompareTitle">지난 시즌과 비교</h2>' +
+      .filter((g) => entryRow(player, g, after, aggregate) && entryRow(player, g, before, aggregate));
+    const minor = after.level !== "MLB" || before.level !== "MLB";
+    const head = '<div class="season-compare-head"><h2 id="seasonCompareTitle">시즌 비교</h2>' +
       '<button type="button" class="season-compare-close" aria-label="닫기">×</button></div>' +
-      '<p class="muted">' + esc(player.name) + ' · ' + afterSeason + ' 시즌을 비교 시즌과 나란히 봅니다.</p>' +
-      '<label class="field"><span>비교 시즌</span><select class="season-compare-select">' +
-      options.map((s) => '<option value="' + s + '"' + (s === beforeSeason ? " selected" : "") + '>' + s + (s === afterSeason - 1 ? " (직전 시즌)" : "") + '</option>').join("") + '</select></label>' +
-      (!options.includes(afterSeason - 1) ? note("직전 시즌(" + (afterSeason - 1) + ") MLB 기록이 없어 그 이전 시즌과 비교합니다.") : "");
+      '<p class="muted">' + esc(player.name) + ' · MLB와 마이너리그 기록을 시즌·레벨 단위로 나란히 봅니다.</p>' +
+      '<div class="season-compare-pickers"><label class="field"><span>기준</span>' + select("season-compare-after", list, after) + '</label>' +
+      '<label class="field"><span>비교 대상</span>' + select("season-compare-before", list, before, after) + '</label>' +
+      // MLB 기록이 두 시즌 이상이고 마이너 기록도 있을 때만 보인다. 첫 콜업 시즌에는 숨기고 마이너 기록과 비교한다.
+      (hasMinor(all) && canMlbOnly(all) ? '<label class="season-compare-mlb"><input type="checkbox" class="season-compare-mlb-only"' +
+        (mlbOnly ? " checked" : "") + '> MLB 기록만</label>' : "") + '</div>' +
+      (before.season < after.season - 1 && !list.some((e) => e.season === after.season - 1) ? note("직전 시즌(" + (after.season - 1) + ") 기록이 없어 그 이전 시즌과 비교합니다.") : "") +
+      (after.level !== before.level ? note("레벨이 다릅니다 (" + esc(before.level) + " → " + esc(after.level) + "). 상대 수준과 리그 환경이 달라 같은 기록도 의미가 다릅니다. wRC+·ERA-·FIP-처럼 그 리그 평균과 비교한 지표가 덜 흔들리지만, 100이 레벨 간 같은 실력을 뜻하지는 않습니다.") : "");
     const body = groups.map((g) => {
-      const before = seasonRow(player, g, beforeSeason, aggregate), after = seasonRow(player, g, afterSeason, aggregate);
-      return '<section class="season-compare-group"><h3>' + (g === "batting" ? "타격" : "투구") + '</h3>' + headline(g, before, after) +
-        statTable(g, before, after, beforeSeason, afterSeason) + '<div data-statcast-group="' + g + '">' + note("Statcast 비교를 불러오는 중…") + '</div></section>';
-    }).join("") || note("두 시즌 모두 같은 역할(타격·투구)의 MLB 기록이 있어야 비교할 수 있습니다.");
+      const b = entryRow(player, g, before, aggregate), a = entryRow(player, g, after, aggregate);
+      return '<section class="season-compare-group"><h3>' + (g === "batting" ? "타격" : "투구") + '</h3>' + headline(g, b, a) +
+        statTable(g, b, a, headLabel(before), headLabel(after)) +
+        (after.level === "MLB" && before.level === "MLB" ? '<div data-statcast-group="' + g + '">' + note("Statcast 비교를 불러오는 중…") + '</div>' : "") + '</section>';
+    }).join("") || note("두 기록 모두 같은 역할(타격·투구)의 기록이 있어야 비교할 수 있습니다.");
     dialog.innerHTML = head + body +
-      note("변화는 " + afterSeason + " − " + beforeSeason + "입니다. 빨강은 나빠진 방향, 파랑은 좋아진 방향이며 ERA·K%(타자)처럼 낮을수록 좋은 지표는 방향을 반대로 판단합니다. wOBA·wRC+·FIP 같은 세이버 지표는 자체 계산한 시즌(2024년부터)만 있어 그 이전 시즌과 여러 팀 합산 행은 '-'입니다. 표본이 작으면 큰 변화도 우연일 수 있습니다.");
+      note("변화는 기준 − 비교 대상입니다. 빨강은 나빠진 방향, 파랑은 좋아진 방향이며 ERA·K%(타자)처럼 낮을수록 좋은 지표는 방향을 반대로 판단합니다. wOBA·wRC+·FIP 같은 세이버 지표는 자체 계산한 시즌(2024년부터)·레벨(AAA~Single-A)만 있어 그 밖의 기록과 여러 팀 합산 행은 '-'입니다. 두 기록 모두 값이 없는 지표는 표에서 뺍니다. 표본이 작으면 큰 변화도 우연일 수 있습니다." +
+        (minor ? " 마이너리그는 Statcast 비교를 제공하지 않습니다." : ""));
     dialog.querySelector(".season-compare-close").addEventListener("click", () => dialog.close());
-    dialog.querySelector(".season-compare-select").addEventListener("change", (e) => draw(player, aggregate, afterSeason, Number(e.target.value)));
+    dialog.querySelector(".season-compare-after").addEventListener("change", (e) => {
+      const next = parse(e.target.value);
+      draw(player, aggregate, next, defaultBefore(list, next), mlbOnly);
+    });
+    dialog.querySelector(".season-compare-before").addEventListener("change", (e) => draw(player, aggregate, after, parse(e.target.value), mlbOnly));
+    const toggle = dialog.querySelector(".season-compare-mlb-only");
+    if (toggle) toggle.addEventListener("change", (e) => {
+      const next = e.target.checked;
+      const [a, b] = pick(next ? mlbList(all) : all, after, before, after.season);
+      draw(player, aggregate, a, b, next); // 첫 await 전에 화면을 다시 그리므로 바로 초점을 옮길 수 있다
+      const box = dialog.querySelector(".season-compare-mlb-only");
+      if (box) box.focus();
+    });
     for (const g of groups) {
-      const html = await statcastPart(player, g, beforeSeason, afterSeason);
+      if (minor) break;
+      const html = await statcastPart(player, g, before.season, after.season);
       if (version !== request) return;
       const slot = dialog.querySelector('[data-statcast-group="' + g + '"]');
       if (slot) slot.innerHTML = html;
     }
   }
 
-  function open(player, aggregate, afterSeason, opener) {
-    const options = earlierSeasons(player, afterSeason);
-    if (!options.length) return;
+  // 비교할 기록 단위가 둘 이상이면 열 수 있다.
+  const available = (player) => entries(player).length >= 2;
+  function open(player, aggregate, season, opener) {
+    const mlbOnly = defaultMlbOnly(player);
+    const list = mlbOnly ? mlbList(entries(player)) : entries(player);
+    const after = defaultAfter(list, season);
+    const before = after && defaultBefore(list, after);
+    if (!before) return;
     const d = ensureDialog();
     d.onclose = () => { if (opener) opener.focus(); };
-    draw(player, aggregate, afterSeason, options[0]);
+    draw(player, aggregate, after, before, mlbOnly);
     if (!d.open) d.showModal();
   }
 
-  window.BB.seasonCompare = { open, earlierSeasons, seasonRow };
+  window.BB.seasonCompare = { open, available, entries, entryRow, defaultAfter, defaultBefore, defaultMlbOnly, pick, mlbList };
 })();

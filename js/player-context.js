@@ -95,14 +95,28 @@
       (delta >= 0 ? "높습니다" : "낮습니다") + (group === "pitching" ? " (낮을수록 좋은 기록)" : "") + '.</p>';
   }
 
+  // 시즌 비교 팝업 버튼. MLB·마이너 기록 단위가 둘 이상이면 열린다.
+  const compareButtonHtml = '<button type="button" class="season-compare-open" id="seasonCompareOpen" aria-haspopup="dialog"><span aria-hidden="true">⇄</span> 지난 시즌과 비교</button>';
+  function bindCompare(player, aggregate, season) {
+    const button = $("seasonCompareOpen");
+    const ok = window.BB.seasonCompare && window.BB.seasonCompare.available(player);
+    button.disabled = !ok;
+    button.title = ok ? "MLB·마이너리그 시즌 기록을 나란히 비교" : "비교할 다른 시즌 기록이 없습니다";
+    button.onclick = (e) => window.BB.seasonCompare.open(player, aggregate, season(), e.currentTarget);
+  }
+
   async function analysis(player, aggregate) {
     const seasons = [...new Set(player.batting.concat(player.pitching).filter((r) => r.league === "mlb").map((r) => r.season))].sort((a, b) => b - a);
-    if (!seasons.length) { $("playerAnalysis").innerHTML = box("시즌 맥락", note("현재 리그 평균 비교·상황별 성적·Statcast·위치 구역 분석은 MLB 정규시즌을 제공합니다.")); return; }
+    if (!seasons.length) {
+      $("playerAnalysis").innerHTML = box("시즌 맥락", compareButtonHtml + note("현재 리그 평균 비교·상황별 성적·Statcast·위치 구역 분석은 MLB 정규시즌을 제공합니다. 마이너리그 기록은 '지난 시즌과 비교'에서 시즌·레벨별로 비교할 수 있습니다."));
+      bindCompare(player, aggregate, () => null);
+      return;
+    }
     let averages = {};
     try { averages = await loadJson("data/mlb_averages.json"); } catch (_) { /* 아래에 미제공 표시 */ }
     $("playerAnalysis").innerHTML = box("리그 평균 비교·선수 리포트", '<label class="field"><span>분석 시즌</span><select id="analysisSeason">' +
       seasons.map((s) => '<option>' + s + '</option>').join("") + '</select></label>' +
-      '<button type="button" class="season-compare-open" id="seasonCompareOpen" aria-haspopup="dialog"><span aria-hidden="true">⇄</span> 지난 시즌과 비교</button>' +
+      compareButtonHtml +
       '<nav class="analysis-jumps" aria-label="분석 구역"><a href="#seasonReport">평균·리포트</a><a href="#situationReport">상황별</a><a href="#statcastReport">타구·구종</a><a href="#zonesReport">탄착군·핫콜드존</a></nav>' +
       '<div id="seasonReport"></div><div id="situationReport"></div><div id="statcastReport"></div><div id="zonesReport"></div>');
     const requestedSeason = Number(new URLSearchParams(location.search).get("season"));
@@ -120,10 +134,6 @@
         link.searchParams.set("season", String(season));
         $(id).href = link.pathname + link.search;
       }
-      const compareButton = $("seasonCompareOpen");
-      const earlier = window.BB.seasonCompare ? window.BB.seasonCompare.earlierSeasons(player, season) : [];
-      compareButton.disabled = !earlier.length;
-      compareButton.title = earlier.length ? season + " 시즌을 " + earlier[0] + " 시즌과 비교" : "이전 MLB 시즌 기록이 없습니다";
       const statcastReady = window.BB.statcast.render(player, season, $("statcastReport"));
       const zonesReady = window.BB.zones && window.BB.zones.render(player, season, $("zonesReport"));
       const groups = player.pos === "P" ? ["pitching", "batting"] : ["batting", "pitching"];
@@ -171,8 +181,7 @@
       if (request === version && location.hash === "#zonesReport") $("zonesReport").scrollIntoView({block:"start"});
     };
     $("analysisSeason").addEventListener("change", render);
-    $("seasonCompareOpen").addEventListener("click", (e) =>
-      window.BB.seasonCompare.open(player, aggregate, Number($("analysisSeason").value), e.currentTarget));
+    bindCompare(player, aggregate, () => Number($("analysisSeason").value));
     render();
   }
   window.BB.renderPlayerContext = (player, aggregate) => {

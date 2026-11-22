@@ -168,8 +168,8 @@
 
 ## 지난 시즌과 비교 팝업
 
-- 선수 상세 분석의 "지난 시즌과 비교" 팝업은 `js/season-compare.js`가 선수 파일과 `data/statcast/{시즌}.json`으로 그리고, 지표 목록·변화 계산은 `js/compare.js`를 쓴다(`player.html`이 함께 읽음). 외부 요청·수집 스크립트가 없다. 지표 키를 바꾸면 `js/common.js` 열 키와 맞춘다. 상세는 PRD 21절.
-- `node --test scripts/test_compare.cjs`(낮을수록 좋은 지표의 방향, 누락값, 변화 표기), `node --test scripts/test_season_compare.cjs`(비교 시즌 선택, 여러 팀 합산 행).
+- 선수 상세 분석의 "지난 시즌과 비교" 팝업은 `js/season-compare.js`가 선수 파일과 `data/statcast/{시즌}.json`으로 그리고, 지표 목록·변화 계산은 `js/compare.js`를 쓴다(`player.html`이 함께 읽음). 비교 단위는 MLB·마이너의 시즌·레벨이며 Statcast는 MLB끼리만 비교한다. "MLB 기록만"은 MLB 기록이 두 시즌 이상일 때만 보이고 기본으로 켜진다(첫 콜업 시즌에는 숨김). 외부 요청·수집 스크립트가 없다. 지표 키를 바꾸면 `js/common.js` 열 키와 맞춘다. 상세는 PRD 21절.
+- `node --test scripts/test_compare.cjs`(낮을수록 좋은 지표의 방향, 누락값, 변화 표기), `node --test scripts/test_season_compare.cjs`(시즌·레벨 목록, 기본 선택, 승격 전후, MLB 기록만, 여러 팀 합산 행).
 
 ## 선수 맥락·경기·뉴스·관심 목록 실행
 
