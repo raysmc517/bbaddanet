@@ -164,6 +164,9 @@ body {
 .metric-help dt { font-weight: 700; }
 .metric-help dd { margin: 0; color: var(--text-sub); }
 .metric-help p { color: var(--text-sub); }
+.statcast-help { margin: 4px 0 10px; line-height: 1.6; }
+.statcast-help dl { grid-template-columns: 1fr; gap: 10px; }
+.statcast-help dl div { grid-template-columns: 96px 1fr; }
 .stats th:has(.sort-button) { padding: 0; }
 .sort-button {
   display: block;
@@ -1022,12 +1025,19 @@ table.stats {
 .zone-plot { max-width: 430px; margin: 12px auto; }
 .zone-plot svg { width: 100%; height: auto; display: block; }
 .zone-axis { fill: none; stroke: var(--border); stroke-width: 1; }
-.zone-strike { fill: none; stroke: var(--text); stroke-width: 1.5; }
+.zone-strike { fill: none; stroke: var(--text); stroke-width: 2.5; }
 .zone-dots { fill: var(--accent); }
 .zone-axis-label { fill: var(--text-sub); font-size: 11px; }
 .zone-table-wrap { max-width: 480px; margin: 16px auto 0; }
 .zone-grid { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 2px; }
-.zone-grid caption { font-size: 13px; color: var(--text-sub); padding-bottom: 8px; }
+.zone-grid-caption { margin: 0; font-size: 13px; color: var(--text-sub); padding-bottom: 8px; text-align: center; }
+/* 스트라이크존 경계: 5×5 중 가운데 3×3을 칸 사이 간격(2px)의 중앙선에 맞춰 감싼다. */
+.zone-grid-box { position: relative; }
+.zone-grid-strike {
+  position: absolute; pointer-events: none; box-sizing: border-box; border: 3px solid var(--text); border-radius: 4px;
+  left: calc(1.5px + (100% - 12px) / 5); width: calc(9px + (100% - 12px) * 3 / 5);
+  top: calc(1.5px + (100% - 12px) / 5); height: calc(9px + (100% - 12px) * 3 / 5);
+}
 .zone-grid td { padding: 0; border: 1px solid var(--border); border-radius: 4px; }
 .zone-grid td.in-zone { border-color: var(--text-sub); }
 .zone-grid button { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; min-height: 64px; padding: 6px 0; border: 0; border-radius: 3px; color: var(--text); background: var(--zone-fill); font: inherit; cursor: pointer; font-variant-numeric: tabular-nums; }
@@ -1041,7 +1051,9 @@ table.stats {
   .zone-section { padding: 10px; }
   .zone-grid strong { font-size: 14px; }
   .zone-grid button { min-height: 56px; }
+  .zone-avg-label { display: none; }
 }
+.zone-grid small { white-space: nowrap; }
 .analysis-jumps { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 12px 0; }
 .analysis-jumps a { color: var(--accent); padding: 6px 0; }
 #zonesReport, #statcastReport, #situationReport, #seasonReport { scroll-margin-top: 16px; }

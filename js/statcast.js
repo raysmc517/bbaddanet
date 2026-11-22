@@ -27,6 +27,26 @@
       rows.map((row) => '<tr>' + row.map((v) => '<td>' + v + '</td>').join("") + '</tr>').join("") + '</tbody></table></div>';
   }
 
+  // 지표 읽는 법. 단일 값의 우열을 단정하지 않고 구종별로 유리한 방향의 '경향'만 적는다.
+  function guide(summary, items, outro) {
+    return '<details class="metric-help statcast-help"><summary>' + summary + '</summary><dl>' +
+      items.map(([term, text]) => '<div><dt>' + term + '</dt><dd>' + text + '</dd></div>').join("") + '</dl>' +
+      (outro ? '<p>' + outro + '</p>' : '') + '</details>';
+  }
+  const PITCH_GUIDE = guide("지표 읽는 법 · 높을수록 좋은가요?", [
+    ["평균 구속", "같은 구종이면 대체로 빠를수록 타자가 대응할 시간이 줄어 유리합니다. 체인지업·스플리터는 직구와 팔 동작은 같고 속도는 충분히 느려야 효과가 있어, 직구와의 구속 차이도 함께 봅니다."],
+    ["회전수", "공이 1분에 도는 횟수입니다. 높다고 무조건 좋지 않습니다. 회전 방향(축)에 따라 같은 회전수도 움직임이 달라집니다. 포심·커브·슬라이더는 높은 편이, 싱커·스플리터처럼 가라앉혀야 하는 공은 낮은 편이 유리한 경향입니다."],
+    ["수평 이동", "포수 쪽에서 본 좌우 휨입니다. +는 포수 기준 오른쪽, −는 왼쪽으로 방향만 뜻하며 크기는 절댓값으로 봅니다. 싱커·체인지업은 투구하는 팔 쪽으로, 슬라이더·커브는 반대쪽으로 휩니다. 좌투수와 우투수는 부호가 반대라 같은 손 평균과 비교합니다."],
+    ["수직 IVB", "중력이 없다고 가정했을 때의 위아래 움직임입니다. 포심은 클수록 덜 떨어져 타자 눈에 '떠오르는' 듯 보여 헛스윙에 유리한 경향이고, 싱커·체인지업·스플리터는 작을수록(더 가라앉을수록), 커브는 음수가 클수록(더 크게 떨어질수록) 유리한 경향입니다."],
+  ], "결국 기준은 같은 구종·같은 손의 MLB 평균과 비교한 차이, 그리고 구종끼리의 구속·움직임 차이입니다. 수치만으로 구위를 판정할 수 없으며 실제 결과는 제구·투구 위치·구종 조합에 크게 좌우됩니다.");
+  const BATTING_GUIDE = guide("지표 읽는 법 · 높을수록 좋은가요?", [
+    ["타구 속도", "빠를수록 좋습니다. 빠른 타구일수록 안타·장타가 될 가능성이 커집니다."],
+    ["발사각", "높을수록 좋은 지표가 아닙니다. 너무 낮으면 땅볼, 너무 높으면 뜬공 아웃이 늘어 중간 범위(약 8~32도)가 유리합니다."],
+    ["강한 타구%", "높을수록 좋습니다. 95 mph(약 153 km/h) 이상 타구의 비율입니다."],
+    ["배럴%", "높을수록 좋습니다. 장타 가능성이 매우 높은 속도·각도 조합의 타구 비율입니다."],
+    ["스위트스폿%", "높을수록 좋은 경향입니다. 안타가 되기 좋은 각도(8~32도)로 날아간 타구의 비율입니다."],
+  ], "타구 수가 적은 시즌은 값이 크게 흔들리므로 표본(타구 수)을 함께 보세요.");
+
   // 부호 있는 원본 인치 좌표를 사용한다. 수직 값은 중력 없는 IVB이며 실제 궤적이 아니다.
   function movementPlot(pitches) {
     const points = pitches.filter((p) => known(p.horizontal) && known(p.ivb));
@@ -62,7 +82,7 @@
   }
 
   function batting(row, season, average) {
-    return '<h4>타구 속도·발사각</h4>' + table([
+    return '<h4>타구 속도·발사각</h4>' + BATTING_GUIDE + table([
       ["타구 수", "BBE: 결과가 발생한 타구 수. 모든 타구에 측정값이 있는 것은 아닙니다."],
       ["평균 타구 속도", "EV: km/h, 괄호 안은 mph"], ["최고 타구 속도", "시즌 중 최고 EV, km/h (mph)"],
       ["평균 발사각", "LA: 수평 기준 발사각(도)"], ["강한 타구%", "95 mph(약 152.9 km/h) 이상인 타구 비율"],
@@ -90,7 +110,7 @@
       const average = averages && averages[row.hand + ":" + pitch.type];
       return format(pitch[key]) + (averages ? '<div class="statcast-average">MLB 평균 (근사)<br>' + comparison(pitch[key], average && average[key], format, unit) + '</div>' : '');
     };
-    return '<h4>구종 특징·구속</h4>' + '<p class="muted">집계 투구 수: ' + row.pitches.toLocaleString("ko-KR") + '구</p>' +
+    return '<h4>구종 특징·구속</h4>' + '<p class="muted">집계 투구 수: ' + row.pitches.toLocaleString("ko-KR") + '구</p>' + PITCH_GUIDE +
       table([["구종", "Baseball Savant의 구종 분류"], ["사용률", "전체 투구 중 비율. 반올림·미분류로 합이 100%와 다를 수 있습니다."],
         ["평균 구속", "km/h, 괄호 안은 mph"], ["회전수 (rpm)", "평균 회전수(rpm). 회전 효율·구위 등급과 다릅니다."],
         ["수평 이동", "포수 시점, cm (in). 음수는 왼쪽, 양수는 오른쪽."],

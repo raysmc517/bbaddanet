@@ -111,3 +111,24 @@ test('entirely unmeasured player records do not appear as zero-hit zone statisti
   assert.match(root.innerHTML,/PITCHf\/x/);
   assert.doesNotMatch(root.innerHTML,/class="zone-grid"|class="zone-plot"|0타수 \/ 0안타/);
 });
+
+test('pitcher zones show usage, pitch count and opponent AVG colored only with enough at-bats', async () => {
+  const row = sample();
+  row.zones[12] = [40,25,4,20,2,3];   // 20타수 2피안타 → 전체보다 낮음(파랑)
+  row.zones[6] = [10,5,1,12,6,8];     // 12타수 6피안타 → 전체보다 높음(빨강)
+  row.zones[0] = [5,2,0,3,3,3];       // 3타수 → 표본 미달(회색)
+  const v = client(async (url) => url === 'data/zones/index.json' ? {seasons:[2026]} : url.endsWith('index.json') ?
+    {season:2026,gameType:'R',buckets:['01'],through:'2026-09-27',updated:'2026-11-20T00:00:00Z'} :
+    {season:2026,players:{1:{pitching:[row]}}});
+  const root = {};
+  await v.render({id:1,pos:'P'},2026,root);
+  const cell = (i) => root.innerHTML.match(new RegExp('<button[^>]*data-zone-cell="' + i + '"[^>]*>(.*?)</button>'))[0];
+  assert.match(cell(12),/<strong>72\.7%<\/strong><small>40구<\/small><small><span class="zone-avg-label">피안타율 <\/span>\.100<\/small>/);
+  assert.match(cell(12),/rgba\(54,116,190/);
+  assert.match(cell(6),/피안타율 <\/span>\.500/);
+  assert.match(cell(6),/rgba\(205,67,62/);
+  assert.match(cell(0),/var\(--surface-alt\)/);
+  assert.match(cell(1),/피안타율 <\/span>-/);
+  assert.match(root.innerHTML,/전체 피안타율\(\.314\) 대비/);
+  assert.doesNotMatch(root.innerHTML,/NaN|Infinity/);
+});

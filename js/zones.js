@@ -40,33 +40,46 @@
       return '<circle cx="' + x + '" cy="' + y + '" r="' + (2 + 6 * Math.sqrt(n / max)).toFixed(2) + '" fill="' + color(type) + '" opacity="' + (.25 + .7 * n / max).toFixed(2) + '"><title>' + esc(PITCH[type] || type) + ' ' + n + '구</title></circle>';
     }).join("");
     return '<figure class="zone-plot"><svg viewBox="0 0 360 325" role="img" aria-label="포수 시점 투구 위치 분포. 점은 20×20 위치 격자의 중심이며 크기는 해당 격자의 투구 수입니다.">' +
-      '<path class="zone-axis" d="M40 40V280H320"/><rect class="zone-strike" x="130.42" y="100" width="99.16" height="120"/>' +
-      '<g class="zone-dots">' + points + '</g>' +
+      '<path class="zone-axis" d="M40 40V280H320"/>' +
+      '<g class="zone-dots">' + points + '</g><rect class="zone-strike" x="130.42" y="100" width="99.16" height="120"><title>스트라이크존 (타자별 존 높이 기준)</title></rect>' +
       '<g class="zone-axis-label"><text x="40" y="298">-2</text><text x="110" y="298">-1</text><text x="180" y="298">0</text><text x="250" y="298">1</text><text x="320" y="298">2</text>' +
       '<text x="25" y="104">1</text><text x="25" y="224">0</text><text x="180" y="320" text-anchor="middle">수평 위치 (ft) · 포수 시점</text>' +
       '<text x="180" y="22" text-anchor="middle">높이: 타자별 존 하단 0 · 상단 1</text></g></svg>' +
       '<figcaption><ul class="zone-legend">' + groups.map((g) => '<li><span style="background:' + color(g.type) + '"></span>' + esc(PITCH[g.type] || g.type) + '</li>').join('') + '</ul>' +
       '<p class="page-note">작은 격자 안의 공을 구종별 한 점으로 합친 분포입니다. 점의 크기·진하기는 현재 조건 안의 상대 투구 수이며 공별 실제 점이나 목표 대비 제구 정확도가 아닙니다. 그림 범위 밖 ' + data.outside + '구도 아래 구역 집계에는 포함됩니다.</p></figcaption></figure>';
   }
+  // 결과 지표의 색: 선수 전체 기록 대비. 빨강은 타자에게 유리, 파랑은 불리. 표본 미달은 회색.
+  function resultFill(cell, metric, average) {
+    const value = measure(cell, metric);
+    if (value === null || average === null || !enough(cell, metric)) return "var(--surface-alt)";
+    const delta = (value - average) * (metric === "whiff" ? -1 : 1);
+    return Math.abs(delta) > 1e-9 ? (delta > 0 ? 'rgba(205,67,62,' : 'rgba(54,116,190,') + (.12 + Math.min(.55, Math.abs(delta) * 1.5)).toFixed(2) + ')' : "var(--surface-alt)";
+  }
   function heatmap(data, metric, role, selected) {
     const totals = data.zones.reduce((a, c) => a.map((n, j) => n + c[j]), Array(6).fill(0));
     const total = totals[0], average = measure(totals, metric, total);
+    // 투수는 구역 비율·구수와 피안타율을 함께 보여주고, 색은 피안타율로 칠한다.
+    const pitching = role === "pitching", avgAll = measure(totals, "avg");
     const rows = Array.from({length:5}, (_, r) => '<tr>' + Array.from({length:5}, (_, c) => {
       const i = r * 5 + c, cell = data.zones[i], value = measure(cell, metric, total), sample = denominator(cell, metric);
-      let fill = "var(--surface-alt)";
-      if (value !== null && enough(cell, metric)) {
+      let fill = "var(--surface-alt)", extra = "", aria = "";
+      if (pitching) {
+        const avg = measure(cell, "avg");
+        fill = resultFill(cell, "avg", avgAll);
+        extra = '<small><span class="zone-avg-label">피안타율 </span>' + fixed(avg, "avg") + '</small>';
+        aria = ', 피안타율 ' + fixed(avg, "avg") + ' (' + cell[3] + '타수)';
+      } else if (value !== null && enough(cell, metric)) {
         if (metric === "usage") fill = 'rgba(31,107,69,' + (.12 + .43 * value / Math.max(.01, ...data.zones.map((z) => measure(z, metric, total) || 0))).toFixed(2) + ')';
-        else {
-          const delta = (value - average) * (metric === "whiff" ? -1 : 1);
-          if (Math.abs(delta) > 1e-9) fill = (delta > 0 ? 'rgba(205,67,62,' : 'rgba(54,116,190,') + (.12 + Math.min(.55, Math.abs(delta) * 1.5)).toFixed(2) + ')';
-        }
+        else fill = resultFill(cell, metric, average);
       }
       const label = metric === "usage" ? cell[0] + "구" : metric === "whiff" ? sample + "스윙" : sample + "타수";
-      return '<td class="' + (r > 0 && r < 4 && c > 0 && c < 4 ? 'in-zone' : 'out-zone') + '"><button type="button" style="--zone-fill:' + fill + '" data-zone-role="' + role + '" data-zone-cell="' + i + '" aria-pressed="' + (i === selected) + '" aria-label="' + name(i) + ' ' + fixed(value, metric) + ', ' + label + '">' +
-        '<strong>' + fixed(value, metric) + '</strong><small>' + label + '</small></button></td>';
+      return '<td class="' + (r > 0 && r < 4 && c > 0 && c < 4 ? 'in-zone' : 'out-zone') + '"><button type="button" style="--zone-fill:' + fill + '" data-zone-role="' + role + '" data-zone-cell="' + i + '" aria-pressed="' + (i === selected) + '" aria-label="' + name(i) + ' ' + fixed(value, metric) + ', ' + label + aria + '">' +
+        '<strong>' + fixed(value, metric) + '</strong><small>' + label + '</small>' + extra + '</button></td>';
     }).join("") + '</tr>').join("");
-    return '<div class="zone-table-wrap"><table class="zone-grid"><caption>포수 시점 · 가운데 3×3은 스트라이크존</caption><tbody>' + rows + '</tbody></table></div>' +
-      note(metric === "usage" ? '숫자는 위치가 확인된 공 중 해당 구역 비율입니다. 진할수록 공이 많습니다.' :
+    return '<div class="zone-table-wrap"><p class="zone-grid-caption">포수 시점 · 굵은 선 안 3×3은 스트라이크존</p>' +
+      '<div class="zone-grid-box"><table class="zone-grid"><tbody>' + rows + '</tbody></table><div class="zone-grid-strike" aria-hidden="true"></div></div></div>' +
+      note(pitching ? '굵은 숫자는 위치가 확인된 공 중 해당 구역 비율, 아래는 투구 수와 피안타율(.000 형식)입니다. 색은 이 투수의 선택 조건 전체 피안타율(' + fixed(avgAll, "avg") + ') 대비이며 빨강은 더 많이 맞은 구역, 파랑은 덜 맞은 구역입니다. 리그 평균과의 비교가 아니며 10타수 미만은 회색으로 둡니다.' :
+        metric === "usage" ? '숫자는 위치가 확인된 공 중 해당 구역 비율입니다. 진할수록 공이 많습니다.' :
         '색은 선택 조건의 선수 전체 기록(' + fixed(average, metric) + ') 대비입니다. 빨강은 타자에게 유리, 파랑은 불리한 결과이며 리그 평균과의 비교가 아닙니다. ' + (metric === 'whiff' ? '20스윙' : '10타수') + ' 미만은 회색으로 두고 수치·분모는 표시합니다.') +
       detail(data.zones[selected], selected, role);
   }
@@ -113,7 +126,7 @@
           const report = !data.seen ? note('선택한 조건의 투구 기록이 없습니다.') : data.seen === data.missing ?
             note('이 조건에는 위치·존 높이가 확인된 공이 없어 위치 분포·구역별 성적을 제공하지 않습니다.') :
             (pitching ? plot(data, rows, s.pitch, s.hand) : '') + heatmap(data, s.metric, role, s.cell);
-          return '<section class="zone-section"><h4>' + (pitching ? '투수 · 투구 위치 분포' : '타자 · 핫콜드존') + '</h4><div class="zone-controls">' +
+          return '<section class="zone-section"><h4>' + (pitching ? '투수 · 투구 위치 분포·핫콜드존' : '타자 · 핫콜드존') + '</h4><div class="zone-controls">' +
             '<label class="field"><span>구종</span><select data-zone-role="' + role + '" data-zone-filter="pitch">' + options(rows, 'pitch', s.pitch, PITCH) + '</select></label>' +
             '<label class="field"><span>' + (pitching ? '상대 타석' : '상대 투구 손') + '</span><select data-zone-role="' + role + '" data-zone-filter="hand">' + options(rows, 'hand', s.hand, hands) + '</select></label>' +
             '</div>' + (pitching ? '' : note('구역의 숫자와 색상은 타율입니다. 구역을 선택하면 아래에서 타수·안타수·장타율·헛스윙률을 확인할 수 있습니다.')) +
