@@ -1045,6 +1045,10 @@ table.stats {
 .analysis-jumps { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 12px 0; }
 .analysis-jumps a { color: var(--accent); padding: 6px 0; }
 #zonesReport, #statcastReport, #situationReport, #seasonReport { scroll-margin-top: 16px; }
+.situation-title { margin: 14px 0 6px; font-size: 14px; font-weight: 600; color: var(--text-sub); }
+/* 상황별 표끼리 열 위치를 맞춘다. 좁은 화면은 최소 너비로 가로 스크롤. */
+.situation-tables table.stats { table-layout: fixed; min-width: 700px; }
+.situation-tables table.stats th:first-child, .situation-tables table.stats td:first-child { width: 110px; }
 .zone-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 0; margin: 8px 0; list-style: none; font-size: 12px; }
 .zone-legend li { display: inline-flex; align-items: center; gap: 4px; }
 .zone-legend li span { width: 10px; height: 10px; border-radius: 50%; }

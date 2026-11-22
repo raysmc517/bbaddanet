@@ -139,19 +139,26 @@
         const data = await loadJson("data/situations/" + season + ".json");
         if (request !== version) return;
         const mine = data.players[player.id] || {};
-        const codes = ["risp", "vr", "vl", "h", "a"];
         const content = ["hitting", "pitching"].map((group) => {
           if (!mine[group]) return "";
           const pitching = group === "pitching";
-          const keys = pitching ? ["battersFaced", "atBats", "hits", "homeRuns", "baseOnBalls", "strikeOuts", "avg", "ops"] :
+          // 투수도 타자와 같은 비율 열(피AVG~피OPS)을 보여주고 이닝·WHIP를 더한다.
+          // ERA는 원본이 홈/원정에만 있어 주자 상황·좌우 표와 맞출 수 없으므로 넣지 않는다.
+          const keys = pitching ? ["inningsPitched", "battersFaced", "atBats", "hits", "homeRuns", "baseOnBalls", "strikeOuts", "avg", "obp", "slg", "ops", "whip"] :
             ["plateAppearances", "atBats", "hits", "homeRuns", "rbi", "baseOnBalls", "strikeOuts", "avg", "obp", "slg", "ops"];
-          const titles = pitching ? ["BF", "AB", "H", "HR", "BB", "SO", "피AVG", "피OPS"] : ["PA", "AB", "H", "HR", "RBI", "BB", "SO", "AVG", "OBP", "SLG", "OPS"];
-          const labels = {risp:"득점권", vr: pitching ? "우타자 상대" : "우투수 상대", vl: pitching ? "좌타자 상대" : "좌투수 상대", h:"홈", a:"원정"};
-          return '<h4>' + (pitching ? "투구" : "타격") + '</h4>' + table(["상황", ...titles], codes.map((code) =>
-            [labels[code], ...keys.map((key) => { const value = (mine[group][code] || {})[key]; return ["avg","obp","slg","ops"].includes(key) ? f(value) : numeric(value) ? esc(String(value)) : "-"; })]));
+          const titles = pitching ? ["IP", "BF", "AB", "H", "HR", "BB", "SO", "피AVG", "피OBP", "피SLG", "피OPS", "WHIP"] : ["PA", "AB", "H", "HR", "RBI", "BB", "SO", "AVG", "OBP", "SLG", "OPS"];
+          // 서로 짝이 되는 상황끼리 표를 나눠 한 쌍씩 비교한다.
+          const pairs = [
+            ["주자 상황", [["risp", "득점권"], ["nr", "평시"]]],
+            [pitching ? "타자 유형" : "투수 유형", pitching ? [["vl", "좌타자 상대"], ["vr", "우타자 상대"]] : [["vl", "좌투수 상대"], ["vr", "우투수 상대"]]],
+            ["홈 / 원정", [["h", "홈"], ["a", "원정"]]]
+          ];
+          const cell = (code, key) => { const value = (mine[group][code] || {})[key]; return ["avg","obp","slg","ops"].includes(key) ? f(value) : key === "whip" ? f(value, 2) : numeric(value) ? esc(String(value)) : "-"; };
+          return '<h4>' + (pitching ? "투구" : "타격") + '</h4><div class="situation-tables">' + pairs.map(([title, rows]) =>
+            '<h5 class="situation-title">' + title + '</h5>' + table(["상황", ...titles], rows.map(([code, label]) => [label, ...keys.map((key) => cell(code, key))]))).join("") + '</div>';
         }).join("");
         $("situationReport").innerHTML = '<h3>상황별 성적</h3>' + (content || note("이 시즌의 상황별 기록이 없습니다.")) +
-          note("MLB 정규시즌 · 득점권은 2루 또는 3루에 주자가 있는 타석. 상황별 기록은 서로 겹치므로 합산하지 않습니다. 적은 타석으로 장기적인 능력을 단정할 수 없습니다. 갱신: " + new Date(data.updated).toLocaleString("ko-KR"));
+          note("MLB 정규시즌 · 득점권은 2루 또는 3루에 주자가 있는 타석, 평시는 주자가 없거나 1루에만 있는 타석입니다. 각 표의 두 줄은 겹치지 않지만 표끼리는 같은 타석을 다시 나눈 것이므로 합산하지 않습니다. 적은 타석으로 장기적인 능력을 단정할 수 없습니다. 갱신: " + new Date(data.updated).toLocaleString("ko-KR"));
       } catch (_) {
         if (request === version) $("situationReport").innerHTML = '<h3>상황별 성적</h3>' + note("이 시즌은 상황별 자료가 아직 없거나 불러오지 못했습니다. 현재 2024~2026 시즌을 수집합니다.");
       }

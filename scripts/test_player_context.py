@@ -45,6 +45,35 @@ class AverageTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "잘림"):
                 context.splits(2025)
 
+    def test_non_risp_sums_bases_empty_and_runner_on_first(self):
+        r0 = {"plateAppearances": 391, "atBats": 339, "hits": 87, "homeRuns": 20, "rbi": 20, "baseOnBalls": 46, "strikeOuts": 102,
+              "hitByPitch": 4, "sacFlies": 0, "totalBases": 165}
+        r1 = {"plateAppearances": 90, "atBats": 77, "hits": 27, "homeRuns": 3, "rbi": 11, "baseOnBalls": 11, "strikeOuts": 18,
+              "hitByPitch": 2, "sacFlies": 1, "totalBases": 43}
+        result = context.non_risp([r0, r1], "hitting")
+        self.assertEqual(result["plateAppearances"], 481)
+        self.assertEqual(result["atBats"], 416)
+        self.assertEqual(result["avg"], ".274")
+        self.assertEqual(result["obp"], f"{(114 + 57 + 6) / (416 + 57 + 6 + 1):.3f}"[1:])
+        self.assertEqual(result["slg"], ".500")
+        self.assertNotIn("battersFaced", result)
+        # 1루 상황에 출전하지 않은 선수는 주자 없음 기록만으로 평시를 만든다.
+        self.assertEqual(context.non_risp([r0, None], "hitting")["plateAppearances"], 391)
+        self.assertIsNone(context.non_risp([None, None], "hitting"))
+
+    def test_non_risp_pitching_uses_outs_and_keeps_missing(self):
+        r0 = {"battersFaced": 22, "atBats": 20, "hits": 4, "baseOnBalls": 1, "hitByPitch": 0, "sacFlies": 0, "totalBases": 6,
+              "inningsPitched": "5.1", "earnedRuns": 1, "homeRuns": 0, "rbi": 1, "strikeOuts": 5}
+        r1 = dict(r0, inningsPitched="0.2", battersFaced=3, atBats=3, hits=0, baseOnBalls=0, totalBases=0, earnedRuns=0)
+        result = context.non_risp([r0, r1], "pitching")
+        self.assertEqual(result["inningsPitched"], "6.0")
+        self.assertEqual(result["battersFaced"], 25)
+        self.assertEqual(result["whip"], "0.83")
+        # 0분모와 누락 항목은 0이 아닌 빈 값으로 둔다.
+        empty = context.non_risp([{"atBats": 0, "hits": 0, "plateAppearances": 1, "baseOnBalls": 1}], "hitting")
+        self.assertNotIn("avg", empty)
+        self.assertNotIn("obp", empty)
+
     def test_failed_splits_keep_last_good_season_file(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)

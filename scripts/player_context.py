@@ -12,7 +12,12 @@ from datetime import datetime, timezone
 from careers import DATA, write
 from collectors import statsapi
 
-SITUATIONS = {"risp": "득점권", "vr": "우투수/우타자 상대", "vl": "좌투수/좌타자 상대", "h": "홈", "a": "원정"}
+SITUATIONS = {"risp": "득점권", "r0": "주자 없음", "r1": "1루", "vr": "우투수/우타자 상대", "vl": "좌투수/좌타자 상대", "h": "홈", "a": "원정"}
+# 평시(nr) = 주자 없음 + 1루 주자만. 득점권과 합쳐 모든 주자 상황을 겹침 없이 나눈다.
+NON_RISP = ("r0", "r1")
+KEYS = ("plateAppearances", "atBats", "hits", "homeRuns", "rbi", "baseOnBalls", "strikeOuts", "avg", "obp", "slg", "ops", "battersFaced", "inningsPitched", "era", "whip")
+SUM_KEYS = ("plateAppearances", "atBats", "hits", "homeRuns", "rbi", "baseOnBalls", "strikeOuts", "battersFaced",
+            "hitByPitch", "sacFlies", "totalBases", "earnedRuns")
 
 
 def number(value):
@@ -74,8 +79,47 @@ def average(season):
     return result
 
 
+def rate_text(value, digits=3):
+    """API와 같은 표기(.280, 1.000). 분모가 0이면 None."""
+    if value is None:
+        return None
+    text = f"{value:.{digits}f}"
+    return text[1:] if digits == 3 and text.startswith("0.") else text
+
+
+def non_risp(parts, group):
+    """주자 없음·1루 기록을 합쳐 평시 기록을 만든다. 출전하지 않은 상황은 0, 항목이 빠지면 None."""
+    present = [p for p in parts if p is not None]
+    if not present:
+        return None
+
+    def total(key):
+        values = [p.get(key) for p in present]
+        return sum(values) if all(isinstance(v, (int, float)) for v in values) else None
+
+    result = {key: total(key) for key in SUM_KEYS}
+    ab, hits, bb, hbp, sf, tb = (result[k] for k in ("atBats", "hits", "baseOnBalls", "hitByPitch", "sacFlies", "totalBases"))
+    avg = hits / ab if ab and hits is not None else None
+    obp_den = ab + bb + hbp + sf if None not in (ab, bb, hbp, sf) else None
+    obp = (hits + bb + hbp) / obp_den if obp_den and hits is not None else None
+    slg = tb / ab if ab and tb is not None else None
+    result.update(avg=rate_text(avg), obp=rate_text(obp), slg=rate_text(slg),
+                  ops=rate_text(obp + slg) if obp is not None and slg is not None else None)
+    if group == "pitching":
+        innings = [p.get("inningsPitched") for p in present]
+        out_count = sum(outs(v) for v in innings) if all(v is not None for v in innings) else None
+        if out_count is not None:
+            result["inningsPitched"] = f"{out_count // 3}.{out_count % 3}"
+            result["whip"] = rate_text((hits + bb) / out_count * 3, 2) if out_count and None not in (hits, bb) else None
+            result["era"] = rate_text(result["earnedRuns"] / out_count * 27, 2) if out_count and result["earnedRuns"] is not None else None
+    else:
+        result.pop("battersFaced", None)
+    return {key: value for key, value in result.items() if key in KEYS and value is not None}
+
+
 def splits(season):
     players = {}
+    raw = {}
     for group in ("hitting", "pitching"):
         for code in SITUATIONS:
             data = statsapi._get("/stats", {"stats": "statSplits", "group": group, "season": season,
@@ -89,12 +133,22 @@ def splits(season):
             for row in block["splits"]:
                 if row.get("split", {}).get("code") != code:
                     raise ValueError("요청과 다른 상황 코드")
-                target = players.setdefault(str(row["player"]["id"]), {}).setdefault(group, {})
+                pid = str(row["player"]["id"])
+                stat = row["stat"]
+                if code in NON_RISP:
+                    bucket = raw.setdefault((pid, group), {})
+                    if code in bucket:
+                        raise ValueError("선수 합계 중복: 팀별 기록과 혼합하지 않음")
+                    bucket[code] = stat
+                    continue
+                target = players.setdefault(pid, {}).setdefault(group, {})
                 if code in target:
                     raise ValueError("선수 합계 중복: 팀별 기록과 혼합하지 않음")
-                stat = row["stat"]
-                keys = ("plateAppearances", "atBats", "hits", "homeRuns", "rbi", "baseOnBalls", "strikeOuts", "avg", "obp", "slg", "ops", "battersFaced", "inningsPitched", "era", "whip")
-                target[code] = {key: stat[key] for key in keys if key in stat}
+                target[code] = {key: stat[key] for key in KEYS if key in stat}
+    for (pid, group), bucket in raw.items():
+        merged = non_risp([bucket.get(code) for code in NON_RISP], group)
+        if merged:
+            players.setdefault(pid, {}).setdefault(group, {})["nr"] = merged
     return {"season": season, "updated": datetime.now(timezone.utc).isoformat(timespec="seconds"), "players": players}
 
 
