@@ -144,6 +144,15 @@
     return '<td class="col-name">' + name + clinch + parent + "</td>";
   }
 
+  // 포스트시즌 진출 확정 팀(지구 우승·와일드카드, 원본 clinchIndicator z·y·w·x)은 순위 칸을 강조한다(2026-11-25 사용자 결정).
+  // 1~3위 상징 대신 진출 여부만 보여준다. 마이너리그는 확정 표시의 뜻이 공개돼 있지 않아 강조하지 않는다.
+  const POSTSEASON = ["z", "y", "w", "x"];
+  const inPostseason = (team) => isMlb() && POSTSEASON.includes(team.clinch);
+  function rankCell(team, rank) {
+    if (!inPostseason(team)) return '<td class="col-rank">' + rank + "</td>";
+    return '<td class="col-rank"><span class="ps-rank" title="포스트시즌 진출">' + rank + '</span><span class="visually-hidden"> 포스트시즌 진출</span></td>';
+  }
+
   // cutoff: 이 순위까지 진출권. 그 아래에 구분선을 긋는다 (정렬하지 않았을 때만)
   function table(title, teams, columns, cutoff) {
     const parents = parentAbbr();
@@ -154,7 +163,7 @@
     const body = rows.map(({ team, rank }) => {
       const line = state.sortKey === "rank" && cutoff && rank === cutoff ? ' class="cutoff"' : "";
       return (
-        "<tr" + line + '><td class="col-rank">' + rank + "</td>" + teamCell(team, parents) +
+        "<tr" + line + ">" + rankCell(team, rank) + teamCell(team, parents) +
         columns.map((column) => '<td class="' + (state.sortKey === column.key ? "sorted" : "") + '">' + column.text(team) + "</td>").join("") +
         "</tr>"
       );
@@ -229,6 +238,9 @@
       ? "확정 표시: " + Object.entries(CLINCH).map(([mark, text]) => '<b class="clinch">' + mark + "</b> " + escapeHtml(text)).join(" · ") +
         ". 와일드카드 표의 굵은 선 위가 진출권(리그당 3팀)입니다."
       : "구단 이름 옆 약칭은 MLB 모구단입니다. 마이너리그는 대부분 전·후반기 우승팀이 플레이오프에 나가므로 기간을 바꿔 확인하세요.";
+    const psTeams = level.leagues.flatMap((league) => league.divisions.flatMap((division) => division.teams)).filter(inPostseason).length;
+    $("rankLegend").hidden = !psTeams;
+    $("rankLegend").innerHTML = psTeams ? '<span><span class="ps-rank" aria-hidden="true">1</span> 포스트시즌 진출 확정 (지구 우승·와일드카드) ' + psTeams + "팀</span>" : "";
     $("updatedText").textContent = "순위 갱신: " + new Date(data.updated).toLocaleString("ko-KR");
     writeUrl();
   }

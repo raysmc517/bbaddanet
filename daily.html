@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>빠따넷 · 경기·뉴스</title>
-  <link rel="stylesheet" href="css/style.css?v=20261120-zones">
+  <link rel="stylesheet" href="css/style.css?v=20261125-nav2">
 </head>
 <body>
   <header class="site-header">
@@ -12,7 +12,7 @@
       <a class="brand" href="./">빠따넷</a>
       <nav class="header-nav">
         <a href="search.html">전체 선수 검색</a>
-        <a href="./" id="backLink">리더보드</a>
+        <a href="leaderboard.html" id="backLink">리더보드</a>
         <a href="standings.html">순위</a>
         <a href="prospects.html">유망주</a>
         <a href="teams.html">구단</a>
@@ -20,6 +20,7 @@
         <a href="daily.html" aria-current="page">경기·뉴스</a>
         <a href="following.html">관심</a>
         <a href="awards.html">수상</a>
+        <a href="glossary.html">용어</a>
       </nav>
     </div>
   </header>
@@ -27,7 +28,7 @@
   <main class="wrap">
     <h1>경기·뉴스</h1>
     <p class="page-note">한국 시간 09시·14시 갱신 예정입니다. 실제 반영은 수집·배포 완료 뒤이며 예약 실행이 늦어질 수 있습니다. 실시간 중계가 아닙니다.</p>
-    <section class="career-section"><h2>선수 성적</h2><p id="favoriteStats"></p><p><a href="./">전체 선수 리더보드</a> · <a href="following.html">관심 목록 관리</a></p></section>
+    <section class="career-section"><h2>선수 성적</h2><p id="favoriteStats"></p><p><a href="leaderboard.html">전체 선수 리더보드</a> · <a href="following.html">관심 목록 관리</a></p></section>
     <section class="career-section"><h2>경기 결과</h2>
       <div class="toolbar-row"><label class="field"><span>MLB 공식 경기일 (미국 현지)</span><select id="gameDate"></select></label>
       <label><input type="checkbox" id="favoriteGames"> 관심 팀 경기만</label></div>
@@ -44,7 +45,7 @@
     </div>
   </footer>
 
-  <script src="js/common.js"></script>
+  <script src="js/common.js?v=20261125-nav"></script>
   <script src="js/favorites.js"></script>
   <script src="js/daily.js"></script>
 </body>

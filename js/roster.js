@@ -21,6 +21,17 @@
     ["Outfielder", "외야수"],
     ["Hitter", "지명타자"],
   ];
+  // 포지션 선택 (2026-11-25 사용자 요구): 보고 싶은 포지션만 남긴다. 투타겸업은 투수에 넣고, 지명타자는 전체에서만 보인다
+  const POS_FILTERS = [
+    { key: "", label: "전체" },
+    { key: "P", label: "투수", types: ["Pitcher", "Two-Way Player"] },
+    { key: "C", label: "포수", types: ["Catcher"] },
+    { key: "IF", label: "내야수", types: ["Infielder"] },
+    { key: "OF", label: "외야수", types: ["Outfielder"] },
+  ];
+  const posFilter = () => POS_FILTERS.find((f) => f.key === state.pos) || POS_FILTERS[0];
+  const byPos = (rows, filter) => ((filter || posFilter()).types ? rows.filter((r) => (filter || posFilter()).types.includes(r.posType)) : rows);
+
   const STATUS = {
     // A(액티브)는 시즌 단계에 따라 activeLabel()로 바꿔 보여준다
     RM: "40인",
@@ -37,7 +48,7 @@
   };
   const HAND = { R: "우", L: "좌", S: "양" };
 
-  const state = { id: null, season: null, view: "", move: "", month: "", moveDesc: true, sort: { bat: ["PA", "desc"], pit: ["outs", "desc"] } };
+  const state = { id: null, season: null, view: "", pos: "", move: "", month: "", moveDesc: true, sort: { bat: ["PA", "desc"], pit: ["outs", "desc"] } };
   let seasons = FALLBACK_SEASONS;
   let team = null;
   let data = null;
@@ -94,13 +105,14 @@
     const head =
       '<tr><th>번호</th><th class="col-name">선수</th><th class="col-team">포지션</th><th class="col-team">투타</th><th>나이</th>' +
       '<th class="col-team">상태</th>' + (injured ? '<th class="col-team">부상 내용 (원문)</th>' : "") + "</tr>";
+    const rows = byPos(view.rows);
     let body;
-    if (!view.rows.length) {
+    if (!rows.length) {
       body = '<tr><td class="empty" colspan="' + columns + '">해당하는 선수가 없습니다.</td></tr>';
     } else {
       const known = new Set(POSITION_GROUPS.map(([type]) => type));
-      const groups = POSITION_GROUPS.map(([type, label]) => [label, view.rows.filter((r) => r.posType === type)]);
-      groups.push(["기타", view.rows.filter((r) => !known.has(r.posType))]);
+      const groups = POSITION_GROUPS.map(([type, label]) => [label, rows.filter((r) => r.posType === type)]);
+      groups.push(["기타", rows.filter((r) => !known.has(r.posType))]);
       body = groups.filter(([, rows]) => rows.length).map(([label, rows]) =>
         '<tr class="group-row"><td colspan="' + columns + '">' + escapeHtml(label) + " " + rows.length + "명</td></tr>" +
         rows.map((r) => {
@@ -197,11 +209,14 @@
   }
 
   function seasonTables() {
-    const players = data.players;
-    const batters = players.filter((r) => r.bat && r.bat.PA > 0);
-    const pitchers = players.filter((r) => r.pit && r.pit.outs + r.pit.G > 0);
-    const idle = players.filter((r) => !batters.includes(r) && !pitchers.includes(r));
-    let html = statTable("bat", "타자", batters, BAT_COLUMNS) + statTable("pit", "투수", pitchers, PIT_COLUMNS);
+    // 투수를 고르면 투수 성적표만, 야수 포지션을 고르면 타자 성적표만 보여준다. 야수의 등판 기록은 전체에서만 보인다
+    const players = byPos(data.players);
+    const pitcherView = state.pos === "P";
+    const batters = pitcherView ? [] : players.filter((r) => r.bat && r.bat.PA > 0);
+    const pitchers = state.pos && !pitcherView ? [] : players.filter((r) => r.pit && r.pit.outs + r.pit.G > 0);
+    const idle = players.filter((r) => !batters.includes(r) && !pitchers.includes(r) && !(pitcherView && r.bat && r.bat.PA > 0));
+    let html = (batters.length || !state.pos ? statTable("bat", "타자", batters, BAT_COLUMNS) : "") +
+      (pitchers.length || !state.pos ? statTable("pit", "투수", pitchers, PIT_COLUMNS) : "");
     if (idle.length) {
       html +=
         '<section class="standings-block"><h2>출전 기록 없음 ' + idle.length + "명</h2>" +
@@ -327,6 +342,13 @@
       escapeHtml(v.label) + " " + v.rows.length + "</button>"
     ).join("");
 
+    // 포지션 선택은 선수 명단에만 둔다(선수 이동 제외). 숫자는 지금 명단에서 그 포지션 선수 수
+    $("posSwitch").hidden = view.key === "moves";
+    $("posSwitch").innerHTML = POS_FILTERS.map((f) =>
+      '<button type="button" data-value="' + f.key + '" aria-pressed="' + (f.key === state.pos) + '">' +
+      escapeHtml(f.label) + " " + byPos(view.rows, f).length + "</button>"
+    ).join("");
+
     const snapshot = view.key !== "season" && view.key !== "moves";
     $("content").innerHTML = view.key === "moves" ? movesTable() : snapshot ? snapshotTable(view) : seasonTables();
     $("rosterDate").textContent = snapshot ? data.date + " 기준" : "";
@@ -357,7 +379,7 @@
   function renderLinks() {
     $("teamLinks").innerHTML =
       '<a href="team.html?id=' + team.id + '">구단 정보</a>' +
-      '<a href="./?league=mlb&season=' + state.season + "&team=" + encodeURIComponent(team.abbr) + '">' + state.season + " 리더보드</a>" +
+      '<a href="leaderboard.html?league=mlb&season=' + state.season + "&team=" + encodeURIComponent(team.abbr) + '">' + state.season + " 리더보드</a>" +
       '<a href="standings.html' + (state.season === seasons[0] ? "" : "?season=" + state.season) + '">' + state.season + " 순위</a>";
   }
 
@@ -365,6 +387,7 @@
     const params = new URLSearchParams({ id: state.id });
     if (state.season !== seasons[0]) params.set("season", state.season);
     if (state.view) params.set("view", state.view);
+    if (state.pos && state.view !== "moves") params.set("pos", state.pos);
     if (state.view === "moves" && state.move) params.set("move", state.move);
     if (state.view === "moves" && state.month) params.set("month", state.month);
     history.replaceState(null, "", "?" + params.toString());
@@ -393,6 +416,12 @@
     $("seasonSelect").addEventListener("change", () => {
       state.season = Number($("seasonSelect").value);
       loadSeason();
+    });
+    $("posSwitch").addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-value]");
+      if (!button || !data) return;
+      state.pos = button.dataset.value;
+      render();
     });
     $("viewSwitch").addEventListener("click", (event) => {
       const button = event.target.closest("button[data-value]");
@@ -442,6 +471,7 @@
     const params = new URLSearchParams(location.search);
     state.id = Number(params.get("id"));
     state.view = params.get("view") || "";
+    if (["P", "C", "IF", "OF"].includes(params.get("pos"))) state.pos = params.get("pos");
     state.move = params.get("move") || "";
     state.month = /^\d{4}-\d{2}$/.test(params.get("month") || "") ? params.get("month") : "";
     try {

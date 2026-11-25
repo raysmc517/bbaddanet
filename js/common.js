@@ -72,6 +72,14 @@ window.BB = (function () {
     LOBp: col("LOBp", "LOB%", "잔루 처리율: 내보낸 주자를 득점시키지 않은 비율", fmt.pct),
   };
 
+  // 열 키 → 용어 설명 페이지(glossary.html)의 항목 id. 타자·투수가 같은 키를 쓰면 같은 항목으로 간다
+  const TERMS = {
+    PA: "pa-ab", AB: "pa-ab", AVG: "avg", OBP: "obp", SLG: "slg", OPS: "ops", ISO: "iso", BABIP: "babip",
+    BBp: "bb-k", Kp: "bb-k", wOBA: "woba", wRCp: "wrc-plus", sWAR: "swar", WAR: "war-official",
+    outs: "innings", ERA: "era", WHIP: "whip", K9: "per9", BB9: "per9", HR9: "per9", KBBp: "k-bb",
+    FIP: "fip", ERAm: "era-minus", FIPm: "era-minus", LOBp: "lob",
+  };
+
   const COLUMNS = {
     batting: {
       basic: [C.G, C.PA, C.AB, C.R, C.H, C.D2, C.D3, C.HR, C.RBI, C.SB, C.CS, C.BB, C.SO, C.AVG, C.OBP, C.SLG, C.OPS],
@@ -143,6 +151,48 @@ window.BB = (function () {
     ballot: (vote) => (vote && vote.ballot ? (vote.ballot === 1 ? "첫 투표" : ordinal(vote.ballot) + " 투표") : ""),
   };
 
+  // ---------- 1~3위 상징 (순위표·대문 개인 순위, 2026-11-25 사용자 요구) ----------
+  // 1위 홈플레이트, 2위 베이스, 3위 야구공. 메달 색을 쓰지 않고 모양으로 구분한다
+  const RANK_SHAPES = {
+    1: { name: "홈플레이트", shape: '<polygon class="plate" points="3,3 21,3 21,13.5 12,21.5 3,13.5"/>', num: "plate-num", y: 11 },
+    2: { name: "베이스", shape: '<polygon class="base" points="12,1.8 22.2,12 12,22.2 1.8,12"/>', num: "base-num", y: 12 },
+    3: { name: "야구공", shape: '<circle class="ball" cx="12" cy="12" r="10"/><path class="seam" d="M5 5.2 Q8.2 12 5 18.8"/><path class="seam" d="M19 5.2 Q15.8 12 19 18.8"/>', num: "ball-num", y: 12 },
+  };
+  function rankMark(rank, label) {
+    const mark = RANK_SHAPES[rank];
+    if (!mark) return String(rank);
+    return '<svg class="rank-mark" viewBox="0 0 24 24" role="img" aria-label="' + (label === false ? mark.name : rank + "위") + '">' +
+      (label === false ? "" : "<title>" + rank + "위</title>") + mark.shape +
+      '<text class="' + mark.num + '" x="12" y="' + mark.y + '" text-anchor="middle" dominant-baseline="central">' + rank + "</text></svg>";
+  }
+
+  // ---------- 좁은 화면 메뉴 (2026-11-25 UI/UX 점검) ----------
+  // 메뉴가 10개라 휴대폰에서는 절반이 가려진다. '메뉴' 버튼을 머리글에 넣고, 누르면 모든 메뉴를 격자로 펼친다.
+  // 넓은 화면에서는 버튼을 숨기고 기존 가로 메뉴를 그대로 쓴다(css/style.css).
+  (function setupNavMenu() {
+    const nav = document.querySelector(".site-header .header-nav");
+    if (!nav) return;
+    nav.id = nav.id || "siteNav";
+    const current = nav.querySelector('[aria-current="page"]');
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "nav-toggle";
+    button.setAttribute("aria-expanded", "false");
+    button.setAttribute("aria-controls", nav.id);
+    button.innerHTML = '<span class="nav-toggle-icon" aria-hidden="true"></span>메뉴' +
+      (current ? '<span class="nav-toggle-current">· ' + escapeHtml(current.textContent.trim()) + "</span>" : "");
+    nav.before(button);
+    const close = () => { button.setAttribute("aria-expanded", "false"); nav.classList.remove("open"); };
+    button.addEventListener("click", () => {
+      const open = button.getAttribute("aria-expanded") !== "true";
+      button.setAttribute("aria-expanded", String(open));
+      nav.classList.toggle("open", open);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && nav.classList.contains("open")) { close(); button.focus(); }
+    });
+  })();
+
   // ---------- 금지약물 징계 표시 (data/ped.json, scripts/ped.py, 2026-11-18 사용자 요구) ----------
   // MLB·마이너리그 공식 징계를 받은 선수의 이름 뒤에 *를 붙인다. 징계 없이 이름만 거론된 선수는 넣지 않는다.
   // 페이지마다 표를 그리는 방식이 달라, 선수 페이지 링크(player.html?id=)가 화면에 생기면 찾아서 붙인다.
@@ -167,5 +217,5 @@ window.BB = (function () {
     }).observe(document.body, { childList: true, subtree: true });
   });
 
-  return { fmt, COLUMNS, isStarter, escapeHtml, loadJson, cell, visibleColumns, venue, has, hof, pedData, pedMark, PED_TITLE };
+  return { fmt, COLUMNS, isStarter, escapeHtml, loadJson, cell, visibleColumns, venue, has, hof, pedData, pedMark, PED_TITLE, rankMark, RANK_SHAPES, TERMS };
 })();

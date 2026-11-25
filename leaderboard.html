@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>빠따넷 · 리더보드</title>
+  <meta name="description" content="MLB, MiLB, NPB, KBO 선수 성적과 세이버매트릭스">
+  <link rel="stylesheet" href="css/style.css?v=20261125-nav2">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="./">빠따넷</a>
+      <nav class="league-tabs" id="leagueTabs" aria-label="리그 선택"></nav>
+      <nav class="header-nav header-nav-end">
+        <a href="search.html">전체 선수 검색</a>
+        <a href="leaderboard.html" aria-current="page">리더보드</a>
+        <a href="standings.html">순위</a>
+        <a href="prospects.html">유망주</a>
+        <a href="teams.html">구단</a>
+        <a href="moves.html">이동</a>
+        <a href="daily.html">경기·뉴스</a>
+        <a href="following.html">관심</a>
+        <a href="awards.html">수상</a>
+        <a href="glossary.html">용어</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="toolbar" aria-label="조회 조건">
+      <div class="toolbar-row">
+        <div class="segmented" id="groupSwitch" role="group" aria-label="타자 또는 투수">
+          <button type="button" data-value="batting">타자</button>
+          <button type="button" data-value="pitching">투수</button>
+        </div>
+        <div class="segmented" id="viewSwitch" role="group" aria-label="지표 종류">
+          <button type="button" data-value="basic">기본</button>
+          <button type="button" data-value="saber">세이버</button>
+        </div>
+        <label class="field">
+          <span>시즌</span>
+          <select id="seasonSelect"></select>
+        </label>
+        <label class="field" id="levelField" hidden>
+          <span>레벨</span>
+          <select id="levelSelect"></select>
+        </label>
+        <label class="field" id="subField" hidden>
+          <span>리그</span>
+          <select id="subSelect"></select>
+        </label>
+        <label class="field">
+          <span>팀</span>
+          <select id="teamSelect"></select>
+        </label>
+        <label class="field">
+          <span id="posLabel">포지션</span>
+          <select id="posSelect"></select>
+        </label>
+        <label class="field">
+          <span id="minLabel">타석</span>
+          <select id="minSelect"></select>
+        </label>
+        <label class="field field-search">
+          <span>현재 시즌 이름 검색</span>
+          <input type="search" id="searchInput" placeholder="영문 이름" autocomplete="off" aria-describedby="searchHelp">
+        </label>
+      </div>
+      <p class="filter-help" id="searchHelp">선택한 시즌·레벨 안에서 찾습니다. 검색을 시작하면 리그·팀·포지션·출장 조건을 전체로 바꿉니다. 은퇴 선수는 <a href="search.html">전체 선수 검색</a>에서 찾아보세요.</p>
+    </section>
+
+    <p class="status" id="status" role="status"></p>
+    <p class="filter-help" id="filterSummary" hidden></p>
+    <div class="table-tools">
+      <div class="segmented" id="columnsSwitch" role="group" aria-label="표 열 표시">
+        <button type="button" data-value="core" aria-pressed="false">핵심 기록</button>
+        <button type="button" data-value="full" aria-pressed="true">전체 기록</button>
+      </div>
+      <p class="filter-help" id="columnsHelp"></p>
+      <p class="sort-summary" id="sortSummary"></p>
+      <details class="metric-help">
+        <summary>지표 설명</summary>
+        <dl id="metricDefinitions"></dl>
+        <p>간이 WAR는 수비 기여를 제외한 자체 계산값입니다. wRC+·ERA-·FIP-의 100은 해당 리그 평균이며, 리그 간 절대 실력이 같다는 뜻은 아닙니다. 지표 이름을 누르면 <a href="glossary.html">용어 설명</a>에서 계산식과 읽는 법을 볼 수 있습니다.</p>
+      </details>
+    </div>
+
+    <div class="table-scroll" id="tableScroll">
+      <table class="stats" id="statsTable">
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    <nav class="pager" id="pager" aria-label="페이지"></nav>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p id="updatedText"></p>
+      <p>MLB 기록 출처: MLB Stats API. Copyright MLB Advanced Media, L.P. 비상업적 개인 프로젝트입니다.</p>
+    </div>
+  </footer>
+
+  <script src="js/common.js?v=20261125-nav"></script>
+  <script src="js/leaderboard.js?v=20261125-terms"></script>
+</body>
+</html>

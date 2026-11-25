@@ -677,7 +677,7 @@
     if (analysisView) $("status").textContent = "상세 기록·분석 · 분석 시즌을 고르면 이 화면의 모든 기록이 함께 바뀝니다.";
 
     // 리더보드에서 넘어왔으면 보던 조건 그대로 돌아가게 한다
-    if (document.referrer && new URL(document.referrer).origin === location.origin && /(\/|index\.html)$/.test(new URL(document.referrer).pathname)) {
+    if (document.referrer && new URL(document.referrer).origin === location.origin && /leaderboard\.html$/.test(new URL(document.referrer).pathname)) {
       $("backLink").href = document.referrer;
     }
 

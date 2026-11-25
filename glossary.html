@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>빠따넷 · 용어 설명</title>
+  <meta name="description" content="wOBA, wRC+, FIP, 간이 WAR 등 빠따넷에 나오는 야구 기록·세이버매트릭스 용어 설명">
+  <link rel="stylesheet" href="css/style.css?v=20261125-nav2">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="./">빠따넷</a>
+      <nav class="header-nav">
+        <a href="search.html">전체 선수 검색</a>
+        <a href="leaderboard.html">리더보드</a>
+        <a href="standings.html">순위</a>
+        <a href="prospects.html">유망주</a>
+        <a href="teams.html">구단</a>
+        <a href="moves.html">이동</a>
+        <a href="daily.html">경기·뉴스</a>
+        <a href="following.html">관심</a>
+        <a href="awards.html">수상</a>
+        <a href="glossary.html" aria-current="page">용어</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap glossary">
+    <h1>용어 설명</h1>
+    <p class="page-note">빠따넷 표에 나오는 기록과 세이버매트릭스 지표를 정리했습니다. 각 지표는 <b>무엇을 재는지</b>, <b>어떻게 계산하는지</b>, <b>어떻게 읽는지</b> 순서로 적었습니다. "자체 계산"이라고 적힌 값은 빠따넷이 공개 기록으로 직접 계산한 것으로, FanGraphs·Baseball-Reference 등의 값과 조금 다를 수 있습니다.</p>
+
+    <label class="field glossary-search">
+      <span>용어 찾기</span>
+      <input type="search" id="glossaryFilter" placeholder="예: wRC+, 출루율, FIP" autocomplete="off">
+    </label>
+    <p class="status" id="glossaryStatus" role="status" hidden></p>
+
+    <nav class="glossary-toc" aria-label="목차">
+      <a href="#basics">먼저 알아 둘 것</a>
+      <a href="#batting">타자 지표</a>
+      <a href="#pitching">투수 지표</a>
+      <a href="#war">WAR</a>
+      <a href="#statcast">Statcast</a>
+      <a href="#standings-terms">순위</a>
+      <a href="#constants">올해 리그 상수</a>
+    </nav>
+
+    <section class="glossary-section" id="basics">
+      <h2>먼저 알아 둘 것</h2>
+      <dl class="glossary-list">
+        <div id="sabermetrics">
+          <dt>세이버매트릭스 <span>Sabermetrics</span></dt>
+          <dd>
+            <p>야구 기록을 통계적으로 분석해 선수의 실제 기여를 더 정확히 재려는 방법입니다. 타율·타점·승리처럼 오래 써 온 기록은 팀 동료나 운, 구장의 영향을 많이 받습니다. 세이버 지표는 이런 영향을 덜어 내고 "득점과 실점에 얼마나 기여했는가"를 보려고 합니다.</p>
+          </dd>
+        </div>
+        <div id="index-100">
+          <dt>리그 평균 = 100 <span>wRC+, ERA-, FIP-</span></dt>
+          <dd>
+            <p>이름에 + 또는 -가 붙은 지표는 같은 시즌·같은 리그 평균을 100으로 맞춘 값입니다. wRC+ 120은 평균보다 20% 더 많이 득점을 만들었다는 뜻이고, ERA- 80은 평균보다 실점을 20% 덜 내줬다는 뜻입니다.</p>
+            <p class="glossary-read"><b>방향</b> wRC+는 높을수록, ERA-·FIP-는 낮을수록 좋습니다.</p>
+            <p class="glossary-caution">100은 그 리그 안의 평균입니다. AAA의 wRC+ 120과 MLB의 wRC+ 120이 같은 실력이라는 뜻은 아닙니다.</p>
+          </dd>
+        </div>
+        <div id="park-factor">
+          <dt>파크팩터 <span>Park factor · 구장 보정</span></dt>
+          <dd>
+            <p>구장마다 펜스 거리, 고도, 날씨가 달라 점수가 나기 쉬운 곳과 어려운 곳이 있습니다. 파크팩터는 팀의 홈 경기와 원정 경기 득점을 비교해 그 차이를 숫자로 나타냅니다. 1.000이 중립이고 클수록 타자에게 유리합니다.</p>
+            <p class="glossary-formula">홈 경기당 득점 ÷ 원정 경기당 득점 → 표본이 작으면 1.000 쪽으로 당김 → 홈 경기는 절반뿐이라 절반만 적용</p>
+            <p class="glossary-read"><b>쓰임</b> wRC+, ERA-, FIP-, 간이 WAR에 적용합니다. 시즌 중 팀을 옮긴 선수는 중립(1.000)으로 둡니다. 자체 계산입니다.</p>
+          </dd>
+        </div>
+        <div id="qualified">
+          <dt>규정타석·규정이닝</dt>
+          <dd>
+            <p>타율·평균자책점 같은 비율 기록은 표본이 적으면 극단적인 값이 나옵니다. 그래서 순위를 매길 때는 일정 출전 이상인 선수만 셉니다. MLB는 팀 경기당 3.1타석, 투수는 팀 경기당 1이닝이 기준입니다. 마이너리그는 리그마다 기준이 다르며, 빠따넷은 MLB 공식 기록의 판정을 그대로 씁니다.</p>
+          </dd>
+        </div>
+        <div id="innings">
+          <dt>이닝 표기 <span>IP</span></dt>
+          <dd>
+            <p>이닝의 소수점은 아웃 수입니다. <b>5.1</b>은 5와 1/3이닝(아웃 16개), <b>5.2</b>는 5와 2/3이닝입니다. 십진수 5.1이 아니며, 빠따넷은 모든 계산을 아웃 수로 합니다.</p>
+          </dd>
+        </div>
+        <div id="pa-ab">
+          <dt>타석과 타수 <span>PA, AB</span></dt>
+          <dd>
+            <p>타석(PA)은 타자가 타석에 선 모든 횟수입니다. 타수(AB)는 여기서 볼넷, 몸에 맞는 공, 희생번트, 희생플라이, 타격방해를 뺀 횟수로 타율의 분모가 됩니다.</p>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="glossary-section" id="batting">
+      <h2>타자 지표</h2>
+      <dl class="glossary-list">
+        <div id="avg">
+          <dt>타율 <span>AVG</span></dt>
+          <dd>
+            <p>타수 중 안타를 친 비율입니다. 가장 익숙한 기록이지만 볼넷과 장타를 반영하지 못합니다.</p>
+            <p class="glossary-formula">안타 ÷ 타수</p>
+          </dd>
+        </div>
+        <div id="obp">
+          <dt>출루율 <span>OBP</span></dt>
+          <dd>
+            <p>아웃되지 않고 1루 이상 나간 비율입니다. 볼넷과 몸에 맞는 공도 출루로 셉니다.</p>
+            <p class="glossary-formula">(안타 + 볼넷 + 몸에 맞는 공) ÷ (타수 + 볼넷 + 몸에 맞는 공 + 희생플라이)</p>
+          </dd>
+        </div>
+        <div id="slg">
+          <dt>장타율 <span>SLG</span></dt>
+          <dd>
+            <p>타수당 평균 몇 루를 갔는지입니다. 단타 1, 2루타 2, 3루타 3, 홈런 4로 셉니다.</p>
+            <p class="glossary-formula">루타 ÷ 타수</p>
+          </dd>
+        </div>
+        <div id="ops">
+          <dt>OPS</dt>
+          <dd>
+            <p>출루율과 장타율을 더한 값입니다. 계산이 쉬워 타자의 공격력을 한눈에 볼 때 자주 씁니다.</p>
+            <p class="glossary-formula">출루율 + 장타율</p>
+            <p class="glossary-caution">출루율이 장타율보다 득점에 더 중요한데 같은 무게로 더하고, 분모가 서로 다릅니다. 더 정확한 지표가 wOBA입니다.</p>
+          </dd>
+        </div>
+        <div id="iso">
+          <dt>순수 장타력 <span>ISO</span></dt>
+          <dd>
+            <p>단타를 빼고 장타로만 얼마나 더 갔는지를 봅니다. 장타력만 따로 보고 싶을 때 씁니다.</p>
+            <p class="glossary-formula">장타율 − 타율</p>
+          </dd>
+        </div>
+        <div id="babip">
+          <dt>인플레이 타구 타율 <span>BABIP</span></dt>
+          <dd>
+            <p>홈런과 삼진을 빼고, 그라운드 안으로 친 타구가 안타가 된 비율입니다. 운과 수비의 영향을 크게 받아 한 시즌에도 크게 오르내립니다. 투수 표에서는 상대 타자의 BABIP입니다.</p>
+            <p class="glossary-formula">(안타 − 홈런) ÷ (타수 − 삼진 − 홈런 + 희생플라이)</p>
+            <p class="glossary-read"><b>읽는 법</b> 평소보다 크게 높거나 낮으면 운이 섞였을 가능성이 있습니다. 다만 타구가 빠르거나 발이 빠른 타자는 꾸준히 높을 수 있습니다.</p>
+          </dd>
+        </div>
+        <div id="bb-k">
+          <dt>볼넷 비율·삼진 비율 <span>BB%, K%</span></dt>
+          <dd>
+            <p>타석 중 볼넷(삼진)으로 끝난 비율입니다. 선구안과 컨택 능력을 볼 때 쓰며, 표본이 적어도 비교적 빨리 안정됩니다. 투수 표에서는 상대한 타자 중 비율이고, 투수에게는 K%가 높고 BB%가 낮을수록 좋습니다.</p>
+            <p class="glossary-formula">볼넷 ÷ 타석, 삼진 ÷ 타석</p>
+          </dd>
+        </div>
+        <div id="woba">
+          <dt>가중 출루율 <span>wOBA</span></dt>
+          <dd>
+            <p>출루를 모두 같게 세지 않고, 볼넷·단타·2루타·3루타·홈런마다 실제 득점 가치만큼 무게를 준 출루율입니다. OPS보다 득점 기여를 더 정확히 나타냅니다. 고의4구는 뺍니다.</p>
+            <p class="glossary-formula">(볼넷×가중치 + 몸에 맞는 공×가중치 + 단타×가중치 + 2루타×가중치 + 3루타×가중치 + 홈런×가중치) ÷ (타수 + 볼넷 − 고의4구 + 희생플라이 + 몸에 맞는 공)</p>
+            <p class="glossary-read"><b>읽는 법</b> 리그 평균 출루율과 비슷한 크기로 맞춥니다. 가중치는 시즌·리그마다 그 해 득점 환경으로 다시 구합니다(아래 <a href="#constants">올해 리그 상수</a> 참고). 자체 계산입니다.</p>
+          </dd>
+        </div>
+        <div id="wrc-plus">
+          <dt>조정 득점 창출력 <span>wRC+</span></dt>
+          <dd>
+            <p>타자가 타석당 만든 득점을 리그 평균 100에 맞춘 값입니다. 구장 보정을 하므로 타자 친화 구장과 투수 친화 구장의 타자를 공평하게 비교할 수 있습니다. 타자의 공격력을 숫자 하나로 볼 때 가장 많이 쓰는 지표입니다.</p>
+            <p class="glossary-formula">wOBA로 구한 평균 대비 득점 + 구장 보정 → 하위 리그(AL·NL 등) 평균을 100으로 환산</p>
+            <p class="glossary-read"><b>읽는 법</b> 100이 평균, 높을수록 좋습니다. 대략 140 이상은 리그 정상급, 80 아래는 공격에서 아쉬운 편입니다. 자체 계산입니다.</p>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="glossary-section" id="pitching">
+      <h2>투수 지표</h2>
+      <dl class="glossary-list">
+        <div id="era">
+          <dt>평균자책점 <span>ERA</span></dt>
+          <dd>
+            <p>9이닝 동안 내준 자책점입니다. 실책으로 생긴 실점은 빼지만 수비 범위와 운의 영향은 그대로 들어갑니다.</p>
+            <p class="glossary-formula">자책점 × 9 ÷ 이닝</p>
+          </dd>
+        </div>
+        <div id="whip">
+          <dt>이닝당 출루 허용 <span>WHIP</span></dt>
+          <dd>
+            <p>한 이닝에 안타와 볼넷으로 평균 몇 명을 내보냈는지입니다. 낮을수록 좋습니다.</p>
+            <p class="glossary-formula">(피안타 + 볼넷) ÷ 이닝</p>
+          </dd>
+        </div>
+        <div id="per9">
+          <dt>9이닝당 기록 <span>K/9, BB/9, HR/9</span></dt>
+          <dd>
+            <p>9이닝 기준으로 탈삼진·볼넷·피홈런이 몇 개인지입니다. 이닝이 다른 투수끼리 비교할 때 씁니다. 상대한 타자 수가 반영되지 않아 요즘은 K%·BB%를 더 많이 봅니다.</p>
+            <p class="glossary-formula">기록 × 9 ÷ 이닝</p>
+          </dd>
+        </div>
+        <div id="k-bb">
+          <dt>K-BB%</dt>
+          <dd>
+            <p>탈삼진 비율에서 볼넷 비율을 뺀 값입니다. 타자를 스스로 잡아내는 힘과 제구를 함께 보여 주며, 투수의 실력을 간단히 볼 때 유용합니다.</p>
+            <p class="glossary-formula">K% − BB%</p>
+          </dd>
+        </div>
+        <div id="fip">
+          <dt>수비 무관 평균자책점 <span>FIP</span></dt>
+          <dd>
+            <p>투수가 수비의 도움 없이 결과를 정하는 홈런·볼넷·몸에 맞는 공·삼진만으로 계산한 평균자책점입니다. 수비와 운의 영향을 덜어 내 투수 자체의 실력을 봅니다.</p>
+            <p class="glossary-formula">(13×피홈런 + 3×(볼넷 + 몸에 맞는 공) − 2×탈삼진) ÷ 이닝 + FIP 상수</p>
+            <p class="glossary-read"><b>읽는 법</b> ERA와 같은 크기로 읽습니다. 낮을수록 좋습니다. ERA가 FIP보다 크게 낮으면 수비나 운의 도움을 받았을 수 있습니다. FIP 상수는 리그 평균 FIP가 리그 평균 ERA와 같아지도록 맞춘 값입니다. 자체 계산입니다.</p>
+          </dd>
+        </div>
+        <div id="era-minus">
+          <dt>조정 평균자책점·조정 FIP <span>ERA-, FIP-</span></dt>
+          <dd>
+            <p>ERA와 FIP를 구장 보정한 뒤 리그 평균 100에 맞춘 값입니다. 시즌과 구장이 달라도 비교할 수 있습니다.</p>
+            <p class="glossary-read"><b>읽는 법</b> 100이 평균, 낮을수록 좋습니다. 80이면 평균보다 20% 적게 실점했다는 뜻입니다. 자체 계산입니다.</p>
+          </dd>
+        </div>
+        <div id="lob">
+          <dt>잔루 처리율 <span>LOB%</span></dt>
+          <dd>
+            <p>내보낸 주자 중 홈을 밟지 못하게 막은 비율입니다. 위기 관리 능력처럼 보이지만 해마다 크게 바뀌어 운의 영향이 큰 편입니다.</p>
+            <p class="glossary-formula">(피안타 + 볼넷 + 몸에 맞는 공 − 실점) ÷ (피안타 + 볼넷 + 몸에 맞는 공 − 1.4×피홈런)</p>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="glossary-section" id="war">
+      <h2>WAR</h2>
+      <dl class="glossary-list">
+        <div id="war-official">
+          <dt>대체 선수 대비 승리 기여 <span>WAR</span></dt>
+          <dd>
+            <p>그 선수 대신 마이너리그에서 쉽게 데려올 수 있는 선수(대체 선수)가 뛰었을 때보다 팀이 몇 승을 더 했는지를 나타냅니다. 공격·수비·주루·포지션을 모두 승수 하나로 합쳐 타자와 투수를 같은 눈금으로 비교할 수 있습니다.</p>
+            <p class="glossary-read"><b>읽는 법</b> 한 시즌 대략 2승이면 주전, 5승이면 올스타, 8승 이상이면 MVP 후보급입니다. 빠따넷의 <b>WAR</b> 열은 MLB 공식 기록의 값입니다.</p>
+          </dd>
+        </div>
+        <div id="swar">
+          <dt>간이 WAR <span>sWAR</span></dt>
+          <dd>
+            <p>빠따넷이 공개 기록만으로 직접 계산한 WAR입니다. 공식 WAR가 없는 마이너리그에도 같은 방식으로 계산합니다.</p>
+            <p class="glossary-formula">타자: (타격 득점 + 주루 득점 + 포지션 보정 + 대체 선수 보정) ÷ 1승에 필요한 득점</p>
+            <p class="glossary-formula">투수: FIP로 구한 실점 억제 + 선발·구원별 대체 선수 보정, 이닝 비례</p>
+            <p class="glossary-caution">수비 기여를 넣지 않았고 구원 투수의 등판 상황(접전·크게 앞선 경기)도 반영하지 않습니다. 그래서 수비가 뛰어난 유격수·포수나 마무리 투수는 공식 WAR와 차이가 날 수 있습니다. 공식 WAR와 같은 값으로 보지 마세요.</p>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="glossary-section" id="statcast">
+      <h2>Statcast</h2>
+      <p class="page-note">MLB 구장의 추적 장비가 잰 타구·투구 측정값입니다. 선수 페이지의 상세 분석에서 2015년부터 볼 수 있습니다.</p>
+      <dl class="glossary-list">
+        <div id="exit-velocity">
+          <dt>타구 속도 <span>EV, Exit Velocity</span></dt>
+          <dd><p>배트에 맞은 직후 공의 속도입니다. 강하게 칠수록 안타·장타가 되기 쉽습니다. 95 mph(약 153 km/h) 이상을 <b>강한 타구</b>로 셉니다.</p></dd>
+        </div>
+        <div id="launch-angle">
+          <dt>발사각 <span>LA, Launch Angle</span></dt>
+          <dd><p>타구가 수평선에서 위로 뜬 각도입니다. 낮으면 땅볼, 높으면 뜬공입니다. 8~32도 사이를 <b>스위트스폿</b>이라 부르며 안타가 되기 쉬운 각도입니다. 높을수록 좋은 것은 아닙니다.</p></dd>
+        </div>
+        <div id="barrel">
+          <dt>배럴 <span>Barrel</span></dt>
+          <dd><p>타구 속도와 발사각의 조합이 장타가 될 확률이 매우 높은 타구입니다. 98 mph 이상에서 시작해 속도가 빠를수록 인정되는 각도 범위가 넓어집니다. 배럴%는 전체 타구 중 배럴의 비율입니다.</p></dd>
+        </div>
+        <div id="bbe">
+          <dt>타구 수 <span>BBE</span></dt>
+          <dd><p>측정 대상이 된 인플레이·홈런 타구 수입니다. 타구 지표의 표본 크기이므로 적으면 해석에 주의합니다.</p></dd>
+        </div>
+        <div id="spin">
+          <dt>회전수 <span>Spin rate, rpm</span></dt>
+          <dd><p>투구가 1분에 몇 바퀴 도는지입니다. 같은 구속이라도 회전이 많은 직구는 덜 떨어지고, 회전이 많은 변화구는 더 많이 휩니다. 회전이 얼마나 움직임으로 바뀌는지(회전 효율)는 따로 보지 않습니다.</p></dd>
+        </div>
+        <div id="movement">
+          <dt>수평 이동·수직 이동 <span>IVB</span></dt>
+          <dd><p>회전이 없다고 가정한 공보다 좌우·위아래로 얼마나 더 움직였는지입니다. 수직 값은 중력을 뺀 <b>IVB</b>(Induced Vertical Break)라서, 양수라고 공이 실제로 떠오른다는 뜻은 아니고 "덜 떨어진다"는 뜻입니다. 수평은 포수 시점이며 음수가 왼쪽입니다.</p></dd>
+        </div>
+        <div id="hot-cold">
+          <dt>핫콜드존</dt>
+          <dd><p>스트라이크존을 구역으로 나눠 구역별 타율(투수는 피안타율)을 색으로 보여 줍니다. 빨간 구역은 잘 친(투수는 많이 맞은) 곳, 파란 구역은 반대입니다. 높이는 타자마다 다른 존의 아래·위를 기준으로 맞춥니다. 표본이 적은 구역은 회색입니다.</p></dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="glossary-section" id="standings-terms">
+      <h2>순위</h2>
+      <dl class="glossary-list">
+        <div id="games-back">
+          <dt>승차 <span>GB</span></dt>
+          <dd><p>1위 팀과의 거리입니다. 두 팀의 (승 차이 + 패 차이) ÷ 2로, 1위 팀이 지고 이 팀이 이기는 경기가 몇 번 있어야 같아지는지를 나타냅니다. 와일드카드 승차는 마지막 진출 팀과의 거리입니다.</p></dd>
+        </div>
+        <div id="magic-number">
+          <dt>매직넘버</dt>
+          <dd><p>선두 팀이 앞으로 이기는 경기 수와 2위 팀이 지는 경기 수를 합쳐 이 숫자가 되면 우승이 확정됩니다.</p></dd>
+        </div>
+        <div id="pythagorean">
+          <dt>기대 승패 <span>Pythagorean</span></dt>
+          <dd>
+            <p>득점과 실점만으로 기대할 수 있는 승률입니다. 실제 승수가 기대보다 많으면 접전에서 운이 좋았거나 불펜이 강했을 수 있습니다.</p>
+            <p class="glossary-formula">득점<sup>1.83</sup> ÷ (득점<sup>1.83</sup> + 실점<sup>1.83</sup>) × 경기 수</p>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="glossary-section" id="constants">
+      <h2>올해 리그 상수</h2>
+      <p class="page-note">wOBA·wRC+·FIP·간이 WAR는 시즌·리그마다 그 해의 득점 환경으로 상수를 다시 구합니다. 아래는 빠따넷이 계산에 쓴 MLB 값입니다.</p>
+      <div id="constantsTable" aria-busy="true">불러오는 중…</div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>지표 공식은 톰 탱고 등이 공개한 일반적인 방식을 따르며 세부 계산은 빠따넷이 정했습니다. MLB 기록 출처: MLB Stats API. 비상업적 개인 프로젝트입니다.</p>
+    </div>
+  </footer>
+
+  <script src="js/common.js?v=20261125-nav"></script>
+  <script src="js/glossary.js?v=20261125-a11y"></script>
+</body>
+</html>

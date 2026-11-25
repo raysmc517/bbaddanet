@@ -27,7 +27,7 @@
 
   function boardLink(team, season) {
     if (!BOARD[team.level] || !team.abbr) return "";
-    return "./?" + BOARD[team.level] + "&season=" + season + "&team=" + encodeURIComponent(team.abbr);
+    return "leaderboard.html?" + BOARD[team.level] + "&season=" + season + "&team=" + encodeURIComponent(team.abbr);
   }
 
   // 펜스 거리 다섯 지점으로 그린 구장 윤곽. 값이 하나라도 없으면 그리지 않는다.

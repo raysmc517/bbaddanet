@@ -3,17 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>빠따넷 · 리더보드</title>
-  <meta name="description" content="MLB, MiLB, NPB, KBO 선수 성적과 세이버매트릭스">
-  <link rel="stylesheet" href="css/style.css?v=20261120-zones">
+  <title>빠따넷</title>
+  <meta name="description" content="MLB·마이너리그 성적과 자체 계산 세이버매트릭스, 순위, 경기 결과, 이적 시장, 수상 기록">
+  <script>
+    // 리더보드가 대문이던 때의 주소(?league=…)는 리더보드로 보낸다
+    if (location.search) location.replace("leaderboard.html" + location.search + location.hash);
+  </script>
+  <link rel="stylesheet" href="css/style.css?v=20261125-nav2">
 </head>
 <body>
   <header class="site-header">
     <div class="wrap header-row">
-      <a class="brand" href="./">빠따넷</a>
-      <nav class="league-tabs" id="leagueTabs" aria-label="리그 선택"></nav>
+      <a class="brand" href="./" aria-current="page">빠따넷</a>
       <nav class="header-nav header-nav-end">
         <a href="search.html">전체 선수 검색</a>
+        <a href="leaderboard.html">리더보드</a>
         <a href="standings.html">순위</a>
         <a href="prospects.html">유망주</a>
         <a href="teams.html">구단</a>
@@ -21,77 +25,73 @@
         <a href="daily.html">경기·뉴스</a>
         <a href="following.html">관심</a>
         <a href="awards.html">수상</a>
+        <a href="glossary.html">용어</a>
       </nav>
     </div>
   </header>
 
-  <main class="wrap">
-    <section class="toolbar" aria-label="조회 조건">
-      <div class="toolbar-row">
-        <div class="segmented" id="groupSwitch" role="group" aria-label="타자 또는 투수">
-          <button type="button" data-value="batting">타자</button>
-          <button type="button" data-value="pitching">투수</button>
-        </div>
-        <div class="segmented" id="viewSwitch" role="group" aria-label="지표 종류">
-          <button type="button" data-value="basic">기본</button>
-          <button type="button" data-value="saber">세이버</button>
-        </div>
-        <label class="field">
-          <span>시즌</span>
-          <select id="seasonSelect"></select>
-        </label>
-        <label class="field" id="levelField" hidden>
-          <span>레벨</span>
-          <select id="levelSelect"></select>
-        </label>
-        <label class="field" id="subField" hidden>
-          <span>리그</span>
-          <select id="subSelect"></select>
-        </label>
-        <label class="field">
-          <span>팀</span>
-          <select id="teamSelect"></select>
-        </label>
-        <label class="field">
-          <span id="posLabel">포지션</span>
-          <select id="posSelect"></select>
-        </label>
-        <label class="field">
-          <span id="minLabel">타석</span>
-          <select id="minSelect"></select>
-        </label>
-        <label class="field field-search">
-          <span>현재 시즌 이름 검색</span>
-          <input type="search" id="searchInput" placeholder="영문 이름" autocomplete="off" aria-describedby="searchHelp">
-        </label>
-      </div>
-      <p class="filter-help" id="searchHelp">선택한 시즌·레벨 안에서 찾습니다. 검색을 시작하면 리그·팀·포지션·출장 조건을 전체로 바꿉니다. 은퇴 선수는 <a href="search.html">전체 선수 검색</a>에서 찾아보세요.</p>
+  <main class="wrap home">
+    <section class="home-hero">
+      <h1>빠따넷</h1>
+      <p class="home-lead">MLB와 마이너리그(AAA~Single-A) 기록을 모아 직접 계산한 세이버매트릭스와 함께 보여주는 야구 기록 사이트입니다.</p>
+      <form class="home-search" action="search.html" role="search">
+        <label for="homeQuery" class="visually-hidden">선수 이름</label>
+        <input id="homeQuery" name="q" type="search" placeholder="선수 이름 (예: Ohtani, Judge)" autocomplete="off">
+        <button type="submit">선수 찾기</button>
+      </form>
+      <p class="home-sub">1876년부터의 MLB 선수 · 2024~2026 시즌 MLB·MiLB 리더보드 · 매일 자동 갱신</p>
     </section>
 
-    <p class="status" id="status" role="status"></p>
-    <p class="filter-help" id="filterSummary" hidden></p>
-    <div class="table-tools">
-      <div class="segmented" id="columnsSwitch" role="group" aria-label="표 열 표시">
-        <button type="button" data-value="core" aria-pressed="false">핵심 기록</button>
-        <button type="button" data-value="full" aria-pressed="true">전체 기록</button>
+    <section aria-labelledby="mainFeatures">
+      <h2 id="mainFeatures" class="home-heading">한눈에 보기</h2>
+      <div class="home-main">
+        <article class="home-card">
+          <header><h3><a href="standings.html">순위</a></h3><p>MLB·AAA~Single-A 리그·지구별 순위, 와일드카드, 기대 승패</p></header>
+          <div id="homeStandings" class="home-preview" aria-busy="true">불러오는 중…</div>
+          <a class="home-more" href="standings.html">전체 순위 보기 →</a>
+        </article>
+        <article class="home-card">
+          <header><h3><a href="leaderboard.html">개인 순위</a></h3><p>부문별 상위 3명. 전체 순위와 세이버 지표는 리더보드에서</p></header>
+          <div class="segmented home-switch" id="homePlayerSwitch" role="group" aria-label="타자 또는 투수" hidden>
+            <button type="button" data-value="batting">타자</button>
+            <button type="button" data-value="pitching">투수</button>
+          </div>
+          <div id="homePlayers" class="home-preview" aria-busy="true">불러오는 중…</div>
+          <a class="home-more" id="homeMoreLeaders" href="leaderboard.html">리더보드 보기 →</a>
+        </article>
+        <article class="home-card">
+          <header><h3><a href="daily.html">경기 결과·뉴스</a></h3><p>최근 MLB 공식 경기 결과와 MLB.com 뉴스 제목</p></header>
+          <div id="homeGames" class="home-preview" aria-busy="true">불러오는 중…</div>
+          <a class="home-more" href="daily.html">경기·뉴스 보기 →</a>
+        </article>
+        <article class="home-card">
+          <header><h3><a href="moves.html">이적 시장</a></h3><p>트레이드·FA 계약·웨이버 클레임 등 공식 처리된 선수 이동 (2009~)</p></header>
+          <div id="homeMoves" class="home-preview" aria-busy="true">불러오는 중…</div>
+          <a class="home-more" href="moves.html">이동 소식 전체 보기 →</a>
+        </article>
+        <article class="home-card home-card-wide">
+          <header><h3><a href="awards.html">수상 기록</a></h3><p>역대 MVP·사이영상·신인왕·골드글러브·실버슬러거와 명예의 전당</p></header>
+          <ul class="home-links">
+            <li><a href="awards.html">시즌별·상별 역대 수상자</a></li>
+            <li><a href="awards.html">명예의 전당 헌액자와 득표율</a></li>
+            <li><a href="teams.html">구단별 우승·수상 횟수와 영구결번</a></li>
+          </ul>
+          <a class="home-more" href="awards.html">수상 기록 보기 →</a>
+        </article>
       </div>
-      <p class="filter-help" id="columnsHelp"></p>
-      <p class="sort-summary" id="sortSummary"></p>
-      <details class="metric-help">
-        <summary>지표 설명</summary>
-        <dl id="metricDefinitions"></dl>
-        <p>간이 WAR는 수비 기여를 제외한 자체 계산값입니다. wRC+·ERA-·FIP-의 100은 해당 리그 평균이며, 리그 간 절대 실력이 같다는 뜻은 아닙니다.</p>
-      </details>
-    </div>
+    </section>
 
-    <div class="table-scroll" id="tableScroll">
-      <table class="stats" id="statsTable">
-        <thead id="tableHead"></thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-    </div>
-
-    <nav class="pager" id="pager" aria-label="페이지"></nav>
+    <section aria-labelledby="moreFeatures">
+      <h2 id="moreFeatures" class="home-heading">더 살펴보기</h2>
+      <ul class="home-grid">
+        <li><a href="leaderboard.html"><strong>리더보드</strong><span>리그·레벨·시즌별 타자·투수 기록, wRC+·FIP·간이 WAR(sWAR) 등 자체 계산 지표</span></a></li>
+        <li><a href="search.html"><strong>선수 페이지</strong><span>프로 첫 시즌부터의 커리어, 입단 경로, 계약, 상황별 성적, Statcast, 핫콜드존, 지난 시즌과 비교</span></a></li>
+        <li><a href="prospects.html"><strong>유망주</strong><span>MLB Pipeline Top 100·구단별 Top 30 순위와 마이너리그 성적</span></a></li>
+        <li><a href="teams.html"><strong>구단</strong><span>30개 구단과 산하 마이너리그 구단, 구장 정보, 파크팩터, 선수단, 연도별 성적</span></a></li>
+        <li><a href="glossary.html"><strong>용어 설명</strong><span>wOBA·wRC+·FIP·간이 WAR 같은 세이버매트릭스 지표의 뜻, 계산식, 읽는 법</span></a></li>
+        <li><a href="following.html"><strong>관심 목록</strong><span>관심 선수·팀을 이 브라우저에 저장해 모아 보기</span></a></li>
+      </ul>
+    </section>
   </main>
 
   <footer class="site-footer">
@@ -101,7 +101,7 @@
     </div>
   </footer>
 
-  <script src="js/common.js"></script>
-  <script src="js/leaderboard.js?v=20261120-ui-details"></script>
+  <script src="js/common.js?v=20261125-nav"></script>
+  <script src="js/home.js?v=20261125-a11y"></script>
 </body>
 </html>

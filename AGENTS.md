@@ -28,7 +28,7 @@
 - `scripts/teams.py`: MLB 구단·산하 구단·구장 정보와 구단 역사(`data/teams.json`). `scripts/awards.py`: 수상 기록·명예의 전당(`data/awards.json`). `scripts/hof_votes.py`: 명예의 전당 득표율·투표 차수(`data/hof_votes.json`).
 - `scripts/past_players.py`: 은퇴 선수 등 과거 MLB 선수 추가. `scripts/search_index.py`: 선수 검색 색인(`data/search.json`).
 - `scripts/moves.py`: 리그 전체 이동 소식(`data/moves_{시즌}.json`)과 입단 경로(`data/arrivals.json`). `scripts/past_moves.py`: 2009~2023 시즌 이적 기록. `scripts/franchise.py`: MLB 구단 연도별 성적(`data/franchise/`). `scripts/leaders.py`: 시즌·리그별 기록 1위(`data/leaders.json`). `scripts/standings.py`: 리그·지구별 순위(`data/standings_{시즌}.json`). `scripts/rosters.py`: MLB 구단 선수단(`data/rosters/{시즌}/{구단 ID}.json`).
-- `index.html`, `standings.html`, `roster.html`, `player.html`, `prospects.html`, `teams.html`, `team.html`, `franchise.html`, `moves.html`, `awards.html`, `search.html`: 화면 진입점. `js/common.js`: 공통 표시 형식과 열 정의. `css/style.css`: 스타일.
+- `index.html`(대문, `js/home.js`), `leaderboard.html`(리더보드), `standings.html`, `roster.html`, `player.html`, `prospects.html`, `teams.html`, `team.html`, `franchise.html`, `moves.html`, `awards.html`, `search.html`, `glossary.html`(용어 설명, 계산식을 바꾸면 함께 고침): 화면 진입점. `js/common.js`: 공통 표시 형식과 열 정의. `css/style.css`: 스타일.
 - `data/`: 생성된 JSON과 랭킹 기록. 데이터 오류는 수집·계산 원인을 먼저 고친다. 대량 JSON을 손으로 수정하지 않는다.
 - 기존 코드 스타일과 UTF-8 인코딩을 유지한다. JSON 필드 변경 시 생성 코드, 소비하는 화면, 기존 데이터와의 호환성을 함께 확인한다.
 - 브라우저는 저장된 JSON을 읽는다. 원본 사이트의 수집 요청은 Python에서 수행한다.

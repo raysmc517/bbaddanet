@@ -348,7 +348,11 @@
     el.sort.textContent = sortColumn
       ? "정렬: " + sortColumn.label + (state.sortDir === "asc" ? " 낮은 순" : " 높은 순") + " · 열 제목을 눌러 변경"
       : "";
-    el.definitions.innerHTML = activeColumns().map((column) => '<div><dt>' + escapeHtml(column.label) + '</dt><dd>' + escapeHtml(column.desc) + '</dd></div>').join("");
+    el.definitions.innerHTML = activeColumns().map((column) => {
+      const term = window.BB.TERMS[column.key];
+      const label = term ? '<a href="glossary.html#' + term + '">' + escapeHtml(column.label) + "</a>" : escapeHtml(column.label);
+      return '<div><dt>' + label + '</dt><dd>' + escapeHtml(column.desc) + '</dd></div>';
+    }).join("");
     writeUrl();
     showOtherGroupMatches();
   }
