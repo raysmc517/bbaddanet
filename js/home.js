@@ -86,7 +86,7 @@
       (group === "batting" ? "규정타석" : "규정이닝") + ' 이상</p><div class="home-categories">' +
       CATEGORIES[group].map((category) => {
         const list = top3(rows, category).map(({ p, rank }) =>
-          '<li><span class="home-rank">' + rankMark(rank) + "</span>" + photo(p.id) + '<a href="player.html?id=' + p.id + '">' + esc(p.name) + "</a>" +
+          '<li><span class="home-rank">' + rankMark(rank) + "</span>" + photo(p.id) + '<a href="player.html?id=' + p.id + '" title="' + esc(p.name) + '">' + esc(p.name) + "</a>" +
           ' <span class="muted">' + esc(p.nt > 1 ? p.nt + "팀" : p.team) + '</span><span class="home-value">' + category.format(p[category.key]) + "</span></li>").join("");
         const title = category.term ? '<a href="glossary.html#' + category.term + '">' + esc(category.label) + "</a>" : esc(category.label);
         return '<section class="home-category"><h4>' + title + '</h4><ol class="home-top">' + (list || '<li class="muted">기록 없음</li>') + "</ol></section>";

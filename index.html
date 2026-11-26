@@ -9,7 +9,7 @@
     // 리더보드가 대문이던 때의 주소(?league=…)는 리더보드로 보낸다
     if (location.search) location.replace("leaderboard.html" + location.search + location.hash);
   </script>
-  <link rel="stylesheet" href="css/style.css?v=20261125-nav2">
+  <link rel="stylesheet" href="css/style.css?v=20261126-home">
 </head>
 <body>
   <header class="site-header">
@@ -60,14 +60,14 @@
           <a class="home-more" id="homeMoreLeaders" href="leaderboard.html">리더보드 보기 →</a>
         </article>
         <article class="home-card">
-          <header><h3><a href="daily.html">경기 결과·뉴스</a></h3><p>최근 MLB 공식 경기 결과와 MLB.com 뉴스 제목</p></header>
-          <div id="homeGames" class="home-preview" aria-busy="true">불러오는 중…</div>
-          <a class="home-more" href="daily.html">경기·뉴스 보기 →</a>
-        </article>
-        <article class="home-card">
           <header><h3><a href="moves.html">이적 시장</a></h3><p>트레이드·FA 계약·웨이버 클레임 등 공식 처리된 선수 이동 (2009~)</p></header>
           <div id="homeMoves" class="home-preview" aria-busy="true">불러오는 중…</div>
           <a class="home-more" href="moves.html">이동 소식 전체 보기 →</a>
+        </article>
+        <article class="home-card">
+          <header><h3><a href="daily.html">경기 결과·뉴스</a></h3><p>최근 MLB 공식 경기 결과와 MLB.com 뉴스 제목</p></header>
+          <div id="homeGames" class="home-preview" aria-busy="true">불러오는 중…</div>
+          <a class="home-more" href="daily.html">경기·뉴스 보기 →</a>
         </article>
         <article class="home-card home-card-wide">
           <header><h3><a href="awards.html">수상 기록</a></h3><p>역대 MVP·사이영상·신인왕·골드글러브·실버슬러거와 명예의 전당</p></header>
@@ -102,6 +102,6 @@
   </footer>
 
   <script src="js/common.js?v=20261125-nav"></script>
-  <script src="js/home.js?v=20261125-a11y"></script>
+  <script src="js/home.js?v=20261126-home"></script>
 </body>
 </html>

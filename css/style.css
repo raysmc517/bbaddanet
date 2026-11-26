@@ -1144,7 +1144,7 @@ table.stats {
 }
 .home-sub { margin: 10px 0 0; color: var(--text-sub); font-size: 14px; }
 .home-heading { margin: 28px 0 12px; font-size: 19px; }
-.home-main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.home-main { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 14px; }
 .home-card {
   display: flex; flex-direction: column; gap: 10px; padding: 18px;
   border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface);
@@ -1159,10 +1159,10 @@ table.stats {
 .home-more { align-self: flex-start; font-weight: 700; }
 .home-card-wide { grid-column: 1 / -1; }
 .home-leagues { display: grid; gap: 12px; }
-/* 부문 목록은 카드 폭이 넉넉할 때만 두 줄로 놓는다(이름이 잘리지 않게) */
+/* 부문 목록은 2×2로 놓아 순위 카드와 높이를 맞춘다. 카드가 좁으면(모바일 등) 한 줄로 쌓는다 */
 #homePlayers { container-type: inline-size; }
 .home-categories { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px 18px; }
-@container (min-width: 600px) { .home-categories { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@container (min-width: 520px) { .home-categories { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .home-league h4, .home-category h4 { margin: 0 0 4px; font-size: 14px; color: var(--text-sub); }
 .home-category h4 a { color: inherit; }
 .home-leaders, .home-top { list-style: none; margin: 0; padding: 0; }
@@ -1209,8 +1209,10 @@ table.stats {
 .home-grid a:hover { border-color: var(--accent); }
 .home-grid strong { color: var(--accent); }
 .home-grid span { color: var(--text-sub); font-size: 14px; }
+/* 왼쪽(팀 순위·이적)은 짧은 목록, 오른쪽(개인 순위·경기·뉴스)은 이름·제목이 길어 2:3으로 나눈다.
+   개인 순위를 2×2로 못 놓는 폭에서는 나란히 두지 않는다(높이 차가 커지므로) */
+@media (max-width: 1024px) { .home-main { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 760px) {
-  .home-main { grid-template-columns: minmax(0, 1fr); }
   .home-hero { padding-top: 24px; }
   .home-hero h1 { font-size: 26px; }
 }
